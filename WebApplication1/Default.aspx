@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="WebApplication1._Default" %>
+﻿<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="WNV._Default" %>
 
 <%@ Register Assembly="System.Web.DataVisualization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Namespace="System.Web.UI.DataVisualization.Charting" TagPrefix="asp" %>
 
@@ -14,7 +14,14 @@
         <div class="col-md-4">
             <h2>North Dakota Temperature Averages</h2>
             <p>
-                ADD CHART
+                <asp:Chart ID="Chart1" runat="server">
+                    <Series>
+                        <asp:Series Name="Series1" ChartType="Line"></asp:Series>
+                    </Series>
+                    <ChartAreas>
+                        <asp:ChartArea Name="ChartArea1"></asp:ChartArea>
+                    </ChartAreas>
+                </asp:Chart>
             </p>
             <p>
                 <asp:DropDownList ID="yearDDL" CssClass="form-control" AutoPostBack="true" style="width:140px;" runat="server" OnSelectedIndexChanged="yearDDL_SelectedIndexChanged">

@@ -7,6 +7,9 @@
 *.userosscache
 *.sln.docstates
 
+#Ignore web config
+Web.config
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
