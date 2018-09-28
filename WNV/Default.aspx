@@ -9,26 +9,34 @@
         <p class="lead">Below are some visualizations representing data</p>
         <%-- <p><a href="http://www.asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p> --%>
     </div>
-
+    
     <div class="row">
+
         <%-- Average Temperatures --%>
-        <div class="col-xs-4">
-            <h2>North Dakota Temperatures</h2>
+        <asp:UpdatePanel runat="server" ID="upnlNDTemps" UpdateMode="Conditional">
+            <Triggers>
+                <asp:AsyncPostBackTrigger ControlID="yearDDL" />
+            </Triggers>
+            <ContentTemplate>
+                <div class="col-xs-4">
+                    <h2>North Dakota Temperatures</h2>
+                    <asp:DropDownList ID="yearDDL" CssClass="form-control" AutoPostBack="true" style="width:140px;" runat="server" OnSelectedIndexChanged="yearDDL_SelectedIndexChanged"></asp:DropDownList>
             
-            <asp:DropDownList ID="yearDDL" CssClass="form-control" AutoPostBack="true" style="width:140px;" runat="server" OnSelectedIndexChanged="yearDDL_SelectedIndexChanged"></asp:DropDownList>
-            
-            <p>
-                <asp:Chart ID="Chart1" runat="server">
-                    <Series>
-                        <asp:Series Name="Series1" ToolTip="Month: #VALX, Temp:#VALY" BorderWidth=6 ChartType="Line"></asp:Series>
-                    </Series>
-                    <ChartAreas>
-                        <asp:ChartArea Name="ChartArea1"></asp:ChartArea>
-                    </ChartAreas>
-                </asp:Chart>
-            </p>
-            <asp:Label ID="weatherErrMsg" runat="server" Text=""></asp:Label>
-        </div>
+                    <p>
+                        <asp:Chart ID="Chart1" runat="server">
+                            <Series>
+                                <asp:Series Name="Series1" ToolTip="Month: #VALX, Temp:#VALY" BorderWidth=6 ChartType="Line"></asp:Series>
+                            </Series>
+                            <ChartAreas>
+                                <asp:ChartArea Name="ChartArea1"></asp:ChartArea>
+                            </ChartAreas>
+                        </asp:Chart>
+                    </p>
+                    <asp:Label ID="weatherErrMsg" runat="server" Text=""></asp:Label>
+                </div>
+            </ContentTemplate>
+        </asp:UpdatePanel>
+
         <%-- Grand Forks Mosquitos --%>
         <div class="col-md-5">
             <h2>Grand Forks Mosquito Data</h2>
