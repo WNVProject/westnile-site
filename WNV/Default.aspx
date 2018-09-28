@@ -5,47 +5,63 @@
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
     <div class="jumbotron">
-        <h1>Visualizations</h1>
+        <h1>West Nile Virus Visualizations</h1>
         <p class="lead">Below are some visualizations representing data</p>
         <%-- <p><a href="http://www.asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p> --%>
     </div>
 
     <div class="row">
-        <div class="col-md-4">
-            <h2>North Dakota Temperature Averages</h2>
+        <%-- Average Temperatures --%>
+        <div class="col-xs-4">
+            <h2>North Dakota Temperatures</h2>
+            
+            <asp:DropDownList ID="yearDDL" CssClass="form-control" AutoPostBack="true" style="width:140px;" runat="server" OnSelectedIndexChanged="yearDDL_SelectedIndexChanged"></asp:DropDownList>
+            
             <p>
                 <asp:Chart ID="Chart1" runat="server">
                     <Series>
-                        <asp:Series Name="Series1" ChartType="Line"></asp:Series>
+                        <asp:Series Name="Series1" ToolTip="Month: #VALX, Temp:#VALY" BorderWidth=6 ChartType="Line"></asp:Series>
                     </Series>
                     <ChartAreas>
                         <asp:ChartArea Name="ChartArea1"></asp:ChartArea>
                     </ChartAreas>
                 </asp:Chart>
             </p>
-            <p>
-                <asp:DropDownList ID="yearDDL" CssClass="form-control" AutoPostBack="true" style="width:140px;" runat="server" OnSelectedIndexChanged="yearDDL_SelectedIndexChanged">
-                </asp:DropDownList>
-            </p>
             <asp:Label ID="weatherErrMsg" runat="server" Text=""></asp:Label>
         </div>
-        <div class="col-md-4">
-            <h2>Get more libraries</h2>
+        <%-- Grand Forks Mosquitos --%>
+        <div class="col-md-5">
+            <h2>Grand Forks Mosquito Data</h2>
             <p>
-                NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.
+                <asp:Chart ID="Chart2" runat="server">
+                    <Series>
+                        <asp:Series Name="Series1" BorderWidth=6 ToolTip="Year: #VALX, WNV Cases:#VALY" ChartType="Line"></asp:Series>
+                        <asp:Series Name="Series2"  ToolTip="Year: #VALX, Total Mosquitoes:#VALY" ChartType="Column"></asp:Series>
+                        <asp:Series Name="Series3" ToolTip="Year: #VALX, Total Culex Tarsalis:#VALY" ChartType="Column"></asp:Series>
+                    </Series>
+                    <ChartAreas>
+                        <asp:ChartArea Name="ChartArea1"></asp:ChartArea>
+                    </ChartAreas>
+                </asp:Chart>
             </p>
-            <p>
-                <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301949">Learn more &raquo;</a>
-            </p>
+            <asp:Label ID="gfErrMsg" runat="server" Text=""></asp:Label>
         </div>
+
+        <%-- WNV Cases --%>
         <div class="col-md-4">
-            <h2>Web Hosting</h2>
+            <h2>WNV Cases</h2>
             <p>
-                You can easily find a web hosting company that offers the right mix of features and price for your applications.
+                <asp:Chart ID="Chart3" runat="server" BorderlineWidth="10">
+                    <Series>
+                        <asp:Series Name="Series1" ToolTip="Year: #VALX, Humans:#VALY" BorderWidth=6 ChartType="Line"></asp:Series>
+                        <asp:Series Name="Series2" ToolTip="Year: #VALX, Birds:#VALY" BorderWidth=6 ChartType="Line"></asp:Series>
+                    </Series>
+                    <ChartAreas>
+                        <asp:ChartArea Name="ChartArea1"></asp:ChartArea>
+                    </ChartAreas>
+                </asp:Chart>
             </p>
-            <p>
-                <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301950">Learn more &raquo;</a>
-            </p>
+            <asp:Label ID="caseErrMsg" runat="server" Text=""></asp:Label>
         </div>
     </div>
 
