@@ -234,7 +234,7 @@ namespace WNV
                     Chart1.ChartAreas[0].AxisY.Minimum = 40;
                     Chart1.ChartAreas[0].AxisY.Maximum = 80;
                     Chart1.ChartAreas[0].AxisX.Title = "Month";
-                    Chart1.ChartAreas[0].AxisY.Title = "Temperature (Deg F)  ";
+                    Chart1.ChartAreas[0].AxisY.Title = "Mean Temperature (Deg F)  ";
 
                     Chart1.Series[0].XValueMember = "Key";
                     Chart1.Series[0].YValueMembers = "Value";

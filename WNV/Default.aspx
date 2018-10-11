@@ -5,13 +5,8 @@
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <div class="jumbotron">
         <div id="map" style="width:1000px;height:600px;">
-                <script>
-                    function initMap() {
-                        var mapOptions = { zoom: 7, center: new google.maps.LatLng(46.8083, -100.7837) };
-                        var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-                    }
-                </script>
-                <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBymYK85pOpWP-KShxoECrUQd_0kG3X3CE&callback=initMap">
+                <script src="/Scripts/Map2.js" type="text/javascript"></script>
+                <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBymYK85pOpWP-KShxoECrUQd_0kG3X3CE&callback=initMap">
     </script>
             </div>
         <%-- <p><a href="http://www.asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p> --%>
