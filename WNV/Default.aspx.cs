@@ -23,6 +23,7 @@ namespace WNV
             yearDDLFill();
             caseChartFill();
             gfChartFill();
+            
         }
 
         //Populates WNV case chart
