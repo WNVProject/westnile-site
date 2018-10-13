@@ -64,11 +64,17 @@
         })();
     </script>
     <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-3">
             <h4>Mean Weather Variables</h4>
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-3">
+            <asp:CheckBox ID="chkSplineWeather" runat="server" Text="Use Splines" CssClass="checkbox"/>
+        </div>
+        <div class="col-lg-3">
             <h4>Mean Mosquito Count Variables</h4>
+        </div>
+        <div class="col-lg-3">
+            <asp:CheckBox ID="chkSplineCount" runat="server" Text="Use Splines" CssClass="checkbox" />
         </div>
     </div>
     <div class="row">

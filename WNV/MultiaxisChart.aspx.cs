@@ -327,7 +327,7 @@ namespace WNV
                                 chrtMultivariate.Series.Add("MeanAedes");
                                 chrtMultivariate.Series["MeanAedes"].Legend = "CountsLegend";
                                 chrtMultivariate.Series["MeanAedes"].ChartArea = "MeanCountsWithWeather";
-                                chrtMultivariate.Series["MeanAedes"].ChartType = SeriesChartType.Line;
+                                chrtMultivariate.Series["MeanAedes"].ChartType = chkSplineCount.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
                                 chrtMultivariate.Series["MeanAedes"].BorderWidth = 3;
                                 chrtMultivariate.Series["MeanAedes"].IsVisibleInLegend = true;
                                 chrtMultivariate.Series["MeanAedes"].LegendText = "Aedes";
@@ -341,7 +341,7 @@ namespace WNV
                                 chrtMultivariate.Series.Add("MeanAedesVexans");
                                 chrtMultivariate.Series["MeanAedesVexans"].Legend = "CountsLegend";
                                 chrtMultivariate.Series["MeanAedesVexans"].ChartArea = "MeanCountsWithWeather";
-                                chrtMultivariate.Series["MeanAedesVexans"].ChartType = SeriesChartType.Line;
+                                chrtMultivariate.Series["MeanAedesVexans"].ChartType = chkSplineCount.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
                                 chrtMultivariate.Series["MeanAedesVexans"].BorderWidth = 3;
                                 chrtMultivariate.Series["MeanAedesVexans"].IsVisibleInLegend = true;
                                 chrtMultivariate.Series["MeanAedesVexans"].LegendText = "Aedes Vexans";
@@ -355,7 +355,7 @@ namespace WNV
                                 chrtMultivariate.Series.Add("MeanAnopheles");
                                 chrtMultivariate.Series["MeanAnopheles"].Legend = "CountsLegend";
                                 chrtMultivariate.Series["MeanAnopheles"].ChartArea = "MeanCountsWithWeather";
-                                chrtMultivariate.Series["MeanAnopheles"].ChartType = SeriesChartType.Line;
+                                chrtMultivariate.Series["MeanAnopheles"].ChartType = chkSplineCount.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
                                 chrtMultivariate.Series["MeanAnopheles"].BorderWidth = 3;
                                 chrtMultivariate.Series["MeanAnopheles"].IsVisibleInLegend = true;
                                 chrtMultivariate.Series["MeanAnopheles"].LegendText = "Anopheles";
@@ -369,7 +369,7 @@ namespace WNV
                                 chrtMultivariate.Series.Add("MeanCulex");
                                 chrtMultivariate.Series["MeanCulex"].Legend = "CountsLegend";
                                 chrtMultivariate.Series["MeanCulex"].ChartArea = "MeanCountsWithWeather";
-                                chrtMultivariate.Series["MeanCulex"].ChartType = SeriesChartType.Line;
+                                chrtMultivariate.Series["MeanCulex"].ChartType = chkSplineCount.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
                                 chrtMultivariate.Series["MeanCulex"].BorderWidth = 3;
                                 chrtMultivariate.Series["MeanCulex"].IsVisibleInLegend = true;
                                 chrtMultivariate.Series["MeanCulex"].LegendText = "Culex";
@@ -383,7 +383,7 @@ namespace WNV
                                 chrtMultivariate.Series.Add("MeanCulexSalinarius");
                                 chrtMultivariate.Series["MeanCulexSalinarius"].Legend = "CountsLegend";
                                 chrtMultivariate.Series["MeanCulexSalinarius"].ChartArea = "MeanCountsWithWeather";
-                                chrtMultivariate.Series["MeanCulexSalinarius"].ChartType = SeriesChartType.Line;
+                                chrtMultivariate.Series["MeanCulexSalinarius"].ChartType = chkSplineCount.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
                                 chrtMultivariate.Series["MeanCulexSalinarius"].BorderWidth = 3;
                                 chrtMultivariate.Series["MeanCulexSalinarius"].IsVisibleInLegend = true;
                                 chrtMultivariate.Series["MeanCulexSalinarius"].LegendText = "Culex Salinarius";
@@ -398,7 +398,7 @@ namespace WNV
                                 chrtMultivariate.Series["MeanCulexTarsalis"].Color = System.Drawing.Color.Red;
                                 chrtMultivariate.Series["MeanCulexTarsalis"].Legend = "CountsLegend";
                                 chrtMultivariate.Series["MeanCulexTarsalis"].ChartArea = "MeanCountsWithWeather";
-                                chrtMultivariate.Series["MeanCulexTarsalis"].ChartType = SeriesChartType.Line;
+                                chrtMultivariate.Series["MeanCulexTarsalis"].ChartType = chkSplineCount.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
                                 chrtMultivariate.Series["MeanCulexTarsalis"].BorderWidth = 3;
                                 chrtMultivariate.Series["MeanCulexTarsalis"].IsVisibleInLegend = true;
                                 chrtMultivariate.Series["MeanCulexTarsalis"].LegendText = "Culex Tarsalis (WNV)";
@@ -412,7 +412,7 @@ namespace WNV
                                 chrtMultivariate.Series.Add("MeanCuliseta");
                                 chrtMultivariate.Series["MeanCuliseta"].Legend = "CountsLegend";
                                 chrtMultivariate.Series["MeanCuliseta"].ChartArea = "MeanCountsWithWeather";
-                                chrtMultivariate.Series["MeanCuliseta"].ChartType = SeriesChartType.Line;
+                                chrtMultivariate.Series["MeanCuliseta"].ChartType = chkSplineCount.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
                                 chrtMultivariate.Series["MeanCuliseta"].BorderWidth = 3;
                                 chrtMultivariate.Series["MeanCuliseta"].IsVisibleInLegend = true;
                                 chrtMultivariate.Series["MeanCuliseta"].LegendText = "Culiseta";
@@ -426,7 +426,7 @@ namespace WNV
                                 chrtMultivariate.Series.Add("MeanOther");
                                 chrtMultivariate.Series["MeanOther"].Legend = "CountsLegend";
                                 chrtMultivariate.Series["MeanOther"].ChartArea = "MeanCountsWithWeather";
-                                chrtMultivariate.Series["MeanOther"].ChartType = SeriesChartType.Line;
+                                chrtMultivariate.Series["MeanOther"].ChartType = chkSplineCount.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
                                 chrtMultivariate.Series["MeanOther"].BorderWidth = 3;
                                 chrtMultivariate.Series["MeanOther"].IsVisibleInLegend = true;
                                 chrtMultivariate.Series["MeanOther"].LegendText = "Other";
@@ -440,7 +440,7 @@ namespace WNV
                                 chrtMultivariate.Series.Add("MeanTotalFemale");
                                 chrtMultivariate.Series["MeanTotalFemale"].Legend = "CountsLegend";
                                 chrtMultivariate.Series["MeanTotalFemale"].ChartArea = "MeanCountsWithWeather";
-                                chrtMultivariate.Series["MeanTotalFemale"].ChartType = SeriesChartType.Line;
+                                chrtMultivariate.Series["MeanTotalFemale"].ChartType = chkSplineCount.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
                                 chrtMultivariate.Series["MeanTotalFemale"].BorderWidth = 3;
                                 chrtMultivariate.Series["MeanTotalFemale"].BorderDashStyle = ChartDashStyle.Dash;
                                 chrtMultivariate.Series["MeanTotalFemale"].IsVisibleInLegend = true;
@@ -455,7 +455,7 @@ namespace WNV
                                 chrtMultivariate.Series.Add("MeanTotalMale");
                                 chrtMultivariate.Series["MeanTotalMale"].Legend = "CountsLegend";
                                 chrtMultivariate.Series["MeanTotalMale"].ChartArea = "MeanCountsWithWeather";
-                                chrtMultivariate.Series["MeanTotalMale"].ChartType = SeriesChartType.Line;
+                                chrtMultivariate.Series["MeanTotalMale"].ChartType = chkSplineCount.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
                                 chrtMultivariate.Series["MeanTotalMale"].BorderWidth = 3;
                                 chrtMultivariate.Series["MeanTotalMale"].BorderDashStyle = ChartDashStyle.Dash;
                                 chrtMultivariate.Series["MeanTotalMale"].IsVisibleInLegend = true;
@@ -537,7 +537,7 @@ namespace WNV
                                     chrtMultivariate.Series["MeanTemp"].YAxisType = AxisType.Secondary;
                                     chrtMultivariate.Series["MeanTemp"].Legend = "WeatherLegend";
                                     chrtMultivariate.Series["MeanTemp"].ChartArea = "MeanCountsWithWeather";
-                                    chrtMultivariate.Series["MeanTemp"].ChartType = SeriesChartType.Line;
+                                    chrtMultivariate.Series["MeanTemp"].ChartType = chkSplineWeather.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
                                     chrtMultivariate.Series["MeanTemp"].BorderWidth = 3;
                                     chrtMultivariate.Series["MeanTemp"].IsVisibleInLegend = true;
                                     chrtMultivariate.Series["MeanTemp"].LegendText = "Temp (F\x00B0)";
@@ -552,7 +552,7 @@ namespace WNV
                                     chrtMultivariate.Series["MeanMaxTemp"].YAxisType = AxisType.Secondary;
                                     chrtMultivariate.Series["MeanMaxTemp"].Legend = "WeatherLegend";
                                     chrtMultivariate.Series["MeanMaxTemp"].ChartArea = "MeanCountsWithWeather";
-                                    chrtMultivariate.Series["MeanMaxTemp"].ChartType = SeriesChartType.Line;
+                                    chrtMultivariate.Series["MeanMaxTemp"].ChartType = chkSplineWeather.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
                                     chrtMultivariate.Series["MeanMaxTemp"].BorderWidth = 3;
                                     chrtMultivariate.Series["MeanMaxTemp"].IsVisibleInLegend = true;
                                     chrtMultivariate.Series["MeanMaxTemp"].LegendText = "Max Temp (F\x00B0)";
@@ -567,7 +567,7 @@ namespace WNV
                                     chrtMultivariate.Series["MeanMinTemp"].YAxisType = AxisType.Secondary;
                                     chrtMultivariate.Series["MeanMinTemp"].Legend = "WeatherLegend";
                                     chrtMultivariate.Series["MeanMinTemp"].ChartArea = "MeanCountsWithWeather";
-                                    chrtMultivariate.Series["MeanMinTemp"].ChartType = SeriesChartType.Line;
+                                    chrtMultivariate.Series["MeanMinTemp"].ChartType = chkSplineWeather.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
                                     chrtMultivariate.Series["MeanMinTemp"].BorderWidth = 3;
                                     chrtMultivariate.Series["MeanMinTemp"].IsVisibleInLegend = true;
                                     chrtMultivariate.Series["MeanMinTemp"].LegendText = "Min Temp (F\x00B0)";
@@ -582,7 +582,7 @@ namespace WNV
                                     chrtMultivariate.Series["MeanBareSoilTemp"].YAxisType = AxisType.Secondary;
                                     chrtMultivariate.Series["MeanBareSoilTemp"].Legend = "WeatherLegend";
                                     chrtMultivariate.Series["MeanBareSoilTemp"].ChartArea = "MeanCountsWithWeather";
-                                    chrtMultivariate.Series["MeanBareSoilTemp"].ChartType = SeriesChartType.Line;
+                                    chrtMultivariate.Series["MeanBareSoilTemp"].ChartType = chkSplineWeather.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
                                     chrtMultivariate.Series["MeanBareSoilTemp"].BorderWidth = 3;
                                     chrtMultivariate.Series["MeanBareSoilTemp"].IsVisibleInLegend = true;
                                     chrtMultivariate.Series["MeanBareSoilTemp"].LegendText = "Bare Soil Temp (F\x00B0)";
@@ -597,7 +597,7 @@ namespace WNV
                                     chrtMultivariate.Series["MeanTurfSoilTemp"].YAxisType = AxisType.Secondary;
                                     chrtMultivariate.Series["MeanTurfSoilTemp"].Legend = "WeatherLegend";
                                     chrtMultivariate.Series["MeanTurfSoilTemp"].ChartArea = "MeanCountsWithWeather";
-                                    chrtMultivariate.Series["MeanTurfSoilTemp"].ChartType = SeriesChartType.Line;
+                                    chrtMultivariate.Series["MeanTurfSoilTemp"].ChartType = chkSplineWeather.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
                                     chrtMultivariate.Series["MeanTurfSoilTemp"].BorderWidth = 3;
                                     chrtMultivariate.Series["MeanTurfSoilTemp"].IsVisibleInLegend = true;
                                     chrtMultivariate.Series["MeanTurfSoilTemp"].LegendText = "Turf Soil Temp (F\x00B0)";
@@ -612,7 +612,7 @@ namespace WNV
                                     chrtMultivariate.Series["MeanWindChill"].YAxisType = AxisType.Secondary;
                                     chrtMultivariate.Series["MeanWindChill"].Legend = "WeatherLegend";
                                     chrtMultivariate.Series["MeanWindChill"].ChartArea = "MeanCountsWithWeather";
-                                    chrtMultivariate.Series["MeanWindChill"].ChartType = SeriesChartType.Line;
+                                    chrtMultivariate.Series["MeanWindChill"].ChartType = chkSplineWeather.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
                                     chrtMultivariate.Series["MeanWindChill"].BorderWidth = 3;
                                     chrtMultivariate.Series["MeanWindChill"].IsVisibleInLegend = true;
                                     chrtMultivariate.Series["MeanWindChill"].LegendText = "Wind Chill (F\x00B0)";
@@ -627,7 +627,7 @@ namespace WNV
                                     chrtMultivariate.Series["MeanDewPoint"].YAxisType = AxisType.Secondary;
                                     chrtMultivariate.Series["MeanDewPoint"].Legend = "WeatherLegend";
                                     chrtMultivariate.Series["MeanDewPoint"].ChartArea = "MeanCountsWithWeather";
-                                    chrtMultivariate.Series["MeanDewPoint"].ChartType = SeriesChartType.Line;
+                                    chrtMultivariate.Series["MeanDewPoint"].ChartType = chkSplineWeather.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
                                     chrtMultivariate.Series["MeanDewPoint"].BorderWidth = 3;
                                     chrtMultivariate.Series["MeanDewPoint"].IsVisibleInLegend = true;
                                     chrtMultivariate.Series["MeanDewPoint"].LegendText = "Dew Point (F\x00B0)";
@@ -647,7 +647,7 @@ namespace WNV
                                     chrtMultivariate.Series["MeanMaxWindSpeed"].YAxisType = AxisType.Secondary;
                                     chrtMultivariate.Series["MeanMaxWindSpeed"].Legend = "WeatherLegend";
                                     chrtMultivariate.Series["MeanMaxWindSpeed"].ChartArea = "MeanCountsWithWeather";
-                                    chrtMultivariate.Series["MeanMaxWindSpeed"].ChartType = SeriesChartType.Line;
+                                    chrtMultivariate.Series["MeanMaxWindSpeed"].ChartType = chkSplineWeather.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
                                     chrtMultivariate.Series["MeanMaxWindSpeed"].BorderWidth = 3;
                                     chrtMultivariate.Series["MeanMaxWindSpeed"].IsVisibleInLegend = true;
                                     chrtMultivariate.Series["MeanMaxWindSpeed"].LegendText = "Max Wind Speed (mph)";
@@ -662,7 +662,7 @@ namespace WNV
                                     chrtMultivariate.Series["MeanWindSpeed"].YAxisType = AxisType.Secondary;
                                     chrtMultivariate.Series["MeanWindSpeed"].Legend = "WeatherLegend";
                                     chrtMultivariate.Series["MeanWindSpeed"].ChartArea = "MeanCountsWithWeather";
-                                    chrtMultivariate.Series["MeanWindSpeed"].ChartType = SeriesChartType.Line;
+                                    chrtMultivariate.Series["MeanWindSpeed"].ChartType = chkSplineWeather.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
                                     chrtMultivariate.Series["MeanWindSpeed"].BorderWidth = 3;
                                     chrtMultivariate.Series["MeanWindSpeed"].IsVisibleInLegend = true;
                                     chrtMultivariate.Series["MeanWindSpeed"].LegendText = "Wind Speed (mph)";
@@ -683,7 +683,7 @@ namespace WNV
                                     chrtMultivariate.Series["MeanTotalRainfall"].YAxisType = AxisType.Secondary;
                                     chrtMultivariate.Series["MeanTotalRainfall"].Legend = "WeatherLegend";
                                     chrtMultivariate.Series["MeanTotalRainfall"].ChartArea = "MeanCountsWithWeather";
-                                    chrtMultivariate.Series["MeanTotalRainfall"].ChartType = SeriesChartType.Line;
+                                    chrtMultivariate.Series["MeanTotalRainfall"].ChartType = chkSplineWeather.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
                                     chrtMultivariate.Series["MeanTotalRainfall"].BorderWidth = 3;
                                     chrtMultivariate.Series["MeanTotalRainfall"].IsVisibleInLegend = true;
                                     chrtMultivariate.Series["MeanTotalRainfall"].LegendText = "Total Rainfall (in)";
@@ -703,7 +703,7 @@ namespace WNV
                                     chrtMultivariate.Series["MeanTotalSolarRad"].YAxisType = AxisType.Secondary;
                                     chrtMultivariate.Series["MeanTotalSolarRad"].Legend = "WeatherLegend";
                                     chrtMultivariate.Series["MeanTotalSolarRad"].ChartArea = "MeanCountsWithWeather";
-                                    chrtMultivariate.Series["MeanTotalSolarRad"].ChartType = SeriesChartType.Line;
+                                    chrtMultivariate.Series["MeanTotalSolarRad"].ChartType = chkSplineWeather.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
                                     chrtMultivariate.Series["MeanTotalSolarRad"].BorderWidth = 3;
                                     chrtMultivariate.Series["MeanTotalSolarRad"].IsVisibleInLegend = true;
                                     chrtMultivariate.Series["MeanTotalSolarRad"].LegendText = "Total Solar Rad (W/m\xB2)";

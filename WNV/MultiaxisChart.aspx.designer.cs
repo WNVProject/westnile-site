@@ -67,6 +67,24 @@ namespace WNV {
         protected global::System.Web.UI.WebControls.Label weatherErrMsg;
         
         /// <summary>
+        /// chkSplineWeather control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkSplineWeather;
+        
+        /// <summary>
+        /// chkSplineCount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkSplineCount;
+        
+        /// <summary>
         /// chkMeanTemp control.
         /// </summary>
         /// <remarks>
