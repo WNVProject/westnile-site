@@ -88,29 +88,88 @@
         for (var i = 0; i < locations.length; i++) {
             var position = new google.maps.LatLng(locations[i][1], locations[i][2]);
             bounds.extend(position);
-            var marker = new google.maps.Marker({ position: position, map: map, title: locations[i][0] });
+            var marker = new google.maps.Marker({
+                position: position, map: map, title: locations[i][0], icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    scale: 2
+                }
+            });
         }
 
-        map.data.loadGeoJson('http://polygons.openstreetmap.fr/get_geojson.py?id=1740282&params=0');
+        map.data.loadGeoJson('Scripts/GeoJSON/Counties.json');
+        map.data.setStyle(function (feature)
+        {
+            var ascii = feature.getProperty('ascii');
+            if (ascii == 65) {
+                var region = (ascii == 65) ? 'blue' : 'red';
+                return {
+                    fillColor: region,
+                    strokeWeight: 1
+                };
+            }
+            else if (ascii == 66) {
+                var region = (ascii == 66) ? 'green' : 'red';
+                return {
+                    fillColor: region,
+                    strokeWeight: 1
+                };
 
-        /*
-        var bermudaTriangleCoords = [
-            new google.maps.LatLng(45.934161, -104.043698),
-            new google.maps.LatLng(49.0000, -104.091361),
-            new google.maps.LatLng(49.0000, -97.259560),
-            new google.maps.LatLng(45.963506, -96.558843)
-            
+            }
+            else if (ascii == 67) {
+                var region = (ascii == 67) ? 'yellow' : 'red';
+                return {
+                    fillColor: region,
+                    strokeWeight: 1
+                };
 
-            
-        ];    
-        var bermudaTriangle = new google.maps.Polygon({
-            paths: bermudaTriangleCoords,
-            strokeColor: '#FF0000',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: '#FF0000',
-            fillOpacity: 0.35
+            }
+            else if (ascii == 68) {
+                var region = (ascii == 68) ? 'orange' : 'red';
+                return {
+                    fillColor: region,
+                    strokeWeight: 1
+                };
+
+            }
+            else if (ascii == 69) {
+                var region = (ascii == 69) ? 'red' : 'red';
+                return {
+                    fillColor: region,
+                    strokeWeight: 1
+                };
+
+            }
+            else if (ascii == 70) {
+                var region = (ascii == 70) ? 'purple' : 'red';
+                return {
+                    fillColor: region,
+                    strokeWeight: 1
+                };
+
+            }
+            else if (ascii == 71) {
+                var region = (ascii == 71) ? 'cyan' : 'red';
+                return {
+                    fillColor: region,
+                    strokeWeight: 1
+                };
+
+            }
+            else if (ascii == 72) {
+                var region = (ascii == 72) ? 'magenta' : 'red';
+                return {
+                    fillColor: region,
+                    strokeWeight: 1
+                };
+
+            }
+            else {
+                var region = 'grey';
+                return {
+                    fillColor: region,
+                    strokeWeight: 1
+                };
+            }
         });
-        bermudaTriangle.setMap(map);*/
     }
 }

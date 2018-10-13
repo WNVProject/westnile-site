@@ -164,7 +164,7 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\GeoJSON\GrandForks.json" />
+    <Content Include="Scripts\GeoJSON\Counties.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="MosquitoSpecies.aspx" />
     <Content Include="Scripts\bootstrap.js" />
