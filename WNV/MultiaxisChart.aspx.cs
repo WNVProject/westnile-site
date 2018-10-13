@@ -695,7 +695,7 @@ namespace WNV
                             }
                             else if (needSolarRadUnitData)
                             {
-                                chrtMultivariate.ChartAreas["MeanCountsWithWeather"].AxisY2.Title = "Mean Total Solar Rad (W/m<sup>2</sup>)";
+                                chrtMultivariate.ChartAreas["MeanCountsWithWeather"].AxisY2.Title = "Mean Total Solar Rad (W/m\xB2)";
                                 chrtMultivariate.ChartAreas["MeanCountsWithWeather"].AxisY2.Interval = 100;
                                 if (chkMeanTotalSolarRad.Checked)
                                 {
@@ -706,7 +706,7 @@ namespace WNV
                                     chrtMultivariate.Series["MeanTotalSolarRad"].ChartType = SeriesChartType.Line;
                                     chrtMultivariate.Series["MeanTotalSolarRad"].BorderWidth = 3;
                                     chrtMultivariate.Series["MeanTotalSolarRad"].IsVisibleInLegend = true;
-                                    chrtMultivariate.Series["MeanTotalSolarRad"].LegendText = "Total Solar Rad (W/m<sup>2</sup>)";
+                                    chrtMultivariate.Series["MeanTotalSolarRad"].LegendText = "Total Solar Rad (W/m\xB2)";
                                     foreach (DataRow row in dt.Rows)
                                     {
                                         chrtMultivariate.Series["MeanTotalSolarRad"].Points.AddXY(row["WeekStart"], row["MeanTotalSolarRad"]);
