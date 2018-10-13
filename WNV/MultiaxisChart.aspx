@@ -149,5 +149,4 @@
             <asp:Label ID="lblError" runat="server" ForeColor="Red"></asp:Label>
         </div>
     </div>
-    </div>
 </asp:Content>
