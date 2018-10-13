@@ -503,7 +503,16 @@ namespace WNV
 
                             if (dt.Rows.Count == 0)
                             {
-                                ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('No weather data exists for "+ddlCounty.SelectedValue+" County between "+ddlWeekStart.Text.Replace("12:00:00 AM","")+"and "+ddlWeekEnd.Text.Replace("12:00:00 AM","")+".');", true);
+                                String msgErrorArea = "";
+                                if (chkStatewide.Checked)
+                                {
+                                    msgErrorArea += " North Dakota ";
+                                }
+                                else
+                                {
+                                    msgErrorArea += " " + ddlCounty.SelectedValue + " County ";
+                                }
+                                ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('No weather data exists for"+ msgErrorArea + "between "+ddlWeekStart.Text.Replace("12:00:00 AM","")+"and "+ddlWeekEnd.Text.Replace("12:00:00 AM","")+".');", true);
                                 return;
                             }
 
