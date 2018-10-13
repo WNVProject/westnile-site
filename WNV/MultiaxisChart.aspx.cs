@@ -52,9 +52,23 @@ namespace WNV
                             ddlWeekEnd.Items.Insert(0, new ListItem("Select...", ""));
                         }
                     }
+                    ddlWeekStart.Enabled = false;
+                    ddlWeekEnd.Enabled = false;
                 }
-                ddlWeekStart.Enabled = false;
-                ddlWeekEnd.Enabled = false;
+                else
+                {
+                    if (ddlYear.SelectedIndex == 0)
+                    {
+                        if (ddlWeekStart.SelectedIndex == 0)
+                        {
+                            ddlWeekStart.Enabled = false;
+                        }
+                        if (ddlWeekEnd.SelectedIndex == 0)
+                        {
+                            ddlWeekEnd.Enabled = false;
+                        }
+                    }
+                }
             }
             catch (MySqlException ex)
             {
@@ -262,7 +276,14 @@ namespace WNV
                         var procedure = "USP_Get_Select_MeanCountyTrapCountsByDateRange";
                         MySqlCommand cmd = new MySqlCommand(procedure, conn);
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("County", ddlCounty.SelectedValue);
+                        if (chkStatewide.Checked)
+                        {
+                            cmd.Parameters.AddWithValue("County", "%");
+                        }
+                        else
+                        {
+                            cmd.Parameters.AddWithValue("County", ddlCounty.SelectedValue);
+                        }
                         cmd.Parameters.AddWithValue("StartWeek", Convert.ToDateTime(ddlWeekStart.SelectedValue));
                         cmd.Parameters.AddWithValue("EndWeek", Convert.ToDateTime(ddlWeekEnd.SelectedValue));
 
@@ -464,7 +485,14 @@ namespace WNV
                         var procedure = "USP_Get_Select_MeanCountyWeatherByDateRange";
                         MySqlCommand cmd = new MySqlCommand(procedure, conn);
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("County", ddlCounty.SelectedValue);
+                        if (chkStatewide.Checked)
+                        {
+                            cmd.Parameters.AddWithValue("County", "%");
+                        }
+                        else
+                        {
+                            cmd.Parameters.AddWithValue("County", ddlCounty.SelectedValue);
+                        }
                         cmd.Parameters.AddWithValue("StartWeek", Convert.ToDateTime(ddlWeekStart.SelectedValue));
                         cmd.Parameters.AddWithValue("EndWeek", Convert.ToDateTime(ddlWeekEnd.SelectedValue));
 
@@ -702,6 +730,20 @@ namespace WNV
                 ddlWeekEnd.ClearSelection();
                 ddlWeekStart.Enabled = false;
                 ddlWeekEnd.Enabled = false;
+            }
+        }
+
+        protected void chkStatewide_CheckChanged(object sender, EventArgs e)
+        {
+            if (chkStatewide.Checked)
+            {
+                ddlCounty.Enabled = false;
+                rfvCounty.Enabled = false;
+            }
+            else
+            {
+                ddlCounty.Enabled = true;
+                rfvCounty.Enabled = true;
             }
         }
     }
