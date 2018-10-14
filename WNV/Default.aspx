@@ -3,10 +3,12 @@
 <%@ Register Assembly="System.Web.DataVisualization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Namespace="System.Web.UI.DataVisualization.Charting" TagPrefix="asp" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
-
     <div class="jumbotron">
-        <h1>West Nile Virus Visualizations</h1>
-        <p class="lead">Below are some visualizations representing data</p>
+        <div id="map" style="width:1000px;height:600px;">
+                <script src="/Scripts/Map2.js" type="text/javascript"></script>
+                <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBymYK85pOpWP-KShxoECrUQd_0kG3X3CE&callback=initMap">
+    </script>
+            </div>
         <%-- <p><a href="http://www.asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p> --%>
     </div>
     
@@ -25,7 +27,7 @@
                     <p>
                         <asp:Chart ID="Chart1" runat="server">
                             <Series>
-                                <asp:Series Name="Series1" ToolTip="Month: #VALX, Temp:#VALY" BorderWidth=6 ChartType="Line"></asp:Series>
+                                <asp:Series Name="Series1" ToolTip="Month: #VALX, Temp:#VALY" BorderWidth=6 ChartType="line"></asp:Series>
                             </Series>
                             <ChartAreas>
                                 <asp:ChartArea Name="ChartArea1"></asp:ChartArea>
@@ -70,6 +72,25 @@
                 </asp:Chart>
             </p>
             <asp:Label ID="caseErrMsg" runat="server" Text=""></asp:Label>
+        </div>
+
+        <%-- Multi-variable chart --%>
+        <%-- 
+        <div class="col-md-4">
+            <h2>Culex Tarselias count versus weather</h2>
+            <p>
+                <asp:Chart ID="Chart4" runat="server" BorderlineWidth="10">
+                    <Series>
+                        <asp:Series Name="Series1" ToolTip=""
+
+                    </Series>
+
+
+                </asp:Chart>
+            </p>
+            --%>
+
+
         </div>
     </div>
 
