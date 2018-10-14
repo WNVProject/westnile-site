@@ -164,6 +164,7 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="MultiaxisChart.aspx" />
     <Content Include="Scripts\GeoJSON\Counties.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="MosquitoSpecies.aspx" />
@@ -238,6 +239,13 @@
     </Compile>
     <Compile Include="MosquitoSpecies.aspx.designer.cs">
       <DependentUpon>MosquitoSpecies.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MultiaxisChart.aspx.cs">
+      <DependentUpon>MultiaxisChart.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MultiaxisChart.aspx.designer.cs">
+      <DependentUpon>MultiaxisChart.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Site.Master.cs">

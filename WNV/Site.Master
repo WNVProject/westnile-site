@@ -55,16 +55,13 @@
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li><a runat="server" href="~/">Home</a></li>
-
-                        <li><a runat="server" href="~/Charts">Charts</a></li>
-                        
+                        <li><a runat="server" href="~/MultiaxisChart.aspx">Multiaxis Chart</a></li>                        
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">About
                             <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a runat="server" href="~/MosquitoSpecies">Mosquito Species</a></li>
                                 <li><a runat="server" href="~/Viruses">Viruses Transmitted by Mosquitos</a></li>
-                                <li><a runat="server" href="~/MultiaxisChart.aspx">Multiaxis Chart</a></li>
                             </ul>
                     </ul>
                             
