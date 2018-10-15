@@ -205,6 +205,7 @@ namespace WNV
             Boolean needWindSpeedUnitData = false;
             Boolean needRainfallUnitData = false;
             Boolean needSolarRadUnitData = false;
+            String chartTitle = "";
             int weatherVariableTypeCount = 0;
 
             ICollection countsKeys = chktblCounts.Keys;
@@ -279,10 +280,12 @@ namespace WNV
                         if (chkStatewide.Checked)
                         {
                             cmd.Parameters.AddWithValue("County", "%");
+                            chartTitle += "North Dakota - "+ ddlWeekStart.Text.Replace("12:00:00 AM", "")+"to "+ ddlWeekEnd.Text.Replace("12:00:00 AM", "") + "- ";
                         }
                         else
                         {
                             cmd.Parameters.AddWithValue("County", ddlCounty.SelectedValue);
+                            chartTitle += ddlCounty.SelectedValue + " County - " + ddlWeekStart.Text.Replace("12:00:00 AM", "") + "to " + ddlWeekEnd.Text.Replace("12:00:00 AM", "")+ "- ";
                         }
                         cmd.Parameters.AddWithValue("StartWeek", Convert.ToDateTime(ddlWeekStart.SelectedValue));
                         cmd.Parameters.AddWithValue("EndWeek", Convert.ToDateTime(ddlWeekEnd.SelectedValue));
@@ -292,6 +295,21 @@ namespace WNV
                             DataTable dt = new DataTable();
                             da.Fill(dt);
 
+                            Boolean skipMosquitoCountData= false;
+                            if (dt.Rows.Count == 0)
+                            {
+                                String msgErrorArea = "";
+                                if (chkStatewide.Checked)
+                                {
+                                    msgErrorArea += " North Dakota ";
+                                }
+                                else
+                                {
+                                    msgErrorArea += " " + ddlCounty.SelectedValue + " County ";
+                                }
+                                ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('No mosquito count data exists for" + msgErrorArea + "between " + ddlWeekStart.Text.Replace("12:00:00 AM", "") + "and " + ddlWeekEnd.Text.Replace("12:00:00 AM", "") + ".');", true);
+                                skipMosquitoCountData = true;
+                            }
                             chrtMultivariate.Legends.Add(new Legend("CountsLegend") { Docking = Docking.Left });
                             chrtMultivariate.Legends["CountsLegend"].Title = "Mosquito Counts";
                             chrtMultivariate.Legends["CountsLegend"].IsTextAutoFit = true;
@@ -300,7 +318,7 @@ namespace WNV
                             chrtMultivariate.ChartAreas["MeanCountsWithWeather"].AxisX.Title = "Date";
                             chrtMultivariate.ChartAreas["MeanCountsWithWeather"].AxisX.TitleFont = new System.Drawing.Font("Arial", 11);
                             chrtMultivariate.ChartAreas["MeanCountsWithWeather"].AxisX.IsMarginVisible = false;
-                            chrtMultivariate.ChartAreas["MeanCountsWithWeather"].AxisY.Title = "Mean Mosquito Count";
+                            chrtMultivariate.ChartAreas["MeanCountsWithWeather"].AxisY.Title = "Mean Mosquito Count per Trap";
                             chrtMultivariate.ChartAreas["MeanCountsWithWeather"].AxisY.TitleFont = new System.Drawing.Font("Arial", 11);
                             chrtMultivariate.ChartAreas["MeanCountsWithWeather"].AxisY.IsMarginVisible = false;
                             chrtMultivariate.ChartAreas["MeanCountsWithWeather"].AxisX.IntervalType = DateTimeIntervalType.Weeks;
@@ -309,160 +327,164 @@ namespace WNV
                             chrtMultivariate.ChartAreas["MeanCountsWithWeather"].AxisX.IntervalOffset = 1;
                             chrtMultivariate.ChartAreas["MeanCountsWithWeather"].AxisX.MajorGrid.LineWidth = 0;
 
-                            if (chkMeanTotalMosquitoes.Checked)
+                            if (!skipMosquitoCountData)
                             {
-                                chrtMultivariate.Series.Add("MeanTotalMosquitoes");
-                                chrtMultivariate.Series["MeanTotalMosquitoes"].Color = System.Drawing.Color.DarkGray;
-                                chrtMultivariate.Series["MeanTotalMosquitoes"].Legend = "CountsLegend";
-                                chrtMultivariate.Series["MeanTotalMosquitoes"].ChartArea = "MeanCountsWithWeather";
-                                chrtMultivariate.Series["MeanTotalMosquitoes"].IsVisibleInLegend = true;
-                                chrtMultivariate.Series["MeanTotalMosquitoes"].LegendText = "Total Mosquitoes";
-                                foreach (DataRow row in dt.Rows)
+                                chartTitle += "Mean Mosquitoes per Trap";
+                                if (chkMeanTotalMosquitoes.Checked)
                                 {
-                                    chrtMultivariate.Series["MeanTotalMosquitoes"].Points.AddXY(row["TrapWeekStart"], row["MeanTotalMosquitoes"]);
+                                    chrtMultivariate.Series.Add("MeanTotalMosquitoes");
+                                    chrtMultivariate.Series["MeanTotalMosquitoes"].Color = System.Drawing.Color.LightGray;
+                                    chrtMultivariate.Series["MeanTotalMosquitoes"].Legend = "CountsLegend";
+                                    chrtMultivariate.Series["MeanTotalMosquitoes"].ChartArea = "MeanCountsWithWeather";
+                                    chrtMultivariate.Series["MeanTotalMosquitoes"].IsVisibleInLegend = true;
+                                    chrtMultivariate.Series["MeanTotalMosquitoes"].LegendText = "Total Mosquitoes";
+                                    foreach (DataRow row in dt.Rows)
+                                    {
+                                        chrtMultivariate.Series["MeanTotalMosquitoes"].Points.AddXY(row["TrapWeekStart"], row["MeanTotalMosquitoes"]);
+                                    }
                                 }
-                            }
-                            if (chkMeanAedes.Checked)
-                            {
-                                chrtMultivariate.Series.Add("MeanAedes");
-                                chrtMultivariate.Series["MeanAedes"].Legend = "CountsLegend";
-                                chrtMultivariate.Series["MeanAedes"].ChartArea = "MeanCountsWithWeather";
-                                chrtMultivariate.Series["MeanAedes"].ChartType = chkSplineCount.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
-                                chrtMultivariate.Series["MeanAedes"].BorderWidth = 3;
-                                chrtMultivariate.Series["MeanAedes"].IsVisibleInLegend = true;
-                                chrtMultivariate.Series["MeanAedes"].LegendText = "Aedes";
-                                foreach (DataRow row in dt.Rows)
+                                if (chkMeanAedes.Checked)
                                 {
-                                    chrtMultivariate.Series["MeanAedes"].Points.AddXY(row["TrapWeekStart"], row["MeanAedes"]);
+                                    chrtMultivariate.Series.Add("MeanAedes");
+                                    chrtMultivariate.Series["MeanAedes"].Legend = "CountsLegend";
+                                    chrtMultivariate.Series["MeanAedes"].ChartArea = "MeanCountsWithWeather";
+                                    chrtMultivariate.Series["MeanAedes"].ChartType = chkSplineCount.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
+                                    chrtMultivariate.Series["MeanAedes"].BorderWidth = 3;
+                                    chrtMultivariate.Series["MeanAedes"].IsVisibleInLegend = true;
+                                    chrtMultivariate.Series["MeanAedes"].LegendText = "Aedes";
+                                    foreach (DataRow row in dt.Rows)
+                                    {
+                                        chrtMultivariate.Series["MeanAedes"].Points.AddXY(row["TrapWeekStart"], row["MeanAedes"]);
+                                    }
                                 }
-                            }
-                            if (chkMeanAedesVexans.Checked)
-                            {
-                                chrtMultivariate.Series.Add("MeanAedesVexans");
-                                chrtMultivariate.Series["MeanAedesVexans"].Legend = "CountsLegend";
-                                chrtMultivariate.Series["MeanAedesVexans"].ChartArea = "MeanCountsWithWeather";
-                                chrtMultivariate.Series["MeanAedesVexans"].ChartType = chkSplineCount.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
-                                chrtMultivariate.Series["MeanAedesVexans"].BorderWidth = 3;
-                                chrtMultivariate.Series["MeanAedesVexans"].IsVisibleInLegend = true;
-                                chrtMultivariate.Series["MeanAedesVexans"].LegendText = "Aedes Vexans";
-                                foreach (DataRow row in dt.Rows)
+                                if (chkMeanAedesVexans.Checked)
                                 {
-                                    chrtMultivariate.Series["MeanAedesVexans"].Points.AddXY(row["TrapWeekStart"], row["MeanAedesVexans"]);
+                                    chrtMultivariate.Series.Add("MeanAedesVexans");
+                                    chrtMultivariate.Series["MeanAedesVexans"].Legend = "CountsLegend";
+                                    chrtMultivariate.Series["MeanAedesVexans"].ChartArea = "MeanCountsWithWeather";
+                                    chrtMultivariate.Series["MeanAedesVexans"].ChartType = chkSplineCount.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
+                                    chrtMultivariate.Series["MeanAedesVexans"].BorderWidth = 3;
+                                    chrtMultivariate.Series["MeanAedesVexans"].IsVisibleInLegend = true;
+                                    chrtMultivariate.Series["MeanAedesVexans"].LegendText = "Aedes Vexans";
+                                    foreach (DataRow row in dt.Rows)
+                                    {
+                                        chrtMultivariate.Series["MeanAedesVexans"].Points.AddXY(row["TrapWeekStart"], row["MeanAedesVexans"]);
+                                    }
                                 }
-                            }
-                            if (chkMeanAnopheles.Checked)
-                            {
-                                chrtMultivariate.Series.Add("MeanAnopheles");
-                                chrtMultivariate.Series["MeanAnopheles"].Legend = "CountsLegend";
-                                chrtMultivariate.Series["MeanAnopheles"].ChartArea = "MeanCountsWithWeather";
-                                chrtMultivariate.Series["MeanAnopheles"].ChartType = chkSplineCount.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
-                                chrtMultivariate.Series["MeanAnopheles"].BorderWidth = 3;
-                                chrtMultivariate.Series["MeanAnopheles"].IsVisibleInLegend = true;
-                                chrtMultivariate.Series["MeanAnopheles"].LegendText = "Anopheles";
-                                foreach (DataRow row in dt.Rows)
+                                if (chkMeanAnopheles.Checked)
                                 {
-                                    chrtMultivariate.Series["MeanAnopheles"].Points.AddXY(row["TrapWeekStart"], row["MeanAnopheles"]);
+                                    chrtMultivariate.Series.Add("MeanAnopheles");
+                                    chrtMultivariate.Series["MeanAnopheles"].Legend = "CountsLegend";
+                                    chrtMultivariate.Series["MeanAnopheles"].ChartArea = "MeanCountsWithWeather";
+                                    chrtMultivariate.Series["MeanAnopheles"].ChartType = chkSplineCount.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
+                                    chrtMultivariate.Series["MeanAnopheles"].BorderWidth = 3;
+                                    chrtMultivariate.Series["MeanAnopheles"].IsVisibleInLegend = true;
+                                    chrtMultivariate.Series["MeanAnopheles"].LegendText = "Anopheles";
+                                    foreach (DataRow row in dt.Rows)
+                                    {
+                                        chrtMultivariate.Series["MeanAnopheles"].Points.AddXY(row["TrapWeekStart"], row["MeanAnopheles"]);
+                                    }
                                 }
-                            }
-                            if (chkMeanCulex.Checked)
-                            {
-                                chrtMultivariate.Series.Add("MeanCulex");
-                                chrtMultivariate.Series["MeanCulex"].Legend = "CountsLegend";
-                                chrtMultivariate.Series["MeanCulex"].ChartArea = "MeanCountsWithWeather";
-                                chrtMultivariate.Series["MeanCulex"].ChartType = chkSplineCount.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
-                                chrtMultivariate.Series["MeanCulex"].BorderWidth = 3;
-                                chrtMultivariate.Series["MeanCulex"].IsVisibleInLegend = true;
-                                chrtMultivariate.Series["MeanCulex"].LegendText = "Culex";
-                                foreach (DataRow row in dt.Rows)
+                                if (chkMeanCulex.Checked)
                                 {
-                                    chrtMultivariate.Series["MeanCulex"].Points.AddXY(row["TrapWeekStart"], row["MeanCulex"]);
+                                    chrtMultivariate.Series.Add("MeanCulex");
+                                    chrtMultivariate.Series["MeanCulex"].Legend = "CountsLegend";
+                                    chrtMultivariate.Series["MeanCulex"].ChartArea = "MeanCountsWithWeather";
+                                    chrtMultivariate.Series["MeanCulex"].ChartType = chkSplineCount.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
+                                    chrtMultivariate.Series["MeanCulex"].BorderWidth = 3;
+                                    chrtMultivariate.Series["MeanCulex"].IsVisibleInLegend = true;
+                                    chrtMultivariate.Series["MeanCulex"].LegendText = "Culex";
+                                    foreach (DataRow row in dt.Rows)
+                                    {
+                                        chrtMultivariate.Series["MeanCulex"].Points.AddXY(row["TrapWeekStart"], row["MeanCulex"]);
+                                    }
                                 }
-                            }
-                            if (chkMeanCulexSalinarius.Checked)
-                            {
-                                chrtMultivariate.Series.Add("MeanCulexSalinarius");
-                                chrtMultivariate.Series["MeanCulexSalinarius"].Legend = "CountsLegend";
-                                chrtMultivariate.Series["MeanCulexSalinarius"].ChartArea = "MeanCountsWithWeather";
-                                chrtMultivariate.Series["MeanCulexSalinarius"].ChartType = chkSplineCount.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
-                                chrtMultivariate.Series["MeanCulexSalinarius"].BorderWidth = 3;
-                                chrtMultivariate.Series["MeanCulexSalinarius"].IsVisibleInLegend = true;
-                                chrtMultivariate.Series["MeanCulexSalinarius"].LegendText = "Culex Salinarius";
-                                foreach (DataRow row in dt.Rows)
+                                if (chkMeanCulexSalinarius.Checked)
                                 {
-                                    chrtMultivariate.Series["MeanCulexSalinarius"].Points.AddXY(row["TrapWeekStart"], row["MeanCulexSalinarius"]);
+                                    chrtMultivariate.Series.Add("MeanCulexSalinarius");
+                                    chrtMultivariate.Series["MeanCulexSalinarius"].Legend = "CountsLegend";
+                                    chrtMultivariate.Series["MeanCulexSalinarius"].ChartArea = "MeanCountsWithWeather";
+                                    chrtMultivariate.Series["MeanCulexSalinarius"].ChartType = chkSplineCount.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
+                                    chrtMultivariate.Series["MeanCulexSalinarius"].BorderWidth = 3;
+                                    chrtMultivariate.Series["MeanCulexSalinarius"].IsVisibleInLegend = true;
+                                    chrtMultivariate.Series["MeanCulexSalinarius"].LegendText = "Culex Salinarius";
+                                    foreach (DataRow row in dt.Rows)
+                                    {
+                                        chrtMultivariate.Series["MeanCulexSalinarius"].Points.AddXY(row["TrapWeekStart"], row["MeanCulexSalinarius"]);
+                                    }
                                 }
-                            }
-                            if (chkMeanCulexTarsalis.Checked)
-                            {
-                                chrtMultivariate.Series.Add("MeanCulexTarsalis");
-                                chrtMultivariate.Series["MeanCulexTarsalis"].Color = System.Drawing.Color.Red;
-                                chrtMultivariate.Series["MeanCulexTarsalis"].Legend = "CountsLegend";
-                                chrtMultivariate.Series["MeanCulexTarsalis"].ChartArea = "MeanCountsWithWeather";
-                                chrtMultivariate.Series["MeanCulexTarsalis"].ChartType = chkSplineCount.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
-                                chrtMultivariate.Series["MeanCulexTarsalis"].BorderWidth = 3;
-                                chrtMultivariate.Series["MeanCulexTarsalis"].IsVisibleInLegend = true;
-                                chrtMultivariate.Series["MeanCulexTarsalis"].LegendText = "Culex Tarsalis (WNV)";
-                                foreach (DataRow row in dt.Rows)
+                                if (chkMeanCulexTarsalis.Checked)
                                 {
-                                    chrtMultivariate.Series["MeanCulexTarsalis"].Points.AddXY(row["TrapWeekStart"], row["MeanCulexTarsalis"]);
+                                    chrtMultivariate.Series.Add("MeanCulexTarsalis");
+                                    chrtMultivariate.Series["MeanCulexTarsalis"].Color = System.Drawing.Color.Red;
+                                    chrtMultivariate.Series["MeanCulexTarsalis"].Legend = "CountsLegend";
+                                    chrtMultivariate.Series["MeanCulexTarsalis"].ChartArea = "MeanCountsWithWeather";
+                                    chrtMultivariate.Series["MeanCulexTarsalis"].ChartType = chkSplineCount.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
+                                    chrtMultivariate.Series["MeanCulexTarsalis"].BorderWidth = 3;
+                                    chrtMultivariate.Series["MeanCulexTarsalis"].IsVisibleInLegend = true;
+                                    chrtMultivariate.Series["MeanCulexTarsalis"].LegendText = "Culex Tarsalis (WNV)";
+                                    foreach (DataRow row in dt.Rows)
+                                    {
+                                        chrtMultivariate.Series["MeanCulexTarsalis"].Points.AddXY(row["TrapWeekStart"], row["MeanCulexTarsalis"]);
+                                    }
                                 }
-                            }
-                            if (chkMeanCuliseta.Checked)
-                            {
-                                chrtMultivariate.Series.Add("MeanCuliseta");
-                                chrtMultivariate.Series["MeanCuliseta"].Legend = "CountsLegend";
-                                chrtMultivariate.Series["MeanCuliseta"].ChartArea = "MeanCountsWithWeather";
-                                chrtMultivariate.Series["MeanCuliseta"].ChartType = chkSplineCount.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
-                                chrtMultivariate.Series["MeanCuliseta"].BorderWidth = 3;
-                                chrtMultivariate.Series["MeanCuliseta"].IsVisibleInLegend = true;
-                                chrtMultivariate.Series["MeanCuliseta"].LegendText = "Culiseta";
-                                foreach (DataRow row in dt.Rows)
+                                if (chkMeanCuliseta.Checked)
                                 {
-                                    chrtMultivariate.Series["MeanCuliseta"].Points.AddXY(row["TrapWeekStart"], row["MeanCuliseta"]);
+                                    chrtMultivariate.Series.Add("MeanCuliseta");
+                                    chrtMultivariate.Series["MeanCuliseta"].Legend = "CountsLegend";
+                                    chrtMultivariate.Series["MeanCuliseta"].ChartArea = "MeanCountsWithWeather";
+                                    chrtMultivariate.Series["MeanCuliseta"].ChartType = chkSplineCount.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
+                                    chrtMultivariate.Series["MeanCuliseta"].BorderWidth = 3;
+                                    chrtMultivariate.Series["MeanCuliseta"].IsVisibleInLegend = true;
+                                    chrtMultivariate.Series["MeanCuliseta"].LegendText = "Culiseta";
+                                    foreach (DataRow row in dt.Rows)
+                                    {
+                                        chrtMultivariate.Series["MeanCuliseta"].Points.AddXY(row["TrapWeekStart"], row["MeanCuliseta"]);
+                                    }
                                 }
-                            }
-                            if (chkMeanOther.Checked)
-                            {
-                                chrtMultivariate.Series.Add("MeanOther");
-                                chrtMultivariate.Series["MeanOther"].Legend = "CountsLegend";
-                                chrtMultivariate.Series["MeanOther"].ChartArea = "MeanCountsWithWeather";
-                                chrtMultivariate.Series["MeanOther"].ChartType = chkSplineCount.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
-                                chrtMultivariate.Series["MeanOther"].BorderWidth = 3;
-                                chrtMultivariate.Series["MeanOther"].IsVisibleInLegend = true;
-                                chrtMultivariate.Series["MeanOther"].LegendText = "Other";
-                                foreach (DataRow row in dt.Rows)
+                                if (chkMeanOther.Checked)
                                 {
-                                    chrtMultivariate.Series["MeanOther"].Points.AddXY(row["TrapWeekStart"], row["MeanOther"]);
+                                    chrtMultivariate.Series.Add("MeanOther");
+                                    chrtMultivariate.Series["MeanOther"].Legend = "CountsLegend";
+                                    chrtMultivariate.Series["MeanOther"].ChartArea = "MeanCountsWithWeather";
+                                    chrtMultivariate.Series["MeanOther"].ChartType = chkSplineCount.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
+                                    chrtMultivariate.Series["MeanOther"].BorderWidth = 3;
+                                    chrtMultivariate.Series["MeanOther"].IsVisibleInLegend = true;
+                                    chrtMultivariate.Series["MeanOther"].LegendText = "Other";
+                                    foreach (DataRow row in dt.Rows)
+                                    {
+                                        chrtMultivariate.Series["MeanOther"].Points.AddXY(row["TrapWeekStart"], row["MeanOther"]);
+                                    }
                                 }
-                            }
-                            if (chkMeanTotalFemales.Checked)
-                            {
-                                chrtMultivariate.Series.Add("MeanTotalFemale");
-                                chrtMultivariate.Series["MeanTotalFemale"].Legend = "CountsLegend";
-                                chrtMultivariate.Series["MeanTotalFemale"].ChartArea = "MeanCountsWithWeather";
-                                chrtMultivariate.Series["MeanTotalFemale"].ChartType = chkSplineCount.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
-                                chrtMultivariate.Series["MeanTotalFemale"].BorderWidth = 3;
-                                chrtMultivariate.Series["MeanTotalFemale"].BorderDashStyle = ChartDashStyle.Dash;
-                                chrtMultivariate.Series["MeanTotalFemale"].IsVisibleInLegend = true;
-                                chrtMultivariate.Series["MeanTotalFemale"].LegendText = "Total Female";
-                                foreach (DataRow row in dt.Rows)
+                                if (chkMeanTotalFemales.Checked)
                                 {
-                                    chrtMultivariate.Series["MeanTotalFemale"].Points.AddXY(row["TrapWeekStart"], row["MeanTotalFemale"]);
+                                    chrtMultivariate.Series.Add("MeanTotalFemale");
+                                    chrtMultivariate.Series["MeanTotalFemale"].Legend = "CountsLegend";
+                                    chrtMultivariate.Series["MeanTotalFemale"].ChartArea = "MeanCountsWithWeather";
+                                    chrtMultivariate.Series["MeanTotalFemale"].ChartType = chkSplineCount.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
+                                    chrtMultivariate.Series["MeanTotalFemale"].BorderWidth = 3;
+                                    chrtMultivariate.Series["MeanTotalFemale"].BorderDashStyle = ChartDashStyle.Dash;
+                                    chrtMultivariate.Series["MeanTotalFemale"].IsVisibleInLegend = true;
+                                    chrtMultivariate.Series["MeanTotalFemale"].LegendText = "Total Female";
+                                    foreach (DataRow row in dt.Rows)
+                                    {
+                                        chrtMultivariate.Series["MeanTotalFemale"].Points.AddXY(row["TrapWeekStart"], row["MeanTotalFemale"]);
+                                    }
                                 }
-                            }
-                            if (chkMeanTotalMales.Checked)
-                            {
-                                chrtMultivariate.Series.Add("MeanTotalMale");
-                                chrtMultivariate.Series["MeanTotalMale"].Legend = "CountsLegend";
-                                chrtMultivariate.Series["MeanTotalMale"].ChartArea = "MeanCountsWithWeather";
-                                chrtMultivariate.Series["MeanTotalMale"].ChartType = chkSplineCount.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
-                                chrtMultivariate.Series["MeanTotalMale"].BorderWidth = 3;
-                                chrtMultivariate.Series["MeanTotalMale"].BorderDashStyle = ChartDashStyle.Dash;
-                                chrtMultivariate.Series["MeanTotalMale"].IsVisibleInLegend = true;
-                                chrtMultivariate.Series["MeanTotalMale"].LegendText = "Total Male";
-                                foreach (DataRow row in dt.Rows)
+                                if (chkMeanTotalMales.Checked)
                                 {
-                                    chrtMultivariate.Series["MeanTotalMale"].Points.AddXY(row["TrapWeekStart"], row["MeanTotalMale"]);
+                                    chrtMultivariate.Series.Add("MeanTotalMale");
+                                    chrtMultivariate.Series["MeanTotalMale"].Legend = "CountsLegend";
+                                    chrtMultivariate.Series["MeanTotalMale"].ChartArea = "MeanCountsWithWeather";
+                                    chrtMultivariate.Series["MeanTotalMale"].ChartType = chkSplineCount.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
+                                    chrtMultivariate.Series["MeanTotalMale"].BorderWidth = 3;
+                                    chrtMultivariate.Series["MeanTotalMale"].BorderDashStyle = ChartDashStyle.Dash;
+                                    chrtMultivariate.Series["MeanTotalMale"].IsVisibleInLegend = true;
+                                    chrtMultivariate.Series["MeanTotalMale"].LegendText = "Total Male";
+                                    foreach (DataRow row in dt.Rows)
+                                    {
+                                        chrtMultivariate.Series["MeanTotalMale"].Points.AddXY(row["TrapWeekStart"], row["MeanTotalMale"]);
+                                    }
                                 }
                             }
                         }
@@ -525,10 +547,14 @@ namespace WNV
                             chrtMultivariate.ChartAreas["MeanCountsWithWeather"].AxisY2.IsMarginVisible = false;
                             chrtMultivariate.ChartAreas["MeanCountsWithWeather"].AxisY2.MajorGrid.LineDashStyle = ChartDashStyle.Dot;
                             chrtMultivariate.ChartAreas["MeanCountsWithWeather"].AxisY2.MajorGrid.LineWidth = 2;
-                            chrtMultivariate.ChartAreas["MeanCountsWithWeather"].AxisY2.MajorGrid.LineColor = System.Drawing.Color.LightGray;
+                            chrtMultivariate.ChartAreas["MeanCountsWithWeather"].AxisY2.MajorGrid.LineColor = System.Drawing.Color.LightSlateGray;
+                            chrtMultivariate.ChartAreas["MeanCountsWithWeather"].AxisY2.MajorTickMark.LineDashStyle = ChartDashStyle.Dot;
+                            chrtMultivariate.ChartAreas["MeanCountsWithWeather"].AxisY2.MajorTickMark.LineWidth = 2;
+                            chrtMultivariate.ChartAreas["MeanCountsWithWeather"].AxisY2.MajorTickMark.LineColor = System.Drawing.Color.LightSlateGray;
 
                             if (needTemperatureUnitData)
                             {
+                                chartTitle += " vs Mean Temperature";
                                 chrtMultivariate.ChartAreas["MeanCountsWithWeather"].AxisY2.Title = "Mean Temperature (F\x00B0)";
                                 chrtMultivariate.ChartAreas["MeanCountsWithWeather"].AxisY2.Interval = 10;
                                 if (chkMeanTemp.Checked)
@@ -639,6 +665,7 @@ namespace WNV
                             }
                             else if (needWindSpeedUnitData)
                             {
+                                chartTitle += " vs Mean Wind Speed";
                                 chrtMultivariate.ChartAreas["MeanCountsWithWeather"].AxisY2.Title = "Mean Speed (mph)";
                                 chrtMultivariate.ChartAreas["MeanCountsWithWeather"].AxisY2.Interval = 5;
                                 if (chkMeanMaxWindSpeed.Checked)
@@ -674,6 +701,7 @@ namespace WNV
                             }
                             else if (needRainfallUnitData)
                             {
+                                chartTitle += " vs Mean Total Rainfall";
                                 chrtMultivariate.ChartAreas["MeanCountsWithWeather"].AxisY2.Title = "Mean Total Rainfall (in)";
                                 chrtMultivariate.ChartAreas["MeanCountsWithWeather"].AxisY2.Interval = 0.5;
                                 if (chkMeanTotalRainfall.Checked)
@@ -695,6 +723,7 @@ namespace WNV
                             }
                             else if (needSolarRadUnitData)
                             {
+                                chartTitle += " vs Mean Total Solar Rad.";
                                 chrtMultivariate.ChartAreas["MeanCountsWithWeather"].AxisY2.Title = "Mean Total Solar Rad (W/m\xB2)";
                                 chrtMultivariate.ChartAreas["MeanCountsWithWeather"].AxisY2.Interval = 100;
                                 if (chkMeanTotalSolarRad.Checked)
@@ -723,6 +752,9 @@ namespace WNV
                     lblError.Visible = true;
                 }
             }
+            chrtMultivariate.Titles["WNVChartTitle"].Font = new System.Drawing.Font("Arial", 11);
+            chrtMultivariate.Titles["WNVChartTitle"].Docking = Docking.Top;
+            chrtMultivariate.Titles["WNVChartTitle"].Text = chartTitle;
         }
 
         protected void ddlYear_SelectedIndexChanged(object sender, EventArgs e)

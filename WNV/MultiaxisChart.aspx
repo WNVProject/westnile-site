@@ -22,7 +22,11 @@
                     <asp:AsyncPostBackTrigger ControlID="btnRender" />
                 </Triggers>
                 <ContentTemplate>
-                    <asp:Chart ID="chrtMultivariate" runat="server" CssClass="col-lg-12 form-control chart" Width="1000px" Height="750px"></asp:Chart>
+                    <asp:Chart ID="chrtMultivariate" runat="server" CssClass="col-lg-12 form-control chart" Width="1000px" Height="750px">
+                        <Titles>
+                            <asp:Title Name="WNVChartTitle" Alignment="BottomCenter"></asp:Title>
+                        </Titles>
+                    </asp:Chart>
                 <asp:Label ID="weatherErrMsg" runat="server" Text=""></asp:Label>
                 </ContentTemplate>
             </asp:UpdatePanel>
