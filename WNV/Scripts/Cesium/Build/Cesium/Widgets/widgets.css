@@ -389,11 +389,12 @@
 
 .cesium-widget {
     position: relative;
+    top: 50px;
 }
 
     .cesium-widget, .cesium-widget canvas {
-        width: 1150px;
-        height: 750px;
+        width: 100vw;
+        height: 100vh;
         touch-action: none;
     }
 
@@ -1345,7 +1346,7 @@ span.cesium-projectionPicker-wrapper {
 .cesium-viewer-toolbar {
     display: block;
     position: absolute;
-    top: 5px;
+    top: 55px;
     right: 5px;
 }
 
