@@ -802,36 +802,36 @@ input.cesium-cesiumInspector-url {
 .cesium-infoBox {
     display: block;
     position: absolute;
-    top: 50px;
-    right: 0;
+    top: 97px;
+    right: 5px;
     width: 40%;
     max-width: 480px;
     background: rgba(38,38,38,0.95);
     color: #edffff;
     border: 1px solid #444;
-    border-right: none;
-    border-top-left-radius: 7px;
-    border-bottom-left-radius: 7px;
+    border-radius: 7px;
     box-shadow: 0 0 10px 1px #000;
-    transform: translate(100%,0);
+    /*transform: translate(100%,0);*/
     visibility: hidden;
     opacity: 0;
     transition: visibility 0s 0.2s,opacity 0.2s ease-in,transform 0.2s ease-in;
 }
 
 .cesium-infoBox-visible {
-    transform: translate(0,0);
+    /*transform: translate(0,0);*/
     visibility: visible;
     opacity: 1;
     transition: opacity 0.2s ease-out,transform 0.2s ease-out;
 }
 
 .cesium-infoBox-title {
+    cursor: move;
     display: block;
     height: 20px;
     padding: 5px 30px 5px 25px;
     background: rgba(84,84,84,1.0);
     border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
     text-align: center;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -1141,6 +1141,7 @@ span.cesium-projectionPicker-wrapper {
     }
 
 .cesium-selection-wrapper {
+    margin-top: 50px;
     position: absolute;
     width: 160px;
     height: 160px;
@@ -1151,13 +1152,14 @@ span.cesium-projectionPicker-wrapper {
 }
 
 .cesium-selection-wrapper-visible {
+    margin-top: 50px;
     visibility: visible;
     opacity: 1;
     transition: opacity 0.2s ease-out;
 }
 
 .cesium-selection-wrapper svg {
-    fill: #2e2;
+    fill: #fa0;
     stroke: #000;
     stroke-width: 1.1px;
 }
