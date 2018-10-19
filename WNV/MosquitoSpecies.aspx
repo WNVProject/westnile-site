@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="MosquitoSpecies.aspx.cs" Inherits="WNV.MosquitoSpecies" %>
+﻿<%@ Page Title="WNVF | Species" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="MosquitoSpecies.aspx.cs" Inherits="WNV.MosquitoSpecies" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
 
     <div class="jumbotron">
