@@ -89,7 +89,10 @@
             </ul>
           </div>
         </nav>
-
+        <div id="interactiveGlobe" style="margin:0;padding:0;width:100%;height:100%;overflow:hidden;">
+            <asp:ContentPlaceHolder ID="MapContent" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
         <div class="container body-content">
             <asp:ContentPlaceHolder ID="MainContent" runat="server">
             </asp:ContentPlaceHolder>

@@ -15,13 +15,20 @@
         }
     </style>
     <div id="cesiumContainer">
-        <div class="row" style="margin-top:50px;top:5px;left:5px;z-index:1000; position:absolute;width:90%">
-            <div class="col-lg-2">
-                <button id="btnShow" class="cesium-button" type="button" >Show JSON</button>
+        <div class="pos-f-t cesium-button p-0 position-absolute" style="margin-top:55px;top:5px;left:3px;z-index:1000;cursor:default;">
+            <div class="collapse" id="navbarToggleExternalContent">
+                <div class="bg-dark p-4">
+                    <h4 class="text-white">Controls</h4>
+                    <span class="text-muted">Show/Hide ND Counties</span><br />
+                    <button id="btnShow" class="cesium-button" type="button" >Show JSON</button>
+                    <button id="btnHide" class="cesium-button" type="button" >Hide JSON</button>
+                </div>
             </div>
-            <div class="col-lg-2">
-                <button id="btnHide" class="cesium-button" type="button" >Hide JSON</button>
-            </div>
+            <nav class="navbar navbar-dark bg-dark" style="padding:0; border-radius:3px;">
+                <button class="navbar-toggler cesium-button" style="margin:0px;padding:5px;width:100%;" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </nav>
         </div>
         <script>
             var CesiumAPIKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI0NjhhNWVlOS0yYThiLTQ3M2YtOTBiNC03ZWY0YmFhMDZiNzgiLCJpZCI6NDA4NCwic2NvcGVzIjpbImFzbCIsImFzciIsImFzdyIsImdjIl0sImlhdCI6MTUzOTg1MDc4N30.jQhxjgKS3zpd5MKaks7_oSddnE_jtCC6fFSsfFufwj8";
@@ -30,7 +37,7 @@
             var viewer = new Cesium.Viewer('cesiumContainer');
 
             document.getElementById("btnShow").addEventListener("click", function(){
-                viewer.dataSources.add(Cesium.GeoJsonDataSource.load('/Scripts/GeoJSON/Counties.json'));
+                viewer.dataSources.add(Cesium.GeoJsonDataSource.load('/Scripts/GeoJSON/ND_Counties.json'));
             });
             document.getElementById("btnHide").addEventListener("click", function () {
                 viewer.dataSources.remove(viewer.dataSources.get(0), false);
