@@ -166,6 +166,12 @@
     </Content>
     <Content Include="InteractiveGlobe.aspx" />
     <Content Include="MultiaxisChart.aspx" />
+    <Content Include="photos\sponsor-logos\gfmc-logo.png" />
+    <Content Include="photos\sponsor-logos\logo-engineering-dark.png" />
+    <Content Include="photos\sponsor-logos\nasa-logo.jpg" />
+    <Content Include="photos\sponsor-logos\ndepscor-logo.png" />
+    <Content Include="photos\sponsor-logos\ndhealth-logo.png" />
+    <Content Include="photos\sponsor-logos\undEngineeringLogo.png" />
     <Content Include="Scripts\Cesium\Apps\CesiumViewer\CesiumViewer.css" />
     <Content Include="Scripts\Cesium\Apps\CesiumViewer\CesiumViewer.js" />
     <Content Include="Scripts\Cesium\Apps\CesiumViewer\CesiumViewerStartup.js" />
