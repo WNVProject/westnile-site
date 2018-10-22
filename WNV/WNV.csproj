@@ -57,6 +57,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Program Files (x86)\MySQL\Connector NET 6.10\Assemblies\v4.5.2\BACKUP\MySql.Web.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -123,9 +126,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.ApplicationInsights">
       <HintPath>..\packages\Microsoft.ApplicationInsights.2.2.0\lib\net45\Microsoft.ApplicationInsights.dll</HintPath>
     </Reference>
@@ -5213,6 +5213,8 @@
     <Content Include="Scripts\Cesium\ThirdParty\requirejs-2.1.20\domReady.js" />
     <Content Include="Scripts\Cesium\ThirdParty\requirejs-2.1.20\require.js" />
     <Content Include="Scripts\Cesium\ThirdParty\requirejs-2.1.20\require.min.js" />
+    <Content Include="Scripts\GeoJSON\gz_2010_us_050_00_20m.json" />
+    <Content Include="Scripts\GeoJSON\gz_2010_us_050_00_5m.json" />
     <Content Include="Scripts\GeoJSON\ND_Counties.json" />
     <Content Include="Scripts\Cesium\Apps\SampleData\Cesium3DTiles\Batched\BatchedColors\batchedColors.b3dm" />
     <Content Include="Scripts\Cesium\Apps\SampleData\Cesium3DTiles\Batched\BatchedColors\tileset.json" />

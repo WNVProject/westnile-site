@@ -64,13 +64,14 @@ textarea {
 }
 
 .slideContainer {
-    width:100%;
-    vertical-align:central;
+    width: 100%;
+    vertical-align: central;
 }
 .ctrlSlider {
     -webkit-appearance: none;
     -moz-appearance: none;
     width: 100%;
+    max-width:none;
     height: 30px;
     border-radius: 3px;
     outline: none;
@@ -78,6 +79,27 @@ textarea {
 .ctrlSlider:hover {
     background: initial !important;
 }
+
 .ctrlOpacity {
     display:none;
+}
+
+.aspnet-width-fix {
+    max-width:none;
+}
+
+.tooltip-hide {
+    display: none !important;
+}
+.tooltip-show {
+    z-index: 1001;
+    position: absolute !important;
+    display: block !important;
+    text-align: center !important;
+    width: 45px !important;
+    color: #fff;
+    fill: #fff;
+    background: #48b;
+    border: 1px solid #aef !important;
+    box-shadow: 0 0 8px #fff;
 }
