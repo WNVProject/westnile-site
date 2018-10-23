@@ -51,184 +51,188 @@
                     </div>
                     <div class="row mb-0">
                         <div class="col-lg-12">
-                            <hr class="dropdown-divider mb-3 mt-3" />
+                            <hr class="dropdown-divider mb-2 mt-2" />
                         </div>
                     </div>
                     <div class="row mb-1">
-                        <div class="col-lg-3">
-                            <h4 class="text-white">Parameters</h4>
+                        <div class="col-lg-12 dropdown-toggle text-white mb-0" data-toggle="collapse" data-target="#pnlParameters" aria-expanded="false" aria-controls="pnlParameters">
+                            <span class="text-white controlPanel-section-header">Parameters</span>
                         </div>
-                        <div class="col-lg-3">
-                            <div class="text-light text-right">
-                                Visualization Type
+                    </div>
+                    <div id="pnlParameters" class="mb-0 collapse">
+                        <div class="row mb-1">
+                            <div class="col-lg-5">
+                                <h6 class="text-white">Visualization Type</h6>
+                            </div>
+                            <div class="col-lg-3">
+                                <h6 class="text-white">State</h6>
                             </div>
                         </div>
-                        <div class="col-lg-6">
-                            <asp:DropDownList ID="ddlVisType" runat="server" CssClass="cesium-button p-1 m-0 aspnet-width-fix" Width="100%">
-                                <asp:ListItem Value="1" Text="Total Mosquitoes per Trap" ></asp:ListItem>
-                                <asp:ListItem Value="2" Text="Average Mosquitoes per Trap" ></asp:ListItem>
-                                <asp:ListItem Value="3" Text="Mosquitoes vs Weather" ></asp:ListItem>
-                            </asp:DropDownList>
-                            <%--<select id="ddlVisType" class="cesium-button p-1 m-0 w-100 aspnet-width-fix">
-                                <option value="01">Mosquito</option>
-                            </select>--%>
-                        </div>
-                    </div>
-                    <div class="row mb-1">
-                        <div class="col-lg-4">
-                            <h6 class="text-white">State</h6>
-                        </div>
-                    </div>
-                    <div class="row mb-1">
-                        <div class="col-lg-4">
-                            <%--<asp:DropDownList ID="ddlState" runat="server" CssClass="dropdown-item cesium-button p-0 m-0 aspnet-width-fix"></asp:DropDownList>--%>
-                            <select id="ddlState" class="cesium-button p-1 m-0 w-100 aspnet-width-fix" disabled="disabled" aria-disabled="true">
-                                <option value="01">Alabama</option>
-                                <option value="02">Alaska</option>
-                                <option value="03">Arizona</option>
-                                <option value="04">Arkansas</option>
-                                <option value="05">California</option>
-                                <option value="06">Colorado</option>
-                                <option value="07">Connecticut</option>
-                                <option value="08">Delaware</option>
-                                <option value="09">D.C.</option>
-                                <option value="10">Florida</option>
-                                <option value="11">Georgia</option>
-                                <option value="12">Hawaii</option>
-                                <option value="13">Idaho</option>
-                                <option value="14">Illinois</option>
-                                <option value="15">Indiana</option>
-                                <option value="16">Iowa</option>
-                                <option value="17">Kansas</option>
-                                <option value="18">Kentucky</option>
-                                <option value="19">Louisiana</option>
-                                <option value="20">Maine</option>
-                                <option value="21">Maryland</option>
-                                <option value="22">Massachusetts</option>
-                                <option value="23">Michigan</option>
-                                <option value="24">Minnesota</option>
-                                <option value="25">Mississippi</option>
-                                <option value="26">Missouri</option>
-                                <option value="27">Montana</option>
-                                <option value="28">Nebraska</option>
-                                <option value="29">Nevada</option>
-                                <option value="30">New Hampshire</option>
-                                <option value="31">New Jersey</option>
-                                <option value="32">New Mexico</option>
-                                <option value="33">New York</option>
-                                <option value="34">North Carolina</option>
-                                <option selected="selected" value="35">North Dakota</option>
-                                <option value="36">Ohio</option>
-                                <option value="37">Oklahoma</option>
-                                <option value="38">Oregon</option>
-                                <option value="39">Pennsylvania</option>
-                                <option value="40">Rhode Island</option>
-                                <option value="41">South Carolina</option>
-                                <option value="42">South Dakota</option>
-                                <option value="43">Tennessee</option>
-                                <option value="44">Texas</option>
-                                <option value="45">Utah</option>
-                                <option value="46">Vermont</option>
-                                <option value="47">Virginia</option>
-                                <option value="48">Washington</option>
-                                <option value="49">West Virginia</option>
-                                <option value="50">Wisconsin</option>
-                                <option value="51">Wyoming</option>
-                            </select>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="form-check-inline">
-                                <asp:CheckBox ID="chkAllStates" runat="server" CssClass="form-check-input aspnet-width-fix" Enabled="false"/>
-                                <label class="form-check-label text-light disabled" for="<%=chkAllStates.ClientID %>">Use All States</label>
+                        <div class="row mb-1">
+                            <div class="col-lg-5">
+                                <asp:DropDownList ID="ddlVisType" runat="server" CssClass="cesium-button p-1 m-0 aspnet-width-fix" Width="100%">
+                                    <asp:ListItem Value="1" Text="Total Mosquitoes per Trap" ></asp:ListItem>
+                                    <asp:ListItem Value="2" Text="Average Mosquitoes per Trap" ></asp:ListItem>
+                                    <asp:ListItem Value="3" Text="Mosquitoes vs Weather" ></asp:ListItem>
+                                </asp:DropDownList>
+                                <%--<select id="ddlVisType" class="cesium-button p-1 m-0 w-100 aspnet-width-fix">
+                                    <option value="01">Mosquito</option>
+                                </select>--%>
+                            </div>
+                            <div class="col-lg-3">
+                                <%--<asp:DropDownList ID="ddlState" runat="server" CssClass="dropdown-item cesium-button p-0 m-0 aspnet-width-fix"></asp:DropDownList>--%>
+                                <select id="ddlState" class="cesium-button p-1 m-0 w-100 aspnet-width-fix" disabled="disabled" aria-disabled="true">
+                                    <option value="01">Alabama</option>
+                                    <option value="02">Alaska</option>
+                                    <option value="03">Arizona</option>
+                                    <option value="04">Arkansas</option>
+                                    <option value="05">California</option>
+                                    <option value="06">Colorado</option>
+                                    <option value="07">Connecticut</option>
+                                    <option value="08">Delaware</option>
+                                    <option value="09">D.C.</option>
+                                    <option value="10">Florida</option>
+                                    <option value="11">Georgia</option>
+                                    <option value="12">Hawaii</option>
+                                    <option value="13">Idaho</option>
+                                    <option value="14">Illinois</option>
+                                    <option value="15">Indiana</option>
+                                    <option value="16">Iowa</option>
+                                    <option value="17">Kansas</option>
+                                    <option value="18">Kentucky</option>
+                                    <option value="19">Louisiana</option>
+                                    <option value="20">Maine</option>
+                                    <option value="21">Maryland</option>
+                                    <option value="22">Massachusetts</option>
+                                    <option value="23">Michigan</option>
+                                    <option value="24">Minnesota</option>
+                                    <option value="25">Mississippi</option>
+                                    <option value="26">Missouri</option>
+                                    <option value="27">Montana</option>
+                                    <option value="28">Nebraska</option>
+                                    <option value="29">Nevada</option>
+                                    <option value="30">New Hampshire</option>
+                                    <option value="31">New Jersey</option>
+                                    <option value="32">New Mexico</option>
+                                    <option value="33">New York</option>
+                                    <option value="34">North Carolina</option>
+                                    <option selected="selected" value="35">North Dakota</option>
+                                    <option value="36">Ohio</option>
+                                    <option value="37">Oklahoma</option>
+                                    <option value="38">Oregon</option>
+                                    <option value="39">Pennsylvania</option>
+                                    <option value="40">Rhode Island</option>
+                                    <option value="41">South Carolina</option>
+                                    <option value="42">South Dakota</option>
+                                    <option value="43">Tennessee</option>
+                                    <option value="44">Texas</option>
+                                    <option value="45">Utah</option>
+                                    <option value="46">Vermont</option>
+                                    <option value="47">Virginia</option>
+                                    <option value="48">Washington</option>
+                                    <option value="49">West Virginia</option>
+                                    <option value="50">Wisconsin</option>
+                                    <option value="51">Wyoming</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-check-inline">
+                                    <asp:CheckBox ID="chkAllStates" runat="server" CssClass="form-check-input aspnet-width-fix" Enabled="false"/>
+                                    <label class="form-check-label text-light disabled" for="<%=chkAllStates.ClientID %>">Use All States</label>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="row mb-0">
                         <div class="col-lg-12">
-                            <hr class="dropdown-divider mb-3 mt-3" />
+                            <hr class="dropdown-divider mb-2 mt-2" />
                         </div>
                     </div>
                     <div class="row mb-1">
-                        <div class="col-lg-12">
-                            <h4 class="text-white">Render Settings</h4>
+                        <div class="col-lg-12 dropdown-toggle text-white mb-0" data-toggle="collapse" data-target="#pnlRenderSettings" aria-expanded="false" aria-controls="pnlRenderSettings">
+                            <span class="text-white controlPanel-section-header">Render Settings</span>
                         </div>
                     </div>
-                    <div class="row mb-1">
-                        <div class="col-lg-6">
-                            <h6 class="text-white">County Border Quality</h6>
-                        </div>
-                        <div class="col-lg-3">
-                            <h6 class="text-white">Data Opacity</h6>
-                        </div>
-                        <div class="col-lg-3">
-                            <h6 class="text-white">Outline Color</h6>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-lg-2">
-                            <div class="form-check-inline">
-                                <input id="rdoCountyLowQual" name="rdoCountyQuality" class="form-check-input" type="radio" checked="checked" />
-                                <label class="form-check-label text-light" for="rdoCountyLowQual">Lowest</label>
+                    <div id="pnlRenderSettings" class="mb-0 collapse">
+                        <div class="row mb-1">
+                            <div class="col-lg-6">
+                                <h6 class="text-white">County Border Quality</h6>
+                            </div>
+                            <div class="col-lg-3">
+                                <h6 class="text-white">Data Opacity</h6>
+                            </div>
+                            <div class="col-lg-3">
+                                <h6 class="text-white">Outline Color</h6>
                             </div>
                         </div>
-                        <div class="col-lg-2">
-                            <div class="form-check-inline">
-                                <input id="rdoCountyMedQual" name="rdoCountyQuality" class="form-check-input" type="radio" />
-                                <label class="form-check-label text-light"for="rdoCountyMedQual">Medium</label>
+                        <div class="row mb-1">
+                            <div class="col-lg-2">
+                                <div class="form-check-inline">
+                                    <input id="rdoCountyLowQual" name="rdoCountyQuality" class="form-check-input" type="radio" checked="checked" />
+                                    <label class="form-check-label text-light" for="rdoCountyLowQual">Lowest</label>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-2">
-                            <div class="form-check-inline">
-                                <input id="rdoCountyHighQual" name="rdoCountyQuality" class="form-check-input" type="radio" />
-                                <label class="form-check-label text-light"for="rdoCountyHighQual">Highest</label>
+                            <div class="col-lg-2">
+                                <div class="form-check-inline">
+                                    <input id="rdoCountyMedQual" name="rdoCountyQuality" class="form-check-input" type="radio" />
+                                    <label class="form-check-label text-light"for="rdoCountyMedQual">Medium</label>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="slideContainer">
-                                <input id="rngDataOpacity" class="ctrlSlider cesium-button p-3 m-0 w-100" type="range" value="100" min="40" max="100" step="2" onchange="valDataOpacity.value=value;" onmouseover="toggleTooltip('valDataOpacity');" onmouseout="toggleTooltip('valDataOpacity');" onmousemove="updateSlideOutputLive(this,'valDataOpacity');"/>
-                                <output id="valDataOpacity" class="tooltip-hide cesium-button text-white p-1 m-0 w-100 text-center">100</output>
+                            <div class="col-lg-2">
+                                <div class="form-check-inline">
+                                    <input id="rdoCountyHighQual" name="rdoCountyQuality" class="form-check-input" type="radio" />
+                                    <label class="form-check-label text-light"for="rdoCountyHighQual">Highest</label>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <select id="ddlOutlineColor" class="cesium-button p-1 m-0 w-100 aspnet-width-fix">
-                                <option value="01" selected="selected">None</option>
-                                <option value="02">Black</option>
-                                <option value="03">Red</option>
-                                <option value="04">Green</option>
-                                <option value="05">Blue</option>
-                                <option value="06">Yellow</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-lg-12">
-                            <hr class="dropdown-divider m-0" />
-                        </div>
-                    </div>
-                    <div class="row mb-1">
-                        <div class="col-lg-12">
-                            <h4 class="text-white">Actions</h4>
+                            <div class="col-lg-3">
+                                <div class="slideContainer">
+                                    <input id="rngDataOpacity" class="ctrlSlider cesium-button p-3 m-0 w-100" type="range" value="100" min="40" max="100" step="2" onchange="valDataOpacity.value=value;" onmouseover="toggleTooltip('valDataOpacity');" onmouseout="toggleTooltip('valDataOpacity');" onmousemove="updateSlideOutputLive(this,'valDataOpacity');"/>
+                                    <output id="valDataOpacity" class="tooltip-hide cesium-button text-white p-1 m-0 w-100 text-center">100</output>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <select id="ddlOutlineColor" class="cesium-button p-1 m-0 w-100 aspnet-width-fix">
+                                    <option value="01" selected="selected">None</option>
+                                    <option value="02">Black</option>
+                                    <option value="03">Red</option>
+                                    <option value="04">Green</option>
+                                    <option value="05">Blue</option>
+                                    <option value="06">Yellow</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="row mb-0">
-                        <div class="col-lg-3">
-                            <asp:UpdatePanel ID="upnlCesium" runat="server">
-                                <Triggers>
-                                    <asp:AsyncPostBackTrigger ControlID="btnRender" /> 
-                                </Triggers>
-                                <ContentTemplate>
-                                    <asp:Button ID="btnRender" runat="server" CssClass="cesium-button m-0 w-100 aspnet-width-fix" Text="Render" OnClick="btnRender_Click" />
-                                </ContentTemplate>
-                            </asp:UpdatePanel>
+                        <div class="col-lg-12">
+                            <hr class="dropdown-divider mb-2 mt-2" />
                         </div>
-                        <div class="col-lg-3">
-                            <button id="btnHide" class="cesium-button m-0 w-100" type="button" >Hide</button>
+                    </div>
+                    <div class="row mb-1">
+                        <div class="col-lg-12 dropdown-toggle text-white mb-0" data-toggle="collapse" data-target="#pnlActions" aria-expanded="false" aria-controls="pnlActions">
+                            <span class="text-white controlPanel-section-header">Actions</span>
                         </div>
-                        <div class="col-lg-3">
-                            <button id="btnResetView" class="cesium-button m-0 w-100" type="button" >Reset View</button>
-                        </div>
-                        <div class="col-lg-3">
-                            <button id="btnResetCountyInfoBoxPos" class="cesium-button m-0 w-100" type="button" >Reset Info Box Position</button>
+                    </div>
+                    <div id="pnlActions" class="mb-0 collapse">
+                        <div class="row mb-0">
+                            <div class="col-lg-3">
+                                <asp:UpdatePanel ID="upnlCesium" runat="server">
+                                    <Triggers>
+                                        <asp:AsyncPostBackTrigger ControlID="btnRender" /> 
+                                    </Triggers>
+                                    <ContentTemplate>
+                                        <asp:Button ID="btnRender" runat="server" CssClass="cesium-button m-0 w-100 aspnet-width-fix" Text="Render" OnClick="btnRender_Click" />
+                                    </ContentTemplate>
+                                </asp:UpdatePanel>
+                            </div>
+                            <div class="col-lg-3">
+                                <button id="btnHide" class="cesium-button m-0 w-100" type="button" >Hide</button>
+                            </div>
+                            <div class="col-lg-3">
+                                <button id="btnResetView" class="cesium-button m-0 w-100" type="button" >Reset View</button>
+                            </div>
+                            <div class="col-lg-3">
+                                <button id="btnResetCountyInfoBoxPos" class="cesium-button m-0 w-100" type="button" >Reset Info Box Position</button>
+                            </div>
                         </div>
                     </div>
                 </div>

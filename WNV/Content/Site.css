@@ -59,6 +59,10 @@ textarea {
         opacity: 1 !important;
     }
 
+.controlPanel-section-header {
+    font-size: larger;
+}
+
 .slideContainer {
     width: 100%;
     vertical-align: central;
