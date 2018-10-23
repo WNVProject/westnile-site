@@ -224,14 +224,17 @@
                         <div class="col-lg-3">
                             <button id="btnHide" class="cesium-button m-0 w-100" type="button" >Hide</button>
                         </div>
-                        <div class="col-lg-6">
-                            <button id="btnResetCountyInfoBoxPos" class="cesium-button m-0 w-100" type="button" >Reset County Info Box Position</button>
+                        <div class="col-lg-3">
+                            <button id="btnResetView" class="cesium-button m-0 w-100" type="button" >Reset View</button>
+                        </div>
+                        <div class="col-lg-3">
+                            <button id="btnResetCountyInfoBoxPos" class="cesium-button m-0 w-100" type="button" >Reset Info Box Position</button>
                         </div>
                     </div>
                 </div>
             </div>
             <nav class="navbar navbar-dark bg-dark" style="padding:0; border-radius:3px;" onclick="expandControls();">
-                <button class="navbar-toggler cesium-button" style="margin:0px;padding:2px;width:100%;" type="button" data-toggle="collapse" data-target="#controlNavbar" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler cesium-button" style="margin:0px;padding:2px;width:100%;" type="button" data-target="#controlNavbar" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
             </nav>
@@ -370,6 +373,18 @@
                 cesiumInfoBox.style.right = "5px";
                 cesiumInfoBox.style.left = "";
             });
+            document.getElementById("btnResetView").addEventListener("click", function () {
+                if (viewer.dataSources.get(0)) {
+                    var countyGeoEntities = viewer.dataSources.get(0).entities.values;
+                    var heading = Cesium.Math.toRadians(0);
+                    var pitch = Cesium.Math.toRadians(-90);
+
+                    viewer.flyTo(countyGeoEntities, {
+                                 duration: 2.0,
+                                 offset: new Cesium.HeadingPitchRange(heading, pitch)
+                    });
+                }
+            });
 
 
             dragElement(document.getElementsByClassName("cesium-infoBox")[0]);
@@ -380,8 +395,11 @@
                 // if present, the header is where you move the DIV from:
                 document.getElementsByClassName("cesium-infoBox-title")[0].onmousedown = dragMouseDown;
                 } else {
-                // otherwise, move the DIV from anywhere inside the DIV:
-                elmnt.onmousedown = dragMouseDown;
+                    // otherwise, move the DIV from anywhere inside the DIV:
+                    elmnt.onmousedown = dragMouseDown;
+                    document.getElementsByClassName("cesium-infoBox-iframe")[0].onmousedown = dragMouseDown;
+                    document.getElementsByClassName("cesium-infoBox-description")[0].onmousedown = dragMouseDown;
+                    document.getElementsByClassName("cesium-infoBox-defaultTable")[0].onmousedown = dragMouseDown;
                 }
 
                 function dragMouseDown(e) {
@@ -420,10 +438,10 @@
                 var ctrlNavbar = document.getElementById('controlNavbar');
                 if (ctrlContainer.classList.contains("hidden")) {
                     ctrlContainer.classList.replace("hidden", "expanded");
-                    ctrlNavbar.classList.add("delay-transition");
+                    setTimeout(function () { $('#controlNavbar').collapse('show') }, 350);
                 } else {
                     ctrlContainer.classList.replace("expanded","hidden");
-                    ctrlNavbar.classList.remove("delay-transition");
+                    $('#controlNavbar').collapse('hide');
                 }
             }
             

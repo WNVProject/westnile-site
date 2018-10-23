@@ -29,6 +29,8 @@ textarea {
     }
 }
 #controlContainer {
+    max-height:calc(100% - 155px);
+    overflow:auto;
     margin-top: 55px;
     top: 5px;
     left: 3px;
@@ -56,12 +58,6 @@ textarea {
     #controlContainer:hover {
         opacity: 1 !important;
     }
-.delay-transition {
-    -webkit-transition-delay: 0.35s !important;
-    -moz-transition-delay: 0.35s !important;
-    -o-transition-delay: 0.35s !important;
-    transition-delay: 0.35s !important;
-}
 
 .slideContainer {
     width: 100%;
