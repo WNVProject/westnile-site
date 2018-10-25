@@ -13,6 +13,7 @@ using MySql.Data.MySqlClient;
 using System.Web.UI.DataVisualization.Charting;
 using Newtonsoft.Json;
 using System.IO;
+using System.Text;
 
 namespace WNV
 {
@@ -26,22 +27,94 @@ namespace WNV
 
         protected void btnRender_Click(object sender, EventArgs e)
         {
+            string procedure = "";
+            Hashtable parameters;
+            string geometryType = "";
+            string fileName = "";
+
+            if (chkShowTraps.Checked)
+            {
+                procedure = "USP_Select_TrapLocations";
+                fileName = "trapLocations.json";
+                geometryType = "Point";
+                generateGeoJsonFromDataTable(procedure, new Hashtable(), geometryType, fileName);
+                ScriptManager.RegisterStartupScript(this, GetType(), "render", "showTraps('" + fileName + "');", true);
+            }
+
+
+
+            //procedure = "USP_Get_Select_MosquitoCountsByTrapByDateRange";
+            //parameters = new Hashtable()
+            //{
+            //    {"County","%"},
+            //    {"StartWeek","2013-01-01"},
+            //    {"EndWeek","2013-12-31"}
+            //};
+            //geometryType = "Point";
+            //fileName = "mosquitoQuery1.json";
+
+            //generateGeoJsonFromDataTable(procedure, parameters, geometryType, fileName);
+            //ScriptManager.RegisterStartupScript(this, GetType(), "render", "render('"+fileName+"');", true);
+        }
+
+        protected void generateGeoJsonFromDataTable(String procedure, Hashtable parameters, String geometryType, String fileName)
+        {
             try
             {
                 using (MySqlConnection conn = new MySqlConnection(cs))
                 {
-                    var procedure = "testProc";
                     MySqlCommand cmd = new MySqlCommand(procedure, conn);
-                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    if (parameters.Count > 0)
+                    {
+                        foreach (DictionaryEntry param in parameters)
+                        {
+                            cmd.Parameters.AddWithValue(param.Key.ToString(), param.Value.ToString());
+                        }
+                    }
 
                     using (MySqlDataAdapter da = new MySqlDataAdapter(cmd))
                     {
                         DataTable dt = new DataTable();
                         da.Fill(dt);
-                        var json = JsonConvert.SerializeObject(dt);
-                        using (StreamWriter sr = new StreamWriter(Server.MapPath("/Scripts/GeoJSON/test.json")))
+
+                        StringBuilder geoJson = new StringBuilder();
+                        geoJson.Append("{\"type\":\"FeatureCollection\",\"features\":[{");
+                        double longitude = 0.0;
+                        double latitude = 0.0;
+                        foreach (DataRow row in dt.Rows)
                         {
-                            sr.Write(json);
+                            geoJson.Append("\"type\":\"Feature\",\"properties\":{");
+                            foreach (DataColumn col in dt.Columns)
+                            {
+                                string columnName = col.ColumnName;
+                                string columnValue = row[col.ColumnName].ToString();
+                                if (columnName.Equals("Longitude"))
+                                {
+                                    longitude = Convert.ToDouble(columnValue);
+                                    continue;
+                                }
+                                if (columnName.Equals("Latitude"))
+                                {
+                                    latitude = Convert.ToDouble(columnValue);
+                                    continue;
+                                }
+                                geoJson.Append("\"" + columnName + "\":\"" + columnValue + "\",");
+                            }
+                            geoJson.Remove(geoJson.Length - 1, 1);
+                            if ("Point".Equals(geometryType))
+                            {
+                                geoJson.Append("},\"geometry\":{\"type\":\"" + geometryType + "\",\"coordinates\":[" + longitude + ", " + latitude + "]}},{");
+                            }
+                        }
+                        geoJson.Remove(geoJson.Length - 2, 2);
+                        geoJson.Append("]}");
+                        geoJson.Replace(" 12:00:00 AM", "");
+
+                        //var json = JsonConvert.SerializeObject(dt);
+                        using (StreamWriter sr = new StreamWriter(Server.MapPath("/Scripts/GeoJSON/"+fileName)))
+                        {
+                            sr.Write(geoJson);
                             sr.Dispose();
                         }
                     }
@@ -49,14 +122,8 @@ namespace WNV
             }
             catch (Exception ex)
             {
-                ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('"+ex.Message+"');", true);
+                ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('" + ex.Message + "');", true);
             }
-            if (IsPostBack)
-            {
-                ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Render Data button performed a Postback!');", true);
-            }
-
-            ScriptManager.RegisterStartupScript(this, GetType(), "render", "render();", true);
         }
     }
 }

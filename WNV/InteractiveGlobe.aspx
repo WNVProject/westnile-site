@@ -17,49 +17,57 @@
     <div id="cesiumContainer">
         <div id="controlContainer" class="pos-f-t cesium-button p-0 position-absolute hidden">
             <div class="collapse" id="controlNavbar">
-                <div class="bg-dark p-4">
+                <div class="bg-dark p-3">
                     <div class="row">
                         <div class="col-lg-4">
-                            <h2 class="text-white">Control Panel</h2>
+                            <h3 class="text-white">Control Panel</h3>
                         </div>
-                        <div class="col-lg-4">
-                            <div class="text-light">
-                                Control Panel Opacity
+                        <div class="col-lg-8">
+                            <div class="row mb-2">
+                                <div class="col-lg-12 text-white mb-0">
+                                    <div class="cesium-button controlPanel-section-header m-0 dropdown-toggle" data-toggle="collapse" data-target="#pnlControlPanelSettings" aria-expanded="false" aria-controls="pnlControlPanelSettings" onclick="toggleDropdownCaret(this);">
+                                        Control Panel Settings<span class="dropdown-caret"></span>
+                                    </div>
+                                </div>
+                                <div id="pnlControlPanelSettings" class="controlPanel-section mb-0 w-100 mr-3 ml-3 collapse">
+                                    <div class="row mb-2">
+                                        <div class="col-lg-6">
+                                            <div class="text-light">
+                                                Control Panel Opacity
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="text-light">
+                                                Control Panel Width
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-1">
+                                        <div class="col-lg-6">
+                                            <div class="slideContainer" onmouseover="document.getElementById('valOpacity')">
+                                                <input id="rngOpacity" class="ctrlSlider cesium-button p-3 m-0 w-100" type="range" value="100" min="10" max="100" step="2" onchange="valOpacity.value=value;adjustOpacity(value,'controlContainer');" onmouseover="toggleTooltip('valOpacity');" onmouseout="toggleTooltip('valOpacity');" onmousemove="updateSlideOutputLive(this,'valOpacity');"/>
+                                                <output class="tooltip-hide cesium-button text-white p-1 m-0 w-100 text-center" id="valOpacity">100</output>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="slideContainer">
+                                                <input id="rngWidth" class="ctrlSlider cesium-button p-3 m-0 w-100" type="range" value="35" min="25" max="40" step="1" onchange="valWidth.value=value;adjustWidth(value,'controlContainer');" onmouseover="toggleTooltip('valWidth');" onmouseout="toggleTooltip('valWidth');" onmousemove="updateSlideOutputLive(this,'valWidth');"/>
+                                                <output id="valWidth" class="tooltip-hide cesium-button text-white p-1 m-0 w-100 text-center">35</output>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="text-light">
-                                Control Panel Width
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-4">
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="slideContainer" onmouseover="document.getElementById('valOpacity')">
-                                <input id="rngOpacity" class="ctrlSlider cesium-button p-3 m-0 w-100" type="range" value="100" min="40" max="100" step="2" onchange="valOpacity.value=value;adjustOpacity(value,'controlContainer');" onmouseover="toggleTooltip('valOpacity');" onmouseout="toggleTooltip('valOpacity');" onmousemove="updateSlideOutputLive(this,'valOpacity');"/>
-                                <output class="tooltip-hide cesium-button text-white p-1 m-0 w-100 text-center" id="valOpacity">100</output>
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="slideContainer">
-                                <input id="rngWidth" class="ctrlSlider cesium-button p-3 m-0 w-100" type="range" value="35" min="25" max="40" step="1" onchange="valWidth.value=value;adjustWidth(value,'controlContainer');" onmouseover="toggleTooltip('valWidth');" onmouseout="toggleTooltip('valWidth');" onmousemove="updateSlideOutputLive(this,'valWidth');"/>
-                                <output id="valWidth" class="tooltip-hide cesium-button text-white p-1 m-0 w-100 text-center">35</output>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mb-0">
-                        <div class="col-lg-12">
-                            <hr class="dropdown-divider mb-2 mt-2" />
                         </div>
                     </div>
                     <div class="row mb-1">
-                        <div class="col-lg-12 dropdown-toggle text-white mb-0" data-toggle="collapse" data-target="#pnlParameters" aria-expanded="false" aria-controls="pnlParameters">
-                            <span class="text-white controlPanel-section-header">Parameters</span>
+                        <div class="col-lg-12 text-white mb-0">
+                            <div class="cesium-button controlPanel-section-header m-0 dropdown-toggle" data-toggle="collapse" data-target="#pnlParameters" aria-expanded="false" aria-controls="pnlParameters" onclick="toggleDropdownCaret(this);">
+                                Parameters<span class="dropdown-caret"></span>
+                            </div>
                         </div>
                     </div>
-                    <div id="pnlParameters" class="mb-0 collapse">
+                    <div id="pnlParameters" class="controlPanel-section mb-0 collapse">
                         <div class="row mb-1">
                             <div class="col-lg-5">
                                 <h6 class="text-white">Visualization Type</h6>
@@ -68,7 +76,7 @@
                                 <h6 class="text-white">State</h6>
                             </div>
                         </div>
-                        <div class="row mb-1">
+                        <div class="row mb-3">
                             <div class="col-lg-5">
                                 <asp:DropDownList ID="ddlVisType" runat="server" CssClass="cesium-button p-1 m-0 aspnet-width-fix" Width="100%">
                                     <asp:ListItem Value="1" Text="Total Mosquitoes per Trap" ></asp:ListItem>
@@ -143,45 +151,44 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mb-0">
-                        <div class="col-lg-12">
-                            <hr class="dropdown-divider mb-2 mt-2" />
-                        </div>
-                    </div>
                     <div class="row mb-1">
-                        <div class="col-lg-12 dropdown-toggle text-white mb-0" data-toggle="collapse" data-target="#pnlRenderSettings" aria-expanded="false" aria-controls="pnlRenderSettings">
-                            <span class="text-white controlPanel-section-header">Render Settings</span>
+                        <div class="col-lg-12 text-white mb-0">
+                            <div class="cesium-button controlPanel-section-header m-0 dropdown-toggle" data-toggle="collapse" data-target="#pnlRenderSettings" aria-expanded="false" aria-controls="pnlRenderSettings" onclick="toggleDropdownCaret(this);">
+                                Render Settings<span class="dropdown-caret"></span>
+                            </div>
                         </div>
                     </div>
-                    <div id="pnlRenderSettings" class="mb-0 collapse">
+                    <div id="pnlRenderSettings" class="controlPanel-section mb-0 collapse">
                         <div class="row mb-1">
-                            <div class="col-lg-6">
+                            <div class="col-lg-4">
                                 <h6 class="text-white">County Border Quality</h6>
+                            </div>
+                            <div class="col-lg-offset-onehalf">
                             </div>
                             <div class="col-lg-3">
                                 <h6 class="text-white">Data Opacity</h6>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-2">
                                 <h6 class="text-white">Outline Color</h6>
                             </div>
                         </div>
-                        <div class="row mb-1">
-                            <div class="col-lg-2">
+                        <div class="row mb-2">
+                            <div class="col-lg-threehalves">
                                 <div class="form-check-inline">
                                     <input id="rdoCountyLowQual" name="rdoCountyQuality" class="form-check-input" type="radio" checked="checked" />
-                                    <label class="form-check-label text-light" for="rdoCountyLowQual">Lowest</label>
+                                    <label class="form-check-label text-light" for="rdoCountyLowQual">Low</label>
                                 </div>
                             </div>
-                            <div class="col-lg-2">
+                            <div class="col-lg-threehalves">
                                 <div class="form-check-inline">
                                     <input id="rdoCountyMedQual" name="rdoCountyQuality" class="form-check-input" type="radio" />
-                                    <label class="form-check-label text-light"for="rdoCountyMedQual">Medium</label>
+                                    <label class="form-check-label text-light"for="rdoCountyMedQual">Med</label>
                                 </div>
                             </div>
-                            <div class="col-lg-2">
+                            <div class="col-lg-threehalves">
                                 <div class="form-check-inline">
                                     <input id="rdoCountyHighQual" name="rdoCountyQuality" class="form-check-input" type="radio" />
-                                    <label class="form-check-label text-light"for="rdoCountyHighQual">Highest</label>
+                                    <label class="form-check-label text-light"for="rdoCountyHighQual">High</label>
                                 </div>
                             </div>
                             <div class="col-lg-3">
@@ -190,7 +197,7 @@
                                     <output id="valDataOpacity" class="tooltip-hide cesium-button text-white p-1 m-0 w-100 text-center">100</output>
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-2">
                                 <select id="ddlOutlineColor" class="cesium-button p-1 m-0 w-100 aspnet-width-fix">
                                     <option value="01" selected="selected">None</option>
                                     <option value="02">Black</option>
@@ -200,19 +207,23 @@
                                     <option value="06">Yellow</option>
                                 </select>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row mb-0">
-                        <div class="col-lg-12">
-                            <hr class="dropdown-divider mb-2 mt-2" />
+                            <div class="col-lg-fivehalves">
+                                <div class="form-check-inline">
+                                    <asp:CheckBox ID="chkShowTraps" runat="server" CssClass="form-check-input aspnet-width-fix"/>
+                                    <label class="form-check-label text-light disabled" for="<%=chkShowTraps.ClientID %>">Show Traps</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row mb-1">
-                        <div class="col-lg-12 dropdown-toggle text-white mb-0" data-toggle="collapse" data-target="#pnlActions" aria-expanded="false" aria-controls="pnlActions">
-                            <span class="text-white controlPanel-section-header">Actions</span>
+                        <div class="col-lg-12 text-white mb-0">
+                            <div class="cesium-button controlPanel-section-header m-0 dropdown-toggle" data-toggle="collapse" data-target="#pnlActions" aria-expanded="false" aria-controls="pnlActions" onclick="toggleDropdownCaret(this);">
+                                Actions
+                                <span class="dropdown-caret"></span>
+                            </div>
                         </div>
                     </div>
-                    <div id="pnlActions" class="mb-0 collapse">
+                    <div id="pnlActions" class="controlPanel-section mb-0 collapse">
                         <div class="row mb-0">
                             <div class="col-lg-3">
                                 <asp:UpdatePanel ID="upnlCesium" runat="server">
@@ -231,7 +242,7 @@
                                 <button id="btnResetView" class="cesium-button m-0 w-100" type="button" >Reset View</button>
                             </div>
                             <div class="col-lg-3">
-                                <button id="btnResetCountyInfoBoxPos" class="cesium-button m-0 w-100" type="button" >Reset Info Box Position</button>
+                                <button id="btnResetCountyInfoBoxPos" class="cesium-button m-0 w-100" type="button" >Reset Info Box</button>
                             </div>
                         </div>
                     </div>
@@ -244,6 +255,7 @@
             </nav>
         </div>
         <script>
+
             document.getElementById('rngOpacity').value = 100;
             document.getElementById('rngWidth').value = 35;
 
@@ -252,7 +264,7 @@
             
             var viewer = new Cesium.Viewer('cesiumContainer');
 
-            function render() {
+            function render(fileToRender) {
                 var btnHide = document.getElementById("btnHide");
                 if (btnHide.innerHTML == "Show") {
                     btnHide.click();
@@ -266,6 +278,7 @@
                 }
                 Cesium.Math.setRandomNumberSeed(0);
                 var countyGeoJson;
+                var mosquitoGeoJson;
                 if (rdoCountyLowQual.checked) {
                     countyGeoJson = Cesium.GeoJsonDataSource.load('/Scripts/GeoJSON/gz_2010_us_050_00_20m.json');
                 } else if (rdoCountyMedQual.checked) {
@@ -273,16 +286,16 @@
                 } else if (rdoCountyHighQual.checked) {
                     countyGeoJson = Cesium.GeoJsonDataSource.load('/Scripts/GeoJSON/gz_2010_us_050_00_500k.json');
                 }
-                
-                countyGeoJson.then(function (dataSource) {
-                    //var countyInfo = Cesium.GeoJsonDataSource.load('/Scripts/GeoJSON/test.json');
-                    //console.log(countyInfo.name);
-                    viewer.dataSources.add(dataSource);
-                    //viewer.dataSources.add(countyInfo);
+
+                console.log(fileToRender);
+                //mosquitoGeoJson = Cesium.GeoJsonDataSource.load('/Scripts/GeoJSON/automated-QueryResult.json');
+
+                var cesiumData;
+                countyGeoJson.then(function (countyDataSource) {
+                    cesiumData = countyDataSource;
 
                     //Get the array of countyGeoEntities
-                    var countyGeoEntities = dataSource.entities.values;
-                    //var countyInfoEntities = countyInfo.entities.values;
+                    var countyGeoEntities = countyDataSource.entities.values;
 
                     var colorHash = {};
                     for (var i = 0; i < countyGeoEntities.length; i++) {
@@ -327,11 +340,6 @@
                             //Extrude the polygon based on the state's population.  Each entity
                             //stores the properties for the GeoJSON feature it was created from
                             //Since the population is a huge number, we divide by 50.
-
-                            //for (var i = 0; i < countyInfoEntities.length; i++) {
-                            //    var infoEntity = countyInfoEntities[i];
-                            //    console.log(infoEntity.properties.TrapName);
-                            //}
                             entity.polygon.extrudedHeight = entity.properties.County * 1000;
                         } else {
                             entity.polygon.show = false;
@@ -346,6 +354,7 @@
                             offset: new Cesium.HeadingPitchRange(heading, pitch)
                         });
                     }
+                    viewer.dataSources.add(cesiumData);
                 }).otherwise(function(error){
                     //Display any errrors encountered while loading.
                     window.alert(error);
@@ -355,8 +364,98 @@
 
 
 
+                //mosquitoGeoJson.then(function (mosquitoDataSource) {
+                //    viewer.dataSources.add(mosquitoDataSource);
+
+                //    //Get the array of countyGeoEntities
+                //    var mosquitoInfoEntities = mosquitoDataSource.entities.values;
+                //    var countyGeoEntities = cesiumData.entities.values;
+
+                //    //viewer.dataSources.add(cesiumData);
+                //}).otherwise(function(error){
+                //    //Display any errrors encountered while loading.
+                //    window.alert(error);
+                //});
+
+
+
+
 
             }
+
+
+
+
+            function showTraps(fileToRender) {
+
+                var trapGeoJson = Cesium.GeoJsonDataSource.load('/Scripts/GeoJSON/'+fileToRender);
+                trapGeoJson.then(function (trapDataSource) {
+                    viewer.dataSources.add(trapDataSource);
+                    //Get the array of countyGeoEntities
+                    var trapGeoEntities = trapDataSource.entities.values;
+                    for (var i = 0; i < trapGeoEntities.length; i++) {
+                        //For each entity, create a random color based on the state name.
+                        //Some states have multiple countyGeoEntities, so we store the color in a
+                        //hash so that we use the same color for the entire state.
+                        var trapMarker = trapGeoEntities[i];
+                        //var ddlState = document.getElementById("ddlState");
+                        //var ddlOutlineColor = document.getElementById("ddlOutlineColor");
+                        //var valDataOpacity = document.getElementById("valDataOpacity").value;
+                        //var chkAllStates = document.getElementById("<%//=chkAllStates.ClientID %>").checked;
+                        var pointFillColor = Cesium.Color.TOMATO  ;
+                        var pointOutlineColor = Cesium.Color.BLACK;
+                        var pointOutlineWidth = 3;
+                        var pointSize = 10;
+
+                        trapMarker.billboard = undefined;
+                        trapMarker.point = new Cesium.PointGraphics({
+                            color: pointFillColor,
+                            outlineColor: pointOutlineColor,
+                            outlineWidth: pointOutlineWidth,
+                            pixelSize: pointSize
+                        });
+                        //var translucency = new Cesium.NearFarScalar(0.5, 1, 1, 1);
+                        //trapMarker.point.translucencyByDistance = translucency;
+                        
+                    }
+                }).otherwise(function(error){
+                    //Display any errrors encountered while loading.
+                    window.alert(error);
+                });
+
+
+
+
+
+                //mosquitoGeoJson.then(function (mosquitoDataSource) {
+                //    viewer.dataSources.add(mosquitoDataSource);
+
+                //    //Get the array of countyGeoEntities
+                //    var mosquitoInfoEntities = mosquitoDataSource.entities.values;
+                //    var countyGeoEntities = cesiumData.entities.values;
+
+                //    //viewer.dataSources.add(cesiumData);
+                //}).otherwise(function(error){
+                //    //Display any errrors encountered while loading.
+                //    window.alert(error);
+                //});
+
+
+
+
+
+            }
+
+
+
+
+
+
+
+
+
+
+
 
             document.getElementById("btnHide").addEventListener("click", function () {
                 var dataSources = viewer.dataSources;
@@ -468,6 +567,18 @@
             function updateSlideOutputLive(ctrlInput,ctrlOutputID) {
                 var ctrlOutputID = document.getElementById(ctrlOutputID);
                 ctrlOutputID.innerText = ctrlInput.value;
+            }
+            function toggleDropdownCaret(caller) {
+                var ctrlChildren = caller.children;
+                caller.style.pointerEvents = "none";
+                for (var i = 0; i < ctrlChildren.length; i++) {
+                    if (!ctrlChildren[i].classList.contains("caret-up")) {
+                        ctrlChildren[i].classList.add("caret-up");
+                    } else {
+                        ctrlChildren[i].classList.remove("caret-up");
+                    }
+                }
+                setTimeout(function () { caller.style.pointerEvents = "auto";}, 350);
             }
         </script>
     </div>
