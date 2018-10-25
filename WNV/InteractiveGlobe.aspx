@@ -209,8 +209,15 @@
                             </div>
                             <div class="col-lg-fivehalves">
                                 <div class="form-check-inline">
-                                    <asp:CheckBox ID="chkShowTraps" runat="server" CssClass="form-check-input aspnet-width-fix"/>
-                                    <label class="form-check-label text-light disabled" for="<%=chkShowTraps.ClientID %>">Show Traps</label>
+                                <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+                                    <Triggers>
+                                        <asp:AsyncPostBackTrigger ControlID="chkShowTraps" /> 
+                                    </Triggers>
+                                    <ContentTemplate>
+                                        <asp:CheckBox ID="chkShowTraps" runat="server" CssClass="form-check-input aspnet-width-fix" AutoPostBack="true" OnCheckedChanged="chkShowTraps_CheckChanged"/>
+                                        <label class="form-check-label text-light disabled" for="<%=chkShowTraps.ClientID %>">Show Traps</label>
+                                    </ContentTemplate>
+                                </asp:UpdatePanel>
                                 </div>
                             </div>
                         </div>
@@ -226,7 +233,7 @@
                     <div id="pnlActions" class="controlPanel-section mb-0 collapse">
                         <div class="row mb-0">
                             <div class="col-lg-3">
-                                <asp:UpdatePanel ID="upnlCesium" runat="server">
+                                <asp:UpdatePanel ID="upnlbtnRender" runat="server">
                                     <Triggers>
                                         <asp:AsyncPostBackTrigger ControlID="btnRender" /> 
                                     </Triggers>
@@ -390,34 +397,42 @@
 
                 var trapGeoJson = Cesium.GeoJsonDataSource.load('/Scripts/GeoJSON/'+fileToRender);
                 trapGeoJson.then(function (trapDataSource) {
-                    viewer.dataSources.add(trapDataSource);
-                    //Get the array of countyGeoEntities
-                    var trapGeoEntities = trapDataSource.entities.values;
-                    for (var i = 0; i < trapGeoEntities.length; i++) {
-                        //For each entity, create a random color based on the state name.
-                        //Some states have multiple countyGeoEntities, so we store the color in a
-                        //hash so that we use the same color for the entire state.
-                        var trapMarker = trapGeoEntities[i];
-                        //var ddlState = document.getElementById("ddlState");
-                        //var ddlOutlineColor = document.getElementById("ddlOutlineColor");
-                        //var valDataOpacity = document.getElementById("valDataOpacity").value;
-                        //var chkAllStates = document.getElementById("<%//=chkAllStates.ClientID %>").checked;
-                        var pointFillColor = Cesium.Color.TOMATO  ;
-                        var pointOutlineColor = Cesium.Color.BLACK;
-                        var pointOutlineWidth = 3;
-                        var pointSize = 10;
+                    var chkShowTraps = document.getElementById('<%= chkShowTraps.ClientID %>').checked;
+                    if (chkShowTraps) {
+                        viewer.dataSources.add(trapDataSource);
+                        //Get the array of countyGeoEntities
+                        var trapGeoEntities = trapDataSource.entities.values;
+                        for (var i = 0; i < trapGeoEntities.length; i++) {
+                            //For each entity, create a random color based on the state name.
+                            //Some states have multiple countyGeoEntities, so we store the color in a
+                            //hash so that we use the same color for the entire state.
+                            var trapMarker = trapGeoEntities[i];
+                            //var ddlState = document.getElementById("ddlState");
+                            //var ddlOutlineColor = document.getElementById("ddlOutlineColor");
+                            //var valDataOpacity = document.getElementById("valDataOpacity").value;
+                            //var chkAllStates = document.getElementById("<%//=chkAllStates.ClientID %>").checked;
+                            var pointFillColor = Cesium.Color.TOMATO;
+                            var pointOutlineColor = Cesium.Color.BLACK;
+                            var pointOutlineWidth = 3;
+                            var pointSize = 10;
 
-                        trapMarker.billboard = undefined;
-                        trapMarker.point = new Cesium.PointGraphics({
-                            color: pointFillColor,
-                            outlineColor: pointOutlineColor,
-                            outlineWidth: pointOutlineWidth,
-                            pixelSize: pointSize
-                        });
-                        //var translucency = new Cesium.NearFarScalar(0.5, 1, 1, 1);
-                        //trapMarker.point.translucencyByDistance = translucency;
-                        
+                            trapMarker.billboard = undefined;
+                            trapMarker.point = new Cesium.PointGraphics({
+                                color: pointFillColor,
+                                outlineColor: pointOutlineColor,
+                                outlineWidth: pointOutlineWidth,
+                                pixelSize: pointSize
+                            });
+                            //var translucency = new Cesium.NearFarScalar(0.5, 1, 1, 1);
+                            //trapMarker.point.translucencyByDistance = translucency;
+
+                        }
+                    } else {
+                        var index = viewer.dataSources.indexOf(trapDataSource);
+                        console.log(index);
+                        viewer.dataSources.remove(trapDataSource);
                     }
+                    
                 }).otherwise(function(error){
                     //Display any errrors encountered while loading.
                     window.alert(error);

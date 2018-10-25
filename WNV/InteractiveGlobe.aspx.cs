@@ -32,29 +32,16 @@ namespace WNV
             string geometryType = "";
             string fileName = "";
 
-            if (chkShowTraps.Checked)
+            procedure = "USP_Get_Select_MeanCountsByStateByDateRange";
+            parameters = new Hashtable()
             {
-                procedure = "USP_Select_TrapLocations";
-                fileName = "trapLocations.json";
-                geometryType = "Point";
-                generateGeoJsonFromDataTable(procedure, new Hashtable(), geometryType, fileName);
-                ScriptManager.RegisterStartupScript(this, GetType(), "render", "showTraps('" + fileName + "');", true);
-            }
+                {"StartWeek","2013-01-01"},
+                {"EndWeek","2013-12-31"}
+            };
+            fileName = "mosquitoQuery1.json";
 
-
-
-            //procedure = "USP_Get_Select_MosquitoCountsByTrapByDateRange";
-            //parameters = new Hashtable()
-            //{
-            //    {"County","%"},
-            //    {"StartWeek","2013-01-01"},
-            //    {"EndWeek","2013-12-31"}
-            //};
-            //geometryType = "Point";
-            //fileName = "mosquitoQuery1.json";
-
-            //generateGeoJsonFromDataTable(procedure, parameters, geometryType, fileName);
-            //ScriptManager.RegisterStartupScript(this, GetType(), "render", "render('"+fileName+"');", true);
+            generateGeoJsonFromDataTable(procedure, parameters, geometryType, fileName);
+            ScriptManager.RegisterStartupScript(this, GetType(), "render", "render('" + fileName + "');", true);
         }
 
         protected void generateGeoJsonFromDataTable(String procedure, Hashtable parameters, String geometryType, String fileName)
@@ -64,7 +51,7 @@ namespace WNV
                 using (MySqlConnection conn = new MySqlConnection(cs))
                 {
                     MySqlCommand cmd = new MySqlCommand(procedure, conn);
-
+                    cmd.CommandType = CommandType.StoredProcedure;
                     if (parameters.Count > 0)
                     {
                         foreach (DictionaryEntry param in parameters)
@@ -124,6 +111,19 @@ namespace WNV
             {
                 ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('" + ex.Message + "');", true);
             }
+        }
+
+        protected void chkShowTraps_CheckChanged(object sender, EventArgs e)
+        {
+            string procedure = "";
+            string geometryType = "";
+            string fileName = "";
+            
+            procedure = "USP_Select_TrapLocations";
+            fileName = "trapLocations.json";
+            geometryType = "Point";
+            generateGeoJsonFromDataTable(procedure, new Hashtable(), geometryType, fileName);
+            ScriptManager.RegisterStartupScript(this, GetType(), "showTraps", "showTraps('" + fileName + "');", true);
         }
     }
 }
