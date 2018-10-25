@@ -23,6 +23,15 @@ namespace WNV
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            string procedure = "";
+            string geometryType = "";
+            string fileName = "";
+
+            procedure = "USP_Select_TrapLocations";
+            fileName = "trapLocations.json";
+            geometryType = "Point";
+            generateGeoJsonFromDataTable(procedure, new Hashtable(), geometryType, fileName);
+            ScriptManager.RegisterStartupScript(this, GetType(), "createTraps", "createTrapLocations('" + fileName + "');", true);
         }
 
         protected void btnRender_Click(object sender, EventArgs e)
@@ -38,7 +47,8 @@ namespace WNV
                 {"StartWeek","2013-01-01"},
                 {"EndWeek","2013-12-31"}
             };
-            fileName = "mosquitoQuery1.json";
+            geometryType = "Point";
+            fileName = "meanMosquitoCounts.json";
 
             generateGeoJsonFromDataTable(procedure, parameters, geometryType, fileName);
             ScriptManager.RegisterStartupScript(this, GetType(), "render", "render('" + fileName + "');", true);
@@ -111,19 +121,6 @@ namespace WNV
             {
                 ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('" + ex.Message + "');", true);
             }
-        }
-
-        protected void chkShowTraps_CheckChanged(object sender, EventArgs e)
-        {
-            string procedure = "";
-            string geometryType = "";
-            string fileName = "";
-            
-            procedure = "USP_Select_TrapLocations";
-            fileName = "trapLocations.json";
-            geometryType = "Point";
-            generateGeoJsonFromDataTable(procedure, new Hashtable(), geometryType, fileName);
-            ScriptManager.RegisterStartupScript(this, GetType(), "showTraps", "showTraps('" + fileName + "');", true);
         }
     }
 }

@@ -44,15 +44,15 @@
                                     </div>
                                     <div class="row mb-1">
                                         <div class="col-lg-6">
-                                            <div class="slideContainer" onmouseover="document.getElementById('valOpacity')">
-                                                <input id="rngOpacity" class="ctrlSlider cesium-button p-3 m-0 w-100" type="range" value="100" min="10" max="100" step="2" onchange="valOpacity.value=value;adjustOpacity(value,'controlContainer');" onmouseover="toggleTooltip('valOpacity');" onmouseout="toggleTooltip('valOpacity');" onmousemove="updateSlideOutputLive(this,'valOpacity');"/>
-                                                <output class="tooltip-hide cesium-button text-white p-1 m-0 w-100 text-center" id="valOpacity">100</output>
+                                            <div class="slideContainer" onmouseover="document.getElementById('valCtrlPnlOpacity')">
+                                                <input id="rngCtrlPnlOpacity" class="ctrlSlider cesium-button p-3 m-0 w-100" type="range" value="100" min="10" max="100" step="2" onchange="valCtrlPnlOpacity.value=value;adjustOpacity(value,'controlContainer');" onmouseover="toggleTooltip('valCtrlPnlOpacity');" onmouseout="toggleTooltip('valCtrlPnlOpacity');" onmousemove="updateSlideOutputLive(this,'valCtrlPnlOpacity');"/>
+                                                <output class="tooltip-hide cesium-button text-white p-1 m-0 w-100 text-center" id="valCtrlPnlOpacity">100</output>
                                             </div>
                                         </div>
                                         <div class="col-lg-6">
                                             <div class="slideContainer">
-                                                <input id="rngWidth" class="ctrlSlider cesium-button p-3 m-0 w-100" type="range" value="35" min="25" max="40" step="1" onchange="valWidth.value=value;adjustWidth(value,'controlContainer');" onmouseover="toggleTooltip('valWidth');" onmouseout="toggleTooltip('valWidth');" onmousemove="updateSlideOutputLive(this,'valWidth');"/>
-                                                <output id="valWidth" class="tooltip-hide cesium-button text-white p-1 m-0 w-100 text-center">35</output>
+                                                <input id="rngCtrlPnlWidth" class="ctrlSlider cesium-button p-3 m-0 w-100" type="range" value="40" min="25" max="50" step="1" onchange="valCtrlPnlWidth.value=value;adjustWidth(value,'controlContainer');" onmouseover="toggleTooltip('valCtrlPnlWidth');" onmouseout="toggleTooltip('valCtrlPnlWidth');" onmousemove="updateSlideOutputLive(this,'valCtrlPnlWidth');"/>
+                                                <output id="valCtrlPnlWidth" class="tooltip-hide cesium-button text-white p-1 m-0 w-100 text-center">35</output>
                                             </div>
                                         </div>
                                     </div>
@@ -209,15 +209,8 @@
                             </div>
                             <div class="col-lg-fivehalves">
                                 <div class="form-check-inline">
-                                <asp:UpdatePanel ID="UpdatePanel1" runat="server">
-                                    <Triggers>
-                                        <asp:AsyncPostBackTrigger ControlID="chkShowTraps" /> 
-                                    </Triggers>
-                                    <ContentTemplate>
-                                        <asp:CheckBox ID="chkShowTraps" runat="server" CssClass="form-check-input aspnet-width-fix" AutoPostBack="true" OnCheckedChanged="chkShowTraps_CheckChanged"/>
-                                        <label class="form-check-label text-light disabled" for="<%=chkShowTraps.ClientID %>">Show Traps</label>
-                                    </ContentTemplate>
-                                </asp:UpdatePanel>
+                                    <input id="chkShowTraps" type="checkbox" class="form-check-input" onclick="showTraps();" />
+                                    <label class="form-check-label text-light disabled" for="chkShowTraps">Show Traps</label>
                                 </div>
                             </div>
                         </div>
@@ -263,13 +256,16 @@
         </div>
         <script>
 
-            document.getElementById('rngOpacity').value = 100;
-            document.getElementById('rngWidth').value = 35;
+            document.getElementById('rngCtrlPnlOpacity').value = 100;
+            document.getElementById('rngCtrlPnlWidth').value = 40;
 
             var CesiumAPIKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI0NjhhNWVlOS0yYThiLTQ3M2YtOTBiNC03ZWY0YmFhMDZiNzgiLCJpZCI6NDA4NCwic2NvcGVzIjpbImFzbCIsImFzciIsImFzdyIsImdjIl0sImlhdCI6MTUzOTg1MDc4N30.jQhxjgKS3zpd5MKaks7_oSddnE_jtCC6fFSsfFufwj8";
             Cesium.Ion.defaultAccessToken = CesiumAPIKey;
             
             var viewer = new Cesium.Viewer('cesiumContainer');
+            var trapGeoEntities;
+            var countyGeoEntities;
+            var mosquitoGeoEntities;
 
             function render(fileToRender) {
                 var btnHide = document.getElementById("btnHide");
@@ -302,7 +298,7 @@
                     cesiumData = countyDataSource;
 
                     //Get the array of countyGeoEntities
-                    var countyGeoEntities = countyDataSource.entities.values;
+                    countyGeoEntities = countyDataSource.entities.values;
 
                     var colorHash = {};
                     for (var i = 0; i < countyGeoEntities.length; i++) {
@@ -389,76 +385,50 @@
 
 
             }
-
-
-
-
-            function showTraps(fileToRender) {
-
-                var trapGeoJson = Cesium.GeoJsonDataSource.load('/Scripts/GeoJSON/'+fileToRender);
+            
+                
+            function createTrapLocations(fileToRender) {
+                var trapGeoJson = Cesium.GeoJsonDataSource.load('/Scripts/GeoJSON/' + fileToRender);
                 trapGeoJson.then(function (trapDataSource) {
-                    var chkShowTraps = document.getElementById('<%= chkShowTraps.ClientID %>').checked;
-                    if (chkShowTraps) {
-                        viewer.dataSources.add(trapDataSource);
-                        //Get the array of countyGeoEntities
-                        var trapGeoEntities = trapDataSource.entities.values;
-                        for (var i = 0; i < trapGeoEntities.length; i++) {
-                            //For each entity, create a random color based on the state name.
-                            //Some states have multiple countyGeoEntities, so we store the color in a
-                            //hash so that we use the same color for the entire state.
-                            var trapMarker = trapGeoEntities[i];
-                            //var ddlState = document.getElementById("ddlState");
-                            //var ddlOutlineColor = document.getElementById("ddlOutlineColor");
-                            //var valDataOpacity = document.getElementById("valDataOpacity").value;
-                            //var chkAllStates = document.getElementById("<%//=chkAllStates.ClientID %>").checked;
-                            var pointFillColor = Cesium.Color.TOMATO;
-                            var pointOutlineColor = Cesium.Color.BLACK;
-                            var pointOutlineWidth = 3;
-                            var pointSize = 10;
 
-                            trapMarker.billboard = undefined;
-                            trapMarker.point = new Cesium.PointGraphics({
-                                color: pointFillColor,
-                                outlineColor: pointOutlineColor,
-                                outlineWidth: pointOutlineWidth,
-                                pixelSize: pointSize
-                            });
-                            //var translucency = new Cesium.NearFarScalar(0.5, 1, 1, 1);
-                            //trapMarker.point.translucencyByDistance = translucency;
+                    viewer.dataSources.add(trapDataSource);
+                    trapGeoEntities = trapDataSource.entities.values;
 
-                        }
-                    } else {
-                        var index = viewer.dataSources.indexOf(trapDataSource);
-                        console.log(index);
-                        viewer.dataSources.remove(trapDataSource);
+                    for (var i = 0; i < trapGeoEntities.length; i++) {
+                        var trapMarker = trapGeoEntities[i];
+                        //var ddlState = document.getElementById("ddlState");
+                        //var ddlOutlineColor = document.getElementById("ddlOutlineColor");
+                        //var valDataOpacity = document.getElementById("valDataOpacity").value;
+                        //var chkAllStates = document.getElementById("<%//=chkAllStates.ClientID %>").checked;
+                        var pointFillColor = Cesium.Color.TOMATO;
+                        var pointOutlineColor = Cesium.Color.BLACK;
+                        var pointOutlineWidth = 3;
+                        var pointSize = 10;
+
+                        trapMarker.billboard = undefined;
+                        trapMarker.point = new Cesium.PointGraphics({
+                            color: pointFillColor,
+                            outlineColor: pointOutlineColor,
+                            outlineWidth: pointOutlineWidth,
+                            pixelSize: pointSize
+                        });
                     }
-                    
-                }).otherwise(function(error){
-                    //Display any errrors encountered while loading.
+                    showTraps();
+                }).otherwise(function (error) {
                     window.alert(error);
                 });
-
-
-
-
-
-                //mosquitoGeoJson.then(function (mosquitoDataSource) {
-                //    viewer.dataSources.add(mosquitoDataSource);
-
-                //    //Get the array of countyGeoEntities
-                //    var mosquitoInfoEntities = mosquitoDataSource.entities.values;
-                //    var countyGeoEntities = cesiumData.entities.values;
-
-                //    //viewer.dataSources.add(cesiumData);
-                //}).otherwise(function(error){
-                //    //Display any errrors encountered while loading.
-                //    window.alert(error);
-                //});
-
-
-
-
-
+            }
+            function showTraps() {
+                var chkShowTraps = document.getElementById("chkShowTraps").checked;
+                if (chkShowTraps) {
+                    for (var i = 0; i < trapGeoEntities.length; i++) {
+                        trapGeoEntities[i].show = true;
+                    }
+                } else {
+                    for (var i = 0; i < trapGeoEntities.length; i++) {
+                        trapGeoEntities[i].show = false;
+                    }
+                }
             }
 
 
