@@ -804,8 +804,10 @@ input.cesium-cesiumInspector-url {
     top: 101px;
     right: 5px;
     width: 40%;
-    max-width: 480px;
-    min-width: 180px;
+    max-width: 500px;
+    min-width: 200px;
+    max-height: 600px;
+    min-height: 30px;
     background: rgba(38,38,38,0.95);
     color: #edffff;
     border: 1px solid #444;
@@ -903,7 +905,8 @@ button.cesium-infoBox-close {
 .cesium-infoBox-iframe {
     border: none;
     width: 100%;
-    margin-bottom: 10px;
+    height:auto;
+    margin: 20px 0px 10px 0px;
 }
 
 span.cesium-sceneModePicker-wrapper {

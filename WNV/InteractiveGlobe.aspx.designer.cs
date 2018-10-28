@@ -13,22 +13,31 @@ namespace WNV {
     public partial class _InteractiveMap {
         
         /// <summary>
-        /// ddlVisType control.
+        /// ddlUniHeatStartYear control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlVisType;
+        protected global::System.Web.UI.WebControls.DropDownList ddlUniHeatStartYear;
         
         /// <summary>
-        /// chkAllStates control.
+        /// ddlUniHeatEndYear control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkAllStates;
+        protected global::System.Web.UI.WebControls.DropDownList ddlUniHeatEndYear;
+        
+        /// <summary>
+        /// ddlUniHeatStat control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlUniHeatStat;
         
         /// <summary>
         /// upnlbtnRender control.

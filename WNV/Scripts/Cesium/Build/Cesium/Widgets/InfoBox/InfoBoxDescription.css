@@ -111,16 +111,21 @@
     color: #de3;
 }
 
+html {
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+}
 body {
     margin: 0;
     padding: 0;
-    overflow:auto;
+    overflow: auto;
 }
 
 .cesium-infoBox-description {
-    font-family: sans-serif;
-    font-size: 13px;
+    font-family: "Helvetiva Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
     padding: 4px;
+    margin: 0px 25px;
     color: #edffff;
 }
 
@@ -196,3 +201,21 @@ body {
     width: 16px;
     height: 11px;
 }
+
+h1,h2,h3 {
+    margin-top:0;
+    font-weight:300;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
