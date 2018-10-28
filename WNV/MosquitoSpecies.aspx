@@ -11,7 +11,6 @@
     </div>
 
     <div id="results">
-        <asp:Label runat="server" id="rslt" Text=""></asp:Label>
     </div>
 
     <div class="row">
@@ -21,7 +20,7 @@
                     <img class="card-img-top" src="https://bugguide.net/images/cache/YRI/QCR/YRIQCR7Q9R90OQM03Q803Q80TQ3KDR7QQ0KQDR7QDRFK1RIQL0W0H07QTR903Q90JRXQYRXQORIQZ060DQHQBRJK.jpg" alt="Card image cap">
                     <div class="card-body">
                         <h5 class="card-title">Culex</h5>
-                        <p class="card-text">Mosquito</p>
+                        <p class="card-text"><asp:Label runat="server" id="rslt" Text=""></asp:Label></p>
                     </div>
                 </div>
             </div>
