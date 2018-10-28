@@ -60,18 +60,28 @@ namespace WNV
 
                             ddlUniHeatStartYear.DataSource = dt;
                             ddlUniHeatEndYear.DataSource = dt;
+                            ddlUniExtrStartYear.DataSource = dt;
+                            ddlUniExtrEndYear.DataSource = dt;
 
                             ddlUniHeatStartYear.DataValueField = "TrapYear";
                             ddlUniHeatEndYear.DataValueField = "TrapYear";
+                            ddlUniExtrStartYear.DataValueField = "TrapYear";
+                            ddlUniExtrEndYear.DataValueField = "TrapYear";
 
                             ddlUniHeatStartYear.DataTextField = "TrapYear";
                             ddlUniHeatEndYear.DataTextField = "TrapYear";
+                            ddlUniExtrStartYear.DataTextField = "TrapYear";
+                            ddlUniExtrEndYear.DataTextField = "TrapYear";
 
                             ddlUniHeatStartYear.DataBind();
                             ddlUniHeatEndYear.DataBind();
+                            ddlUniExtrStartYear.DataBind();
+                            ddlUniExtrEndYear.DataBind();
 
                             ddlUniHeatStartYear.SelectedIndex = 0;
                             ddlUniHeatEndYear.SelectedIndex = ddlUniHeatEndYear.Items.Count - 1;
+                            ddlUniExtrStartYear.SelectedIndex = 0;
+                            ddlUniExtrEndYear.SelectedIndex = ddlUniHeatEndYear.Items.Count - 1;
                         }
                     }
                 }
@@ -98,27 +108,60 @@ namespace WNV
                 {"EndWeek","2019-12-31"}
             };
 
-            if (ddlUniHeatStat.SelectedValue == "1")
+            if (ddlVisType.SelectedValue == "1")
             {
-                procedure = "USP_Get_Select_MeanCountsByStateByDateRange";
-                parameters = new Hashtable()
+                if (ddlUniHeatStat.SelectedValue == "Mean")
                 {
-                    {"StartWeek",ddlUniHeatStartYear.SelectedValue.ToString()+"-01-01"},
-                    {"EndWeek",ddlUniHeatEndYear.SelectedValue.ToString()+"-12-31"}
-                };
+                    procedure = "USP_Get_Select_MeanCountsByStateByDateRange";
+                    parameters = new Hashtable()
+                    {
+                        {"StartWeek",ddlUniHeatStartYear.SelectedValue.ToString()+"-01-01"},
+                        {"EndWeek",ddlUniHeatEndYear.SelectedValue.ToString()+"-12-31"}
+                    };
+                    String jsonToRender = generateJSONFromDataTable(procedure, parameters);
+                    ScriptManager.RegisterStartupScript(this, GetType(), "renderUnivariateHeatmap", "renderUnivariateHeatmap('" + jsonToRender + "','" + ddlUniHeatStat.SelectedValue + "');", true);
+                }
+                if (ddlUniHeatStat.SelectedValue == "Total")
+                {
+                    procedure = "USP_Get_Select_TotalCountsByStateByDateRange";
+                    parameters = new Hashtable()
+                    {
+                        {"StartWeek",ddlUniHeatStartYear.SelectedValue.ToString()+"-01-01"},
+                        {"EndWeek",ddlUniHeatEndYear.SelectedValue.ToString()+"-12-31"}
+                    };
+                    String jsonToRender = generateJSONFromDataTable(procedure, parameters);
+                    ScriptManager.RegisterStartupScript(this, GetType(), "renderUnivariateHeatmap", "renderUnivariateHeatmap('" + jsonToRender + "','" + ddlUniHeatStat.SelectedValue + "');", true);
+                }
             }
-            if (ddlUniHeatStat.SelectedValue == "2")
+            else if (ddlVisType.SelectedValue == "2")
             {
-                procedure = "USP_Get_Select_TotalCountsByStateByDateRange";
-                parameters = new Hashtable()
+                if (ddlUniExtrStat.SelectedValue == "Mean")
                 {
-                    {"StartWeek",ddlUniHeatStartYear.SelectedValue.ToString()+"-01-01"},
-                    {"EndWeek",ddlUniHeatEndYear.SelectedValue.ToString()+"-12-31"}
-                };
+                    procedure = "USP_Get_Select_MeanCountsByStateByDateRange";
+                    parameters = new Hashtable()
+                    {
+                        {"StartWeek",ddlUniExtrStartYear.SelectedValue.ToString()+"-01-01"},
+                        {"EndWeek",ddlUniExtrEndYear.SelectedValue.ToString()+"-12-31"}
+                    };
+                    String jsonToRender = generateJSONFromDataTable(procedure, parameters);
+                    ScriptManager.RegisterStartupScript(this, GetType(), "renderUnivariateExtrusion", "renderUnivariateExtrusion('" + jsonToRender + "','" + ddlUniExtrStat.SelectedValue + "');", true);
+                }
+                if (ddlUniExtrStat.SelectedValue == "Total")
+                {
+                    procedure = "USP_Get_Select_TotalCountsByStateByDateRange";
+                    parameters = new Hashtable()
+                    {
+                        {"StartWeek",ddlUniExtrStartYear.SelectedValue.ToString()+"-01-01"},
+                        {"EndWeek",ddlUniExtrEndYear.SelectedValue.ToString()+"-12-31"}
+                    };
+                    String jsonToRender = generateJSONFromDataTable(procedure, parameters);
+                    ScriptManager.RegisterStartupScript(this, GetType(), "renderUnivariateExtrusion", "renderUnivariateExtrusion('" + jsonToRender + "','" + ddlUniExtrStat.SelectedValue + "');", true);
+                }
             }
+            else if (ddlVisType.SelectedValue == "3")
+            {
 
-            String jsonToRender = generateJSONFromDataTable(procedure, parameters);
-            ScriptManager.RegisterStartupScript(this, GetType(), "renderCountyPolygons", "renderCountyPolygons('" + jsonToRender + "');", true);
+            }
         }
 
         protected void generateGeoJsonFromDataTable(String procedure, Hashtable parameters, String geometryType, String fileName)
