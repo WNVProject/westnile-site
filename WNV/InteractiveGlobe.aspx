@@ -485,14 +485,11 @@
                             </div>
                         </div>
                         <div class="row mb-0">
-                            <div class="col-lg-4">
+                            <div class="col-lg-6">
                                 <button id="btnResetView" class="cesium-button m-0 w-100" type="button" >Reset View</button>
                             </div>
-                            <div class="col-lg-4">
-                                <button id="btnResetCountyInfoBoxPos" class="cesium-button m-0 w-100" type="button" >Reset Info Position</button>
-                            </div>
-                            <div class="col-lg-4">
-                                <button id="btnResetLegendBoxPos" class="cesium-button m-0 w-100" type="button" >Reset Legend Position</button>
+                            <div class="col-lg-6">
+                                <button id="btnResetCountyInfoBoxPos" class="cesium-button m-0 w-100" type="button" >Reset Info Box Position</button>
                             </div>
                         </div>
                     </div>
@@ -712,8 +709,8 @@
                 var columnOfInterest = statType + " " + mosquitoVariable;
                 var infoBoxMessage = "";
                 if (statType == "Mean") {
-                    infoBoxMessage = columnOfInterest + " per week";
-                } else if (statType == "Sum") {
+                    infoBoxMessage = columnOfInterest + "";
+                } else if (statType == "Total") {
                     infoBoxMessage = columnOfInterest + "";
                 }
                 var maxColumnValue;
@@ -817,18 +814,6 @@
                                         var columnCountyName = columnValue;
                                         var valueOfInterest = mosquitoDataRow[columnOfInterest];
                                         countyEntity.polygon.extrudedHeight = 0;
-                                        countyEntity.description =
-                                            '<h1>' + columnCountyName + ' County</h1>' +
-                                            '<div class="row">'+
-                                                '<span>' +
-                                                    infoBoxMessage +
-                                                '&nbsp;:&nbsp;</span>' +
-                                                '<span>' +
-                                                    valueOfInterest +
-                                                '</span>' +
-                                            '</div>'
-                                            ;
-                                        
                                         var color = new Cesium.Color.fromBytes(
                                             255,
                                             0,
@@ -836,6 +821,54 @@
                                             Math.floor((valueOfInterest/maxColumnValue) * 255)
                                         );
                                         countyEntity.polygon.material = color;
+                                        var colorBytes = color.toBytes();
+
+                                        var valueOfInterestLegendOffsetText = "";
+                                        var valueOfInterestLegendOffsetValue = Math.round(((maxColumnValue - valueOfInterest) / maxColumnValue) * 300);
+                                        if (!valueOfInterestLegendOffsetValue == 0) {
+                                            valueOfInterestLegendOffsetText = '<div class="row" style="height:' + valueOfInterestLegendOffsetValue + 'px"><div class="col-xs-12"></div></div>';
+                                        }
+                                        
+
+                                        countyEntity.description =
+                                            '<h2 class="text-center">' + columnCountyName + ' County</h2>' +
+                                            '<div class="row" style="margin-bottom:20px">'+
+                                                '<div class="col-xs-6 text-right">' +
+                                                    infoBoxMessage +
+                                                '</div>' +
+                                                '<div class="col-xs-6">' +
+                                                    valueOfInterest +
+                                                '</div>' +
+                                            '</div>' +
+                                            '<div class="row">'+
+                                                '<div class="col-xs-4 text-right" style="padding-right:0px">' +
+                                                    '<div class="row" style="height:150px"><div class="col-xs-12">'+maxColumnValue + '&nbsp;&nbsp;&mdash;'+'</div></div>'+
+                                                    '<div class="row" style="height:150px"><div class="col-xs-12"></div></div>'+
+                                                    '<div class="row" style="height:22px"><div class="col-xs-12">'+minColumnValue + '&nbsp;&nbsp;&mdash;'+'</div></div>'+
+                                                '</div>' +
+                                                '<div class="col-xs-4" style="margin-top:12px">' +
+                                                    '<div style="height:300px;background-image: linear-gradient(rgba('+colorBytes[0]+','+colorBytes[1]+','+colorBytes[2]+'),rgba('+colorBytes[0]+','+colorBytes[1]+','+colorBytes[2]+','+(minColumnValue/maxColumnValue)+')">' +
+                                                        
+                                                    '</div>' +
+                                                '</div>' +
+                                                '<div class="col-xs-4" style="padding-left:0px">' +
+                                                    valueOfInterestLegendOffsetText +
+                                                    '<div class="row"><div class="col-xs-12"><span style="font-size:18px">&larr;</span>&nbsp;&nbsp;' + valueOfInterest +'</div></div>'+
+                                                '</div>' +
+                                            '</div>' +
+                                            '<div class="row" style="margin-top:20px">'+
+                                                '<div class="col-xs-4 text-right">' +
+                                                    infoBoxMessage +
+                                                '</div>' +
+                                                '<div class="col-xs-4 text-center">' +
+                                                    'Intensity' +
+                                                '</div>' +
+                                                '<div class="col-xs-4 text-left">' +
+                                                    columnCountyName +
+                                                '</div>' +
+                                            '</div>' 
+                                            ;
+                                        
                                         countyEntity.polygon.heightReference = Cesium.HeightReference.CLAMP_TO_GROUND;
 
                                         var countyPolygonPositions = countyEntity.polygon.hierarchy.getValue(Cesium.JulianDate.now()).positions;
@@ -917,7 +950,7 @@
                 var columnOfInterest = statType + " " + mosquitoVariable;
                 var infoBoxMessage = "";
                 if (statType == "Mean") {
-                    infoBoxMessage = columnOfInterest + " per week";
+                    infoBoxMessage = columnOfInterest + "";
                 } else if (statType == "Total") {
                     infoBoxMessage = columnOfInterest + "";
                 }
@@ -1023,19 +1056,7 @@
                                     if (columnValue == name) {
                                         var columnCountyName = columnValue;
                                         var valueOfInterest = mosquitoDataRow[columnOfInterest];
-                                        countyEntity.polygon.extrudedHeight = Math.floor((valueOfInterest/maxColumnValue) * ((extrusionFactor/100) * 200000));
-                                        countyEntity.description =
-                                            '<h1>' + columnCountyName + ' County</h1>' +
-                                            '<div class="row">'+
-                                                '<span>' +
-                                                    infoBoxMessage +
-                                                '&nbsp;:&nbsp;</span>' +
-                                                '<span>' +
-                                                    valueOfInterest +
-                                                '</span>' +
-                                            '</div>'
-                                            ;
-                                        
+                                        countyEntity.polygon.extrudedHeight = Math.floor((valueOfInterest / maxColumnValue) * ((extrusionFactor / 100) * 200000));
                                         var color = new Cesium.Color.fromBytes(
                                             255,
                                             255 - Math.floor((valueOfInterest/maxColumnValue) * 255),
@@ -1043,6 +1064,52 @@
                                             Math.floor((dataOpacity/100) * 255)
                                         );
                                         countyEntity.polygon.material = color;
+                                        
+                                        var valueOfInterestLegendOffsetText = "";
+                                        var valueOfInterestLegendOffsetValue = Math.round(((maxColumnValue - valueOfInterest) / maxColumnValue) * 300);
+                                        if (!valueOfInterestLegendOffsetValue == 0) {
+                                            valueOfInterestLegendOffsetText = '<div class="row" style="height:' + valueOfInterestLegendOffsetValue + 'px"><div class="col-xs-12"></div></div>';
+                                        }
+
+                                        countyEntity.description =
+                                            '<h2 class="text-center">' + columnCountyName + ' County</h2>' +
+                                            '<div class="row" style="margin-bottom:20px">'+
+                                                '<div class="col-xs-6 text-right">' +
+                                                    infoBoxMessage +
+                                                '</div>' +
+                                                '<div class="col-xs-6">' +
+                                                    valueOfInterest +
+                                                '</div>' +
+                                            '</div>' +
+                                            '<div class="row">'+
+                                                '<div class="col-xs-4 text-right" style="padding-right:0px">' +
+                                                    '<div class="row" style="height:150px"><div class="col-xs-12">'+maxColumnValue + '&nbsp;&nbsp;&mdash;'+'</div></div>'+
+                                                    '<div class="row" style="height:150px"><div class="col-xs-12"></div></div>'+
+                                                    '<div class="row" style="height:22px"><div class="col-xs-12">'+minColumnValue + '&nbsp;&nbsp;&mdash;'+'</div></div>'+
+                                                '</div>' +
+                                                '<div class="col-xs-4" style="margin-top:12px">' +
+                                                    '<div style="height:300px;background-image: linear-gradient(rgba(255,0,0,'+dataOpacity/100+'),rgba(255,255,255,'+dataOpacity/100+')">' +
+                                                        
+                                                    '</div>' +
+                                                '</div>' +
+                                                '<div class="col-xs-4" style="padding-left:0px">' +
+                                                    valueOfInterestLegendOffsetText +
+                                                    '<div class="row"><div class="col-xs-12"><span style="font-size:18px">&larr;</span>&nbsp;&nbsp;' + valueOfInterest +'</div></div>'+
+                                                '</div>' +
+                                            '</div>' +
+                                            '<div class="row" style="margin-top:20px">'+
+                                                '<div class="col-xs-4 text-right">' +
+                                                    infoBoxMessage +
+                                                '</div>' +
+                                                '<div class="col-xs-4 text-center">' +
+                                                    'Intensity' +
+                                                '</div>' +
+                                                '<div class="col-xs-4 text-left">' +
+                                                    columnCountyName +
+                                                '</div>' +
+                                            '</div>' 
+                                            ;
+                                        
                                         countyEntity.polygon.heightReference = Cesium.HeightReference.CLAMP_TO_GROUND;
                                         countyEntity.polygon.shadows = Cesium.ShadowMode.CAST_ONLY;
 
@@ -1160,31 +1227,31 @@
                         
 
                         trapMarker.description = 
-                        '<h1>' + trapMarker.properties.name + '</h1>' +
-                            '<div class="row">'+
-                                '<span>' +
+                        '<h2 class="text-center">' + trapMarker.properties.name + '</h2>' +
+                        '<div class="row" style="margin-bottom:10px">'+
+                            '<div class="col-xs-6 text-right">' +
                                     'County' +
-                                '&nbsp;:&nbsp;</span>' +
-                                '<span>' +
+                            '</div>' +
+                            '<div class="col-xs-6">' +
                                     trapMarker.properties.County +
-                                '</span>' +
                             '</div>' +
-                            '<div class="row">'+
-                                '<span>' +
+                        '</div>' +
+                        '<div class="row" style="margin-bottom:10px">'+
+                            '<div class="col-xs-6 text-right">' +
                                     'Latitude' +
-                                '&nbsp;:&nbsp;</span>' +
-                                '<span>' +
-                                    trapLatitude +
-                                '</span>' +
                             '</div>' +
-                            '<div class="row">'+
-                                '<span>' +
+                            '<div class="col-xs-6">' +
+                                    trapLatitude +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="row" style="margin-bottom:10px">'+
+                            '<div class="col-xs-6 text-right">' +
                                     'Longitude' +
-                                '&nbsp;:&nbsp;</span>' +
-                                '<span>' +
+                            '</div>' +
+                            '<div class="col-xs-6">' +
                                     trapLongitude +
-                                '</span>' +
-                            '</div>' 
+                            '</div>' +
+                        '</div>'
                             ;
                     }
                     showTraps();

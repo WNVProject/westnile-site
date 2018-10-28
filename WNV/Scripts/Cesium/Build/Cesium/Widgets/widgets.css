@@ -804,9 +804,9 @@ input.cesium-cesiumInspector-url {
     top: 101px;
     right: 5px;
     width: 40%;
-    max-width: 500px;
-    min-width: 200px;
-    max-height: 600px;
+    max-width: 600px;
+    min-width: 400px;
+    max-height: 700px;
     min-height: 30px;
     background: rgba(38,38,38,0.95);
     color: #edffff;
