@@ -28,6 +28,7 @@ textarea {
         padding: 0;
     }
 }
+
 #controlContainer {
     max-height:calc(100% - 155px);
     overflow:auto;
@@ -37,6 +38,7 @@ textarea {
     z-index: 1000;
     cursor: default;
 }
+
 #controlContainer.hidden {
     width: 38px !important;
     -webkit-transition: width 0.35s ease-in-out !important;
@@ -55,9 +57,11 @@ textarea {
         -o-transition: width 0.35s ease-in-out, opacity 0.2s linear !important;
         transition: width 0.35s ease-in-out, opacity 0.2s linear !important;
     }
+
     #controlContainer:hover {
         opacity: 1 !important;
     }
+
 
 .controlPanel-section {
     padding: 0 10px;
@@ -72,6 +76,7 @@ textarea {
     width: 100%;
     vertical-align: central;
 }
+
 .ctrlSlider {
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -81,6 +86,7 @@ textarea {
     border-radius: 3px;
     outline: none;
 }
+
 .ctrlSlider:hover {
     background: initial !important;
 }
