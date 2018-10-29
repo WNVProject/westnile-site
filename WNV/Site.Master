@@ -18,6 +18,7 @@
     <link href="/Scripts/Build/Cesium/Widgets/widgets.css" rel="stylesheet" />
 </head>
 <body>
+
     <form runat="server">
         <asp:ScriptManager runat="server">
             <Scripts>
@@ -83,9 +84,17 @@
             </asp:ContentPlaceHolder>
             <hr />
             <footer>
+                <div id="Sponsors" style="position:inherit">
+			        <a href="https://www.und.edu/" target="_blank"><img id="und-engineering-logo" class="img-fluid" src="photos/sponsor-logos/logo-engineering-dark.png" width="250" height=""/></a>
+			        <a href="https://www.nasa.gov/" target="_blank"><img id="nasa-logo" class="img-fluid" src="photos/sponsor-logos/nasa-logo.jpg" width="150" height="80"/></a>
+			        <a href="https://www.ndhealth.gov/" target="_blank"><img id="ndhealth-logo" class="img-fluid" src="photos/sponsor-logos/ndhealth-logo.png" width="250" height="80"/></a>
+			        <a href="http://www.gfmosquito.com/" target="_blank"><img id="gfmc-logo" class="img-fluid" src="photos/sponsor-logos/gfmc-logo.png" width= "150" height="80"/></a>
+                    <a href="http://ndnasaepscor.und.edu/" target="_blank"><img id="ndepscor-logo" class="s" src="photos/sponsor-logos/ndepscor-logo.png" width="300" height="80"/></a>
+                </div>
                 <p>&copy; <%: DateTime.Now.Year %></p>
             </footer>
         </div>
+        
         <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
 	    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     </form>
