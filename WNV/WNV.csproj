@@ -5219,7 +5219,9 @@
     <Content Include="Scripts\Cesium\ThirdParty\requirejs-2.1.20\domReady.js" />
     <Content Include="Scripts\Cesium\ThirdParty\requirejs-2.1.20\require.js" />
     <Content Include="Scripts\Cesium\ThirdParty\requirejs-2.1.20\require.min.js" />
-    <Content Include="Scripts\GeoJSON\Counties.json" />
+    <Content Include="Scripts\GeoJSON\gz_2010_us_050_00_20m.json" />
+    <Content Include="Scripts\GeoJSON\gz_2010_us_050_00_5m.json" />
+    <Content Include="Scripts\GeoJSON\ND_Counties.json" />
     <Content Include="Scripts\Cesium\Apps\SampleData\Cesium3DTiles\Batched\BatchedColors\batchedColors.b3dm" />
     <Content Include="Scripts\Cesium\Apps\SampleData\Cesium3DTiles\Batched\BatchedColors\tileset.json" />
     <Content Include="Scripts\Cesium\Apps\SampleData\Cesium3DTiles\Batched\BatchedTranslucentOpaqueMix\batchedTranslucentOpaqueMix.b3dm" />
@@ -6228,6 +6230,8 @@
     <Content Include="Scripts\Cesium\ThirdParty\dojo-release-1.10.4\dojo\_firebug\LICENSE" />
     <Content Include="Scripts\Cesium\ThirdParty\jasmine-2.2.0\MIT.LICENSE" />
     <Content Include="Scripts\Cesium\ThirdParty\requirejs-2.1.20\MIT.LICENSE" />
+    <Content Include="Scripts\GeoJSON\Counties.json" />
+    <Content Include="Scripts\GeoJSON\gz_2010_us_050_00_500k.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="MosquitoSpecies.aspx" />
     <Content Include="Scripts\bootstrap.js" />
@@ -6351,7 +6355,9 @@
     <Folder Include="Scripts\Cesium\Apps\Sandcastle\gallery\development\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
