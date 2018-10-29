@@ -57,6 +57,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Program Files (x86)\MySQL\Connector NET 6.10\Assemblies\v4.5.2\BACKUP\MySql.Web.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -123,9 +126,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.ApplicationInsights">
       <HintPath>..\packages\Microsoft.ApplicationInsights.2.2.0\lib\net45\Microsoft.ApplicationInsights.dll</HintPath>
     </Reference>
@@ -166,6 +166,12 @@
     </Content>
     <Content Include="InteractiveGlobe.aspx" />
     <Content Include="MultiaxisChart.aspx" />
+    <Content Include="photos\sponsor-logos\gfmc-logo.png" />
+    <Content Include="photos\sponsor-logos\logo-engineering-dark.png" />
+    <Content Include="photos\sponsor-logos\nasa-logo.jpg" />
+    <Content Include="photos\sponsor-logos\ndepscor-logo.png" />
+    <Content Include="photos\sponsor-logos\ndhealth-logo.png" />
+    <Content Include="photos\sponsor-logos\undEngineeringLogo.png" />
     <Content Include="Scripts\Cesium\Apps\CesiumViewer\CesiumViewer.css" />
     <Content Include="Scripts\Cesium\Apps\CesiumViewer\CesiumViewer.js" />
     <Content Include="Scripts\Cesium\Apps\CesiumViewer\CesiumViewerStartup.js" />
@@ -5213,7 +5219,9 @@
     <Content Include="Scripts\Cesium\ThirdParty\requirejs-2.1.20\domReady.js" />
     <Content Include="Scripts\Cesium\ThirdParty\requirejs-2.1.20\require.js" />
     <Content Include="Scripts\Cesium\ThirdParty\requirejs-2.1.20\require.min.js" />
-    <Content Include="Scripts\GeoJSON\Counties.json" />
+    <Content Include="Scripts\GeoJSON\gz_2010_us_050_00_20m.json" />
+    <Content Include="Scripts\GeoJSON\gz_2010_us_050_00_5m.json" />
+    <Content Include="Scripts\GeoJSON\ND_Counties.json" />
     <Content Include="Scripts\Cesium\Apps\SampleData\Cesium3DTiles\Batched\BatchedColors\batchedColors.b3dm" />
     <Content Include="Scripts\Cesium\Apps\SampleData\Cesium3DTiles\Batched\BatchedColors\tileset.json" />
     <Content Include="Scripts\Cesium\Apps\SampleData\Cesium3DTiles\Batched\BatchedTranslucentOpaqueMix\batchedTranslucentOpaqueMix.b3dm" />
@@ -6222,6 +6230,8 @@
     <Content Include="Scripts\Cesium\ThirdParty\dojo-release-1.10.4\dojo\_firebug\LICENSE" />
     <Content Include="Scripts\Cesium\ThirdParty\jasmine-2.2.0\MIT.LICENSE" />
     <Content Include="Scripts\Cesium\ThirdParty\requirejs-2.1.20\MIT.LICENSE" />
+    <Content Include="Scripts\GeoJSON\Counties.json" />
+    <Content Include="Scripts\GeoJSON\gz_2010_us_050_00_500k.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="MosquitoSpecies.aspx" />
     <Content Include="Scripts\bootstrap.js" />
@@ -6345,7 +6355,9 @@
     <Folder Include="Scripts\Cesium\Apps\Sandcastle\gallery\development\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

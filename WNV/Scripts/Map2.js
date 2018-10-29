@@ -82,9 +82,22 @@
             ['Tioga', 48.397244, -102.938238],
             ['Willison #1', 48.1469683, -103.6179745]
         ];
+        var infowindow = new google.maps.InfoWindow();
         var bismarck = { lat: 46.8083, lng: -100.7837 }
         var bounds = new google.maps.LatLngBounds();
-        var map = new google.maps.Map(document.getElementById('map'), { zoom: 7, center: bismarck, zoomControl: true, scaleControl: false, disableDefaultUI: true });
+        var mapProperties = {
+            zoom: 7,
+            center: bismarck,
+            zoomControl: true,
+            scaleControl: false,
+            disableDefaultUI: true,
+            draggable: false,
+            gestureHandling: "none",
+            MapTypeId: google.maps.MapTypeId.HYBRID,
+            maxZoom: 7,
+            minZoom: 7,
+        }
+        var map = new google.maps.Map(document.getElementById('map'), mapProperties);
         for (var i = 0; i < locations.length; i++) {
             var position = new google.maps.LatLng(locations[i][1], locations[i][2]);
             bounds.extend(position);
@@ -171,5 +184,14 @@
                 };
             }
         });
+        map.data.addListener('click', function (event) {
+            var countyName = event.feature.getProperty("name");
+            var countyRegion = event.feature.getProperty("region");
+            infowindow.setContent("<div style='width:150px; text-align: center;'>" + countyName + "</br>" + countyRegion + "</div>");
+            infowindow.setPosition(event.latLng)
+            infowindow.setOptions({ pixelOffset: new google.maps.Size(0, -30) });
+            infowindow.open(map);
+        });
+
     }
 }

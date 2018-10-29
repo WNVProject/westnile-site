@@ -28,3 +28,330 @@ textarea {
         padding: 0;
     }
 }
+
+#controlContainer {
+    max-height:calc(100% - 155px);
+    overflow:auto;
+    margin-top: 55px;
+    top: 5px;
+    left: 3px;
+    z-index: 1000;
+    cursor: default;
+}
+
+#controlContainer.hidden {
+    width: 38px !important;
+    -webkit-transition: width 0.35s ease-in-out !important;
+    -moz-transition: width 0.35s ease-in-out !important;
+    -o-transition: width 0.35s ease-in-out !important;
+    transition: width 0.35s ease-in-out !important;
+    -webkit-transition-delay: 0.35s !important;
+    -moz-transition-delay: 0.35s !important;
+    -o-transition-delay: 0.35s !important;
+    transition-delay: 0.35s !important;
+}
+    #controlContainer.expanded {
+        width: 35%;
+        -webkit-transition: width 0.35s ease-in-out, opacity 0.2s linear !important;
+        -moz-transition: width 0.35s ease-in-out, opacity 0.2s linear !important;
+        -o-transition: width 0.35s ease-in-out, opacity 0.2s linear !important;
+        transition: width 0.35s ease-in-out, opacity 0.2s linear !important;
+    }
+
+    #controlContainer:hover {
+        opacity: 1 !important;
+    }
+
+
+.controlPanel-section {
+    padding: 0 10px;
+}
+.controlPanel-section-header {
+    font-size: larger;
+    width: 100%;
+    padding: 5px;
+}
+
+.slideContainer {
+    width: 100%;
+    vertical-align: central;
+}
+
+.ctrlSlider {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 100%;
+    max-width:none;
+    height: 30px;
+    border-radius: 3px;
+    outline: none;
+}
+
+.ctrlSlider:hover {
+    background: initial !important;
+}
+
+.ctrlOpacity {
+    display:none;
+}
+
+.aspnet-width-fix {
+    max-width:none;
+}
+
+.tooltip-hide {
+    display: none !important;
+}
+.tooltip-show {
+    z-index: 1001;
+    position: absolute !important;
+    display: block !important;
+    text-align: center !important;
+    width: 45px !important;
+    color: #fff;
+    fill: #fff;
+    background: #48b;
+    border: 1px solid #aef !important;
+    box-shadow: 0 0 8px #fff;
+}
+#controlContainer .dropdown-toggle::after {
+    display: none;
+}
+
+.dropdown-caret {
+    float: right;
+    text-align: right;
+    width: 0;
+    height: 0;
+    margin-top: 0.7em;
+    content: "";
+    border-top: .5em solid white;
+    border-right: .5em solid transparent;
+    border-bottom: 0;
+    border-left: .5em solid transparent;
+    transform: rotate(-360deg);
+    transition: transform 150ms ease;
+}
+    .dropdown-caret.caret-up {
+        transform: rotate(-180deg);
+        transition: transform 150ms ease;
+        margin-top: 0.5em;
+    }
+
+.col-xs-onehalf, .col-sm-onehalf, .col-md-onehalf, .col-lg-onehalf, .col-xs-threehalves, .col-sm-threehalves, .col-md-threehalves, .col-lg-threehalves, .col-xs-fivehalves, .col-sm-fivehalves, .col-md-fivehalves, .col-lg-fivehalves {
+    position: relative;
+    min-height: 1px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.col-xs-onehalf, .col-xs-threehalves, .col-xs-fivehalves {
+    float: left;
+}
+
+.col-xs-onehalf {
+    width: 4.16666666%;
+}
+
+.col-xs-pull-onehalf {
+    right: 4.16666666%;
+}
+
+.col-xs-push-onehalf {
+    left: 4.16666666%;
+}
+
+.col-xs-offset-onehalf {
+    margin-left: 4.16666666%;
+}
+
+.col-xs-threehalves {
+    width: 12.5%;
+}
+
+.col-xs-pull-threehalves {
+    right: 12.5%;
+}
+
+.col-xs-push-threehalves {
+    left: 12.5%;
+}
+
+.col-xs-offset-threehalves {
+    margin-left: 12.5%;
+}
+
+.col-xs-fivehalves {
+    width: 20.83333333%;
+}
+
+.col-xs-pull-fivehalves {
+    right: 20.83333333%;
+}
+
+.col-xs-push-fivehalves {
+    left: 20.83333333%;
+}
+
+.col-xs-offset-fivehalves {
+    margin-left: 20.83333333%;
+}
+
+@media (min-width: 768px) {
+    .col-sm-onehalf, .col-sm-threehalves, .col-sm-fivehalves {
+        float: left;
+    }
+
+    .col-sm-onehalf {
+        width: 4.16666666%;
+    }
+
+    .col-sm-pull-onehalf {
+        right: 4.16666666%;
+    }
+
+    .col-sm-push-onehalf {
+        left: 4.16666666%;
+    }
+
+    .col-sm-offset-onehalf {
+        margin-left: 4.16666666%;
+    }
+
+    .col-sm-threehalves {
+        width: 12.5%;
+    }
+
+    .col-sm-pull-threehalves {
+        right: 12.5%;
+    }
+
+    .col-sm-push-threehalves {
+        left: 12.5%;
+    }
+
+    .col-sm-offset-threehalves {
+        margin-left: 12.5%;
+    }
+
+    .col-sm-fivehalves {
+        width: 20.83333333%;
+    }
+
+    .col-sm-pull-fivehalves {
+        right: 20.83333333%;
+    }
+
+    .col-sm-push-fivehalves {
+        left: 20.83333333%;
+    }
+
+    .col-sm-offset-fivehalves {
+        margin-left: 20.83333333%;
+    }
+}
+
+@media (min-width: 992px) {
+    .col-md-onehalf, .col-md-threehalves, .col-md-fivehalves {
+        float: left;
+    }
+
+    .col-md-onehalf {
+        width: 4.16666666%;
+    }
+
+    .col-md-pull-onehalf {
+        right: 4.16666666%;
+    }
+
+    .col-md-push-onehalf {
+        left: 4.16666666%;
+    }
+
+    .col-md-offset-onehalf {
+        margin-left: 4.16666666%;
+    }
+
+    .col-md-threehalves {
+        width: 12.5%;
+    }
+
+    .col-md-pull-threehalves {
+        right: 12.5%;
+    }
+
+    .col-md-push-threehalves {
+        left: 12.5%;
+    }
+
+    .col-md-offset-threehalves {
+        margin-left: 12.5%;
+    }
+
+    .col-md-fivehalves {
+        width: 20.83333333%;
+    }
+
+    .col-md-pull-fivehalves {
+        right: 20.83333333%;
+    }
+
+    .col-md-push-fivehalves {
+        left: 20.83333333%;
+    }
+
+    .col-md-offset-fivehalves {
+        margin-left: 20.83333333%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .col-lg-onehalf, col-lg-threehalves, .col-lg-fivehalves {
+        float: left;
+    }
+
+    .col-lg-onehalf {
+        width: 4.16666666%;
+    }
+
+    .col-lg-pull-onehalf {
+        right: 4.16666666%;
+    }
+
+    .col-lg-push-onehalf {
+        left: 4.16666666%;
+    }
+
+    .col-lg-offset-onehalf {
+        margin-left: 4.16666666%;
+    }
+
+    .col-lg-threehalves {
+        width: 12.5%;
+    }
+    .col-lg-pull-threehalves {
+        right: 12.5%;
+    }
+    .col-lg-push-threehalves {
+        left: 12.5%;
+    }
+    .col-lg-offset-threehalves {
+        margin-left: 12.5%;
+    }
+
+    .col-lg-fivehalves {
+        width: 20.83333333%;
+    }
+
+    .col-lg-pull-fivehalves {
+        right: 20.83333333%;
+    }
+
+    .col-lg-push-fivehalves {
+        left: 20.83333333%;
+    }
+
+    .col-lg-offset-fivehalves {
+        margin-left: 20.83333333%;
+    }
+}

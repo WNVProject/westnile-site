@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="WNV._Default" %>
+﻿<%@ Page Title="WNVF | Home" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="WNV._Default" %>
 
 <%@ Register Assembly="System.Web.DataVisualization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Namespace="System.Web.UI.DataVisualization.Charting" TagPrefix="asp" %>
 
@@ -9,12 +9,10 @@
                 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBymYK85pOpWP-KShxoECrUQd_0kG3X3CE&callback=initMap">
     </script>
             </div>
-        <%-- <p><a href="http://www.asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p> --%>
     </div>
     
     <div class="row">
-
-        <%-- Average Temperatures --%>
+        <%-- Average Temperatures 
         <asp:UpdatePanel runat="server" ID="upnlNDTemps" UpdateMode="Conditional">
             <Triggers>
                 <asp:AsyncPostBackTrigger ControlID="yearDDL" />
@@ -39,7 +37,7 @@
             </ContentTemplate>
         </asp:UpdatePanel>
 
-        <%-- Grand Forks Mosquitos --%>
+        <%-- Grand Forks Mosquitos 
         <div class="col-md-5">
             <h2>Grand Forks Mosquito Data</h2>
             <p>
@@ -57,7 +55,7 @@
             <asp:Label ID="gfErrMsg" runat="server" Text=""></asp:Label>
         </div>
 
-        <%-- WNV Cases --%>
+        <%-- WNV Cases 
         <div class="col-md-4">
             <h2>WNV Cases</h2>
             <p>
@@ -74,7 +72,7 @@
             <asp:Label ID="caseErrMsg" runat="server" Text=""></asp:Label>
         </div>
 
-        <%-- Multi-variable chart --%>
+        <%-- Multi-variable chart 
         <%-- 
         <div class="col-md-4">
             <h2>Culex Tarselias count versus weather</h2>
@@ -88,10 +86,11 @@
 
                 </asp:Chart>
             </p>
-            --%>
+            
 
 
         </div>
-    </div>
 
+        --%>
+    </div>
 </asp:Content>

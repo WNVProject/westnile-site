@@ -15,7 +15,8 @@ using System.Web.UI.DataVisualization.Charting;
 namespace WNV
 {
     public partial class _Default : Page
-    {
+    { 
+        /*
         private string cs = ConfigurationManager.ConnectionStrings["CString"].ConnectionString;
 
         protected void Page_Load(object sender, EventArgs e)
@@ -29,6 +30,7 @@ namespace WNV
         //Populates WNV case chart
         protected void caseChartFill()
         {
+            
             try
             {
                 int year = 2007;
@@ -252,6 +254,6 @@ namespace WNV
             }
 
         }
-
+        */
     }
 }

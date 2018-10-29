@@ -389,7 +389,6 @@
 
 .cesium-widget {
     position: relative;
-    top: 50px;
 }
 
     .cesium-widget, .cesium-widget canvas {
@@ -802,10 +801,13 @@ input.cesium-cesiumInspector-url {
 .cesium-infoBox {
     display: block;
     position: absolute;
-    top: 97px;
+    top: 101px;
     right: 5px;
     width: 40%;
-    max-width: 480px;
+    max-width: 600px;
+    min-width: 400px;
+    max-height: 700px;
+    min-height: 30px;
     background: rgba(38,38,38,0.95);
     color: #edffff;
     border: 1px solid #444;
@@ -814,7 +816,9 @@ input.cesium-cesiumInspector-url {
     /*transform: translate(100%,0);*/
     visibility: hidden;
     opacity: 0;
-    transition: visibility 0s 0.2s,opacity 0.2s ease-in,transform 0.2s ease-in;
+    transition: visibility 0s 0.2s,opacity 0.2s ease-in,transform 0.2s ease-in !important;
+    resize: horizontal;
+    overflow: auto;
 }
 
 .cesium-infoBox-visible {
@@ -874,17 +878,23 @@ button.cesium-infoBox-close {
 }
 
     button.cesium-infoBox-close:focus {
-        background: rgba(238,136,0,0.44);
+        border:1px solid;
+        border-color: #ea4;
         outline: none;
     }
 
     button.cesium-infoBox-close:hover {
-        background: #888;
+        background: rgba(255,40,0,0.9);
+        border:1px solid;
+        border-color: rgba(255,195,180,1);
+        box-shadow: 0 0 8px #fff;
         color: #000;
     }
 
     button.cesium-infoBox-close:active {
-        background: #a00;
+        background: rgba(255,130,100,0.9);
+        border: 1px solid;
+        border-color: rgba(255,255,255,1);
         color: #000;
     }
 
@@ -895,7 +905,8 @@ button.cesium-infoBox-close {
 .cesium-infoBox-iframe {
     border: none;
     width: 100%;
-    width: calc(100% - 2px);
+    height:auto;
+    margin: 20px 0px 10px 0px;
 }
 
 span.cesium-sceneModePicker-wrapper {
@@ -1141,7 +1152,6 @@ span.cesium-projectionPicker-wrapper {
     }
 
 .cesium-selection-wrapper {
-    margin-top: 50px;
     position: absolute;
     width: 160px;
     height: 160px;
@@ -1152,7 +1162,6 @@ span.cesium-projectionPicker-wrapper {
 }
 
 .cesium-selection-wrapper-visible {
-    margin-top: 50px;
     visibility: visible;
     opacity: 1;
     transition: opacity 0.2s ease-out;
@@ -1273,7 +1282,7 @@ span.cesium-projectionPicker-wrapper {
     overflow: hidden;
     display: block;
     position: relative;
-    top: 0;
+    top: -55px;
     left: 0;
     width: 100%;
     height: 100%;
@@ -1348,7 +1357,7 @@ span.cesium-projectionPicker-wrapper {
 .cesium-viewer-toolbar {
     display: block;
     position: absolute;
-    top: 55px;
+    top: 60px;
     right: 5px;
 }
 
