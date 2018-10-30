@@ -81,7 +81,7 @@
                                 <asp:DropDownList ID="ddlVisType" runat="server" CssClass="cesium-button p-1 m-0 aspnet-width-fix" Width="100%" onchange="toggleParameterPanel(this);">
                                     <asp:ListItem Value="1" Text="Univariate County Heatmap" ></asp:ListItem>
                                     <asp:ListItem Value="2" Text="Univariate County Extrusion" ></asp:ListItem>
-                                    <%--<asp:ListItem Value="3" Text="Multivariate County Extrusion" ></asp:ListItem>--%>
+                                    <asp:ListItem Value="3" Text="Pearson's Correlation Heatmap" ></asp:ListItem>
                                 </asp:DropDownList>
                             </div>
                             <div class="col-lg-3">
@@ -340,58 +340,55 @@
                         </div>
                         <div id="pnlVisualization3" class="mb-0 mt-1 collapse">
                             <div class="row mb-1">
-                                <div class="col-lg-4">
-                                    <h6 class="text-white">County Border Quality</h6>
-                                </div>
-                                <div class="col-lg-offset-onehalf">
-                                </div>
                                 <div class="col-lg-3">
-                                    <h6 class="text-white">Data Opacity</h6>
+                                    <h6 class="text-white">Mosquito Vairable</h6>
+                                </div>
+                                <div class="col-lg-5">
+                                    <h6 class="text-white">Weather Vairable</h6>
                                 </div>
                                 <div class="col-lg-2">
-                                    <h6 class="text-white">Outline Color</h6>
+                                    <h6 class="text-white">Start Year</h6>
+                                </div>
+                                <div class="col-lg-2">
+                                    <h6 class="text-white">End Year</h6>
                                 </div>
                             </div>
                             <div class="row mb-2">
-                                <div class="col-lg-threehalves">
-                                    <div class="form-check-inline">
-                                        <input id="testIn9" name="rdoCountyQuality" class="form-check-input" type="radio" checked="checked" />
-                                        <label class="form-check-label text-light" for="rdoCountyLowQual">Low</label>
-                                    </div>
-                                </div>
-                                <div class="col-lg-threehalves">
-                                    <div class="form-check-inline">
-                                        <input id="testIn10" name="rdoCountyQuality" class="form-check-input" type="radio" />
-                                        <label class="form-check-label text-light"for="rdoCountyMedQual">Med</label>
-                                    </div>
-                                </div>
-                                <div class="col-lg-threehalves">
-                                    <div class="form-check-inline">
-                                        <input id="testIn11" name="rdoCountyQuality" class="form-check-input" type="radio" />
-                                        <label class="form-check-label text-light"for="rdoCountyHighQual">High</label>
-                                    </div>
-                                </div>
                                 <div class="col-lg-3">
-                                    <div class="slideContainer">
-                                        <input id="rngDataOpacity" class="ctrlSlider cesium-button p-3 m-0 w-100" type="range" value="100" min="40" max="100" step="2" onchange="valDataOpacity.value=value;" onmouseover="toggleTooltip('valDataOpacity');" onmouseout="toggleTooltip('valDataOpacity');" onmousemove="updateSlideOutputLive(this,'valDataOpacity');"/>
-                                        <output id="valDataOpacity" class="tooltip-hide cesium-button text-white p-1 m-0 w-100 text-center">100</output>
-                                    </div>
-                                </div>
-                                <div class="col-lg-2">
-                                    <select id="ddlTest3" class="cesium-button p-1 m-0 w-100 aspnet-width-fix">
-                                        <option value="01" selected="selected">None</option>
-                                        <option value="02">Black</option>
-                                        <option value="03">Red</option>
-                                        <option value="04">Green</option>
-                                        <option value="05">Blue</option>
-                                        <option value="06">Yellow</option>
+                                    <select id="ddlPearsonHeatMosquitoVar" class="cesium-button p-1 m-0 w-100 aspnet-width-fix">
+                                        <option value="Mosquitoes">All</option>
+                                        <option value="Males">Males</option>
+                                        <option value="Females">Females</option>
+                                        <option value="Other">Other</option>
+                                        <option value="Aedes">Aedes</option>
+                                        <option value="Aedes Vexans">Aedes Vexans</option>
+                                        <option value="Anopheles">Anopheles</option>
+                                        <option value="Culex">Culex</option>
+                                        <option value="Culex Salinarius">Culex Salinarius</option>
+                                        <option value="Culex Tarsalis">Culex Tarsalis</option>
+                                        <option value="Culiseta">Culiseta</option>
                                     </select>
                                 </div>
-                                <div class="col-lg-fivehalves">
-                                    <div class="form-check-inline">
-                                        <input id="chkTest3" type="checkbox" class="form-check-input" onclick="showTraps();" />
-                                        <label class="form-check-label text-light" for="chkShowTraps">Show Traps</label>
-                                    </div>
+                                <div class="col-lg-5">
+                                    <select id="ddlPearsonHeatWeatherVar" class="cesium-button p-1 m-0 w-100 aspnet-width-fix">
+                                        <option value="Temp">Mean Temp (F&deg;)</option>
+                                        <option value="Max Temp">Max Temp (F&deg;)</option>
+                                        <option value="Min Temp">Min Temp (F&deg;)</option>
+                                        <option value="Bare Soil Temp">Bare Soil Temp (F&deg;)</option>
+                                        <option value="Turf Soil Temp">Turf Soil Temp (F&deg;)</option>
+                                        <option value="Dew Point">Dew Point (F&deg;)</option>
+                                        <option value="Wind Chill">Wind Chill (F&deg;)</option>
+                                        <option value="Mean Wind Speed">Mean Wind Speed (mph)</option>
+                                        <option value="Max Wind Speed">Max Wind Speed (mph)</option>
+                                        <option value="Solar Radiation">Solar Radiation (W/m&sup2;)</option>
+                                        <option value="Rainfall">Rainfall (in)</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-2">
+                                    <asp:DropDownList ID="ddlPearsonHeatStartYear" runat="server" CssClass="cesium-button p-1 m-0 w-100 aspnet-width-fix" Width="100%"></asp:DropDownList>
+                                </div>
+                                <div class="col-lg-2">
+                                    <asp:DropDownList ID="ddlPearsonHeatEndYear" runat="server" CssClass="cesium-button p-1 m-0 w-100 aspnet-width-fix" Width="100%"></asp:DropDownList>
                                 </div>
                             </div>
                         </div>
@@ -824,7 +821,7 @@
                                         var colorBytes = color.toBytes();
 
                                         var valueOfInterestLegendOffsetText = "";
-                                        var valueOfInterestLegendOffsetValue = Math.round(((maxColumnValue - valueOfInterest) / maxColumnValue) * 300);
+                                        var valueOfInterestLegendOffsetValue = Math.round(((maxColumnValue - valueOfInterest) / maxColumnValue) * 298);
                                         if (!valueOfInterestLegendOffsetValue == 0) {
                                             valueOfInterestLegendOffsetText = '<div class="row" style="height:' + valueOfInterestLegendOffsetValue + 'px"><div class="col-xs-12"></div></div>';
                                         }
@@ -1066,7 +1063,7 @@
                                         countyEntity.polygon.material = color;
                                         
                                         var valueOfInterestLegendOffsetText = "";
-                                        var valueOfInterestLegendOffsetValue = Math.round(((maxColumnValue - valueOfInterest) / maxColumnValue) * 300);
+                                        var valueOfInterestLegendOffsetValue = Math.round(((maxColumnValue - valueOfInterest) / maxColumnValue) * 298);
                                         if (!valueOfInterestLegendOffsetValue == 0) {
                                             valueOfInterestLegendOffsetText = '<div class="row" style="height:' + valueOfInterestLegendOffsetValue + 'px"><div class="col-xs-12"></div></div>';
                                         }

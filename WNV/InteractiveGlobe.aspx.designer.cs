@@ -76,6 +76,24 @@ namespace WNV {
         protected global::System.Web.UI.WebControls.DropDownList ddlUniExtrStat;
         
         /// <summary>
+        /// ddlPearsonHeatStartYear control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlPearsonHeatStartYear;
+        
+        /// <summary>
+        /// ddlPearsonHeatEndYear control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlPearsonHeatEndYear;
+        
+        /// <summary>
         /// upnlbtnRender control.
         /// </summary>
         /// <remarks>

@@ -62,26 +62,36 @@ namespace WNV
                             ddlUniHeatEndYear.DataSource = dt;
                             ddlUniExtrStartYear.DataSource = dt;
                             ddlUniExtrEndYear.DataSource = dt;
+                            ddlPearsonHeatStartYear.DataSource = dt;
+                            ddlPearsonHeatEndYear.DataSource = dt;
 
                             ddlUniHeatStartYear.DataValueField = "TrapYear";
                             ddlUniHeatEndYear.DataValueField = "TrapYear";
                             ddlUniExtrStartYear.DataValueField = "TrapYear";
                             ddlUniExtrEndYear.DataValueField = "TrapYear";
+                            ddlPearsonHeatStartYear.DataValueField = "TrapYear";
+                            ddlPearsonHeatEndYear.DataValueField = "TrapYear";
 
                             ddlUniHeatStartYear.DataTextField = "TrapYear";
                             ddlUniHeatEndYear.DataTextField = "TrapYear";
                             ddlUniExtrStartYear.DataTextField = "TrapYear";
                             ddlUniExtrEndYear.DataTextField = "TrapYear";
+                            ddlPearsonHeatStartYear.DataTextField = "TrapYear";
+                            ddlPearsonHeatEndYear.DataTextField = "TrapYear";
 
                             ddlUniHeatStartYear.DataBind();
                             ddlUniHeatEndYear.DataBind();
                             ddlUniExtrStartYear.DataBind();
                             ddlUniExtrEndYear.DataBind();
+                            ddlPearsonHeatStartYear.DataBind();
+                            ddlPearsonHeatEndYear.DataBind();
 
                             ddlUniHeatStartYear.SelectedIndex = 0;
                             ddlUniHeatEndYear.SelectedIndex = ddlUniHeatEndYear.Items.Count - 1;
                             ddlUniExtrStartYear.SelectedIndex = 0;
                             ddlUniExtrEndYear.SelectedIndex = ddlUniHeatEndYear.Items.Count - 1;
+                            ddlPearsonHeatStartYear.SelectedIndex = 0;
+                            ddlPearsonHeatEndYear.SelectedIndex = ddlUniHeatEndYear.Items.Count - 1;
                         }
                     }
                 }
@@ -160,7 +170,24 @@ namespace WNV
             }
             else if (ddlVisType.SelectedValue == "3")
             {
+                //procedure = "USP_Get_Select_MeanCountsByStateByDateRange";
+                //parameters = new Hashtable()
+                //{
+                //    {"StartWeek",ddlUniExtrStartYear.SelectedValue.ToString()+"-01-01"},
+                //    {"EndWeek",ddlUniExtrEndYear.SelectedValue.ToString()+"-12-31"}
+                //};
+                //String mosquitoJsonToRender = generateJSONFromDataTable(procedure, parameters);
+                //ScriptManager.RegisterStartupScript(this, GetType(), "renderUnivariateExtrusion", "renderUnivariateExtrusion('" + mosquitoJsonToRender + "','" + ddlUniExtrStat.SelectedValue + "');", true);
 
+
+                //procedure = "USP_Get_Select_TotalCountsByStateByDateRange";
+                //parameters = new Hashtable()
+                //{
+                //    {"StartWeek",ddlUniExtrStartYear.SelectedValue.ToString()+"-01-01"},
+                //    {"EndWeek",ddlUniExtrEndYear.SelectedValue.ToString()+"-12-31"}
+                //};
+                //String weatherJsonToRender = generateJSONFromDataTable(procedure, parameters);
+                //ScriptManager.RegisterStartupScript(this, GetType(), "renderUnivariateExtrusion", "renderUnivariateExtrusion('" + weatherJsonToRender + "','" + ddlUniExtrStat.SelectedValue + "');", true);
             }
         }
 
@@ -265,5 +292,6 @@ namespace WNV
             }
             return json;
         }
+
     }
 }
