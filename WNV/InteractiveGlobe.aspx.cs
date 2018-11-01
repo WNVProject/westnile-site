@@ -357,6 +357,12 @@ namespace WNV
                     {
                         leastRowCount = weatherRowCount;
                     }
+                    if (leastRowCount < 3)
+                    {
+                        mosquitoVarDiffsFromAvg.Clear();
+                        weatherVarDiffsFromAvg.Clear();
+                        continue;
+                    }
 
                     double covariance = 0.0;
                     double mosquitoVariance = 0.0;
@@ -371,6 +377,7 @@ namespace WNV
                         mosquitoVariance += Math.Round(Math.Pow(mosquitoVarDiffsFromAvg[i], 2), 5);
                         weatherVariance += Math.Round(Math.Pow(weatherVarDiffsFromAvg[i], 2), 5);
                     }
+                    covariance = covariance / (leastRowCount - 1);
                     mosquitoStdDeviation = Math.Sqrt(mosquitoVariance);
                     weatherStdDeviation = Math.Sqrt(weatherVariance);
 
@@ -393,7 +400,8 @@ namespace WNV
                         jsonToRender.Append("\"MosquitoRowCount\":" + mosquitoRowCount + ",");
                         jsonToRender.Append("\"WeatherRowCount\":" + weatherRowCount + ",");
                         jsonToRender.Append("\"LeastRowCount\":" + leastRowCount + ",");
-                        jsonToRender.Append("\"PearsonCoefficient\":\"" + pearsonCorrelationCoefficient + "\"},");
+                        jsonToRender.Append("\"Covariance\":" + covariance + ",");
+                        jsonToRender.Append("\"PearsonCoefficient\":" + pearsonCorrelationCoefficient + "},");
                     }
                 }
                 double avgPearsonCorrelation = 0.0;
