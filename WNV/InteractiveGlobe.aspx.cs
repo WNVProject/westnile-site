@@ -377,7 +377,7 @@ namespace WNV
                         mosquitoVariance += Math.Round(Math.Pow(mosquitoVarDiffsFromAvg[i], 2), 5);
                         weatherVariance += Math.Round(Math.Pow(weatherVarDiffsFromAvg[i], 2), 5);
                     }
-                    covariance = covariance / (leastRowCount - 1);
+                    //covariance = covariance / (leastRowCount - 1);
                     mosquitoStdDeviation = Math.Sqrt(mosquitoVariance);
                     weatherStdDeviation = Math.Sqrt(weatherVariance);
 
@@ -421,27 +421,7 @@ namespace WNV
                     ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Average Pearson Correlation: r = "+avgPearsonCorrelation+"');", true);
                 }
 
-
-
-
-                //procedure = "USP_Get_Select_MeanCountsByStateByDateRange";
-                //parameters = new Hashtable()
-                //{
-                //    {"StartWeek",ddlUniExtrStartYear.SelectedValue.ToString()+"-01-01"},
-                //    {"EndWeek",ddlUniExtrEndYear.SelectedValue.ToString()+"-12-31"}
-                //};
-                //String mosquitoJsonToRender = generateJSONFromDataTable(procedure, parameters);
-                //ScriptManager.RegisterStartupScript(this, GetType(), "renderUnivariateExtrusion", "renderUnivariateExtrusion('" + mosquitoJsonToRender + "','" + ddlUniExtrStat.SelectedValue + "');", true);
-
-
-                //procedure = "USP_Get_Select_TotalCountsByStateByDateRange";
-                //parameters = new Hashtable()
-                //{
-                //    {"StartWeek",ddlUniExtrStartYear.SelectedValue.ToString()+"-01-01"},
-                //    {"EndWeek",ddlUniExtrEndYear.SelectedValue.ToString()+"-12-31"}
-                //};
-                //String weatherJsonToRender = generateJSONFromDataTable(procedure, parameters);
-                //ScriptManager.RegisterStartupScript(this, GetType(), "renderUnivariateExtrusion", "renderUnivariateExtrusion('" + weatherJsonToRender + "','" + ddlUniExtrStat.SelectedValue + "');", true);
+                ScriptManager.RegisterStartupScript(this, GetType(), "renderPearsonCorrelationHeatmap", "renderPearsonCorrelationHeatmap('" + jsonToRender + "','" + ddlPearsonHeatMosquitoVar.Value + "','"+ddlPearsonHeatWeatherVar.Value+"');", true);
             }
         }
 

@@ -1194,9 +1194,10 @@
 
 
 
-            function renderPearsonCorrelationHeatmap(jsonString) {
+            function renderPearsonCorrelationHeatmap(jsonString, mosquitoVarOfInterest, weatherVarOfInterest) {
 
                 
+                var jsonToRender = JSON.parse(jsonString);
                 var btnHide = document.getElementById("btnHide");
                 if (btnHide.innerHTML == "Show") {
                     btnHide.click();
@@ -1208,6 +1209,7 @@
                 if (viewer.dataSources.get(viewer.dataSources.indexOf(globalRefCountyDataSource))) {
                     viewer.dataSources.remove(globalRefCountyDataSource, false);
                 }
+                var infoBoxMessage = "Pearson's Coefficient";
                 
                 var countyGeoJson;
                 if (rdoCountyLowQual.checked) {
@@ -1251,7 +1253,9 @@
 
                         if (countyEntity.properties.State == ddlState.options[ddlState.selectedIndex].value || chkAllStates) {
                             
-                            //Remove the outlines.
+                            countyEntity.polygon.show = false;
+                            countyEntity.polygon.outline = false;
+
                             ddlOutlineColor.value == "01" ? countyEntity.polygon.outline = false : countyEntity.polygon.outline = true;
                             if (countyEntity.polygon.outline) {
                                 if (ddlOutlineColor.value == "02") {
@@ -1267,49 +1271,46 @@
                                 }
                             }
 
-                            var currMosquitoVarDiffFromMean = 0;
-                            var currWeatherVarDiffFromMean = 0;
-                            var currMosquitoVarStdDeviation = 0;
-                            var currWeatherVarStdDeviation = 0;
-                            var countyPearsonCorrelationVal = 0;
-                            var covariance = 0;
-                            for (var j = 0; j < mosquitoJson.length; j++) {
-                                var mosquitoDataRow = mosquitoJson[j];
-                                currMosquitoVarDiffFromMean = mosquitoDataRow[mosquitoColumnOfInterest] - meanMosquitoVariable;
-                            }
-                            for (var j = 0; j < weatherJson.length; j++) {
-                                var weatherDataRow = weatherJson[j];
-                                currWeaterVarDiffFromMean = weatherDataRow[weatherColumnOfInterest] - meanWeatherVariable;
-                            }
-                            covariance = currMosquitoVarDiffFromMean * currWeatherVarDiffFromMean;
-                            //need rowcount for each county for std deviation calculations.
-
-
-
-
-
-
-
                             for (var j = 0; j < jsonToRender.length; j++){
                                 
-                                var mosquitoDataRow = jsonToRender[j];
-                                for (var key in mosquitoDataRow){
+                                var dataRow = jsonToRender[j];
+                                for (var key in dataRow){
                                     var columnHeader = key;
-                                    var columnValue = mosquitoDataRow[columnHeader];
+                                    var columnValue = dataRow[columnHeader];
                                     if (columnValue == name) {
+                                        countyEntity.polygon.show = true;
                                         var columnCountyName = columnValue;
-                                        var valueOfInterest = mosquitoDataRow[columnOfInterest];
-                                        countyEntity.polygon.extrudedHeight = Math.floor((valueOfInterest / maxColumnValue) * ((extrusionFactor / 100) * 200000));
-                                        var color = new Cesium.Color.fromBytes(
-                                            255,
-                                            255 - Math.floor((valueOfInterest/maxColumnValue) * 255),
-                                            255 - Math.floor((valueOfInterest/maxColumnValue) * 255),
-                                            Math.floor((dataOpacity/100) * 255)
-                                        );
+                                        var mosquitoVarOfInterest = dataRow["MosquitoVar"];
+                                        var weatherVarOfInterest = dataRow["WeatherVar"];
+                                        var valueOfInterest = dataRow["PearsonCoefficient"];
+                                        countyEntity.polygon.extrudedHeight = 0;
+                                        var color;
+                                        if (valueOfInterest <= 0) {
+                                            color = new Cesium.Color.fromBytes(
+                                                0,
+                                                0,
+                                                255,
+                                                Math.floor((valueOfInterest*-1) * 255)
+                                            );
+                                        } else if (valueOfInterest == 0) {
+                                            color = new Cesium.Color.fromBytes(
+                                                0,
+                                                0,
+                                                0,
+                                                0
+                                            );
+                                        } else {
+                                            color = new Cesium.Color.fromBytes(
+                                                255,
+                                                0,
+                                                0,
+                                                Math.floor((valueOfInterest) * 255)
+                                            );
+                                        }
                                         countyEntity.polygon.material = color;
                                         
                                         var valueOfInterestLegendOffsetText = "";
-                                        var valueOfInterestLegendOffsetValue = Math.round(((maxColumnValue - valueOfInterest) / maxColumnValue) * 298);
+                                        var valueOfInterestLegendOffsetValue = Math.round(((1 - valueOfInterest) / 1) * 298);
                                         if (!valueOfInterestLegendOffsetValue == 0) {
                                             valueOfInterestLegendOffsetText = '<div class="row" style="height:' + valueOfInterestLegendOffsetValue + 'px"><div class="col-xs-12"></div></div>';
                                         }
@@ -1326,12 +1327,12 @@
                                             '</div>' +
                                             '<div class="row">'+
                                                 '<div class="col-xs-4 text-right" style="padding-right:0px">' +
-                                                    '<div class="row" style="height:150px"><div class="col-xs-12">'+maxColumnValue + '&nbsp;&nbsp;&mdash;'+'</div></div>'+
+                                                    '<div class="row" style="height:150px"><div class="col-xs-12">' + "1" + '&nbsp;&nbsp;&mdash;'+'</div></div>'+
                                                     '<div class="row" style="height:150px"><div class="col-xs-12"></div></div>'+
-                                                    '<div class="row" style="height:22px"><div class="col-xs-12">'+minColumnValue + '&nbsp;&nbsp;&mdash;'+'</div></div>'+
+                                                    '<div class="row" style="height:22px"><div class="col-xs-12">'+ "-1" + '&nbsp;&nbsp;&mdash;'+'</div></div>'+
                                                 '</div>' +
                                                 '<div class="col-xs-4" style="margin-top:12px">' +
-                                                    '<div style="height:300px;background-image: linear-gradient(rgba(255,0,0,'+dataOpacity/100+'),rgba(255,255,255,'+dataOpacity/100+')">' +
+                                                    '<div style="height:300px;background-image: linear-gradient(rgba(255,0,0),rgba(0,0,0,0),rgba(0,0,255))">' +
                                                         
                                                     '</div>' +
                                                 '</div>' +
@@ -1362,7 +1363,7 @@
 
                                         var countyPolygonBoundingSphere = Cesium.BoundingSphere.fromPoints(countyPolygonPositions);
                                         var countyCartographicCenter = Cesium.Cartographic.fromCartesian(countyPolygonBoundingSphere.center);
-                                        var countyExtrusionHeightOffset = Cesium.Cartesian3.fromRadians(countyCartographicCenter.longitude, countyCartographicCenter.latitude, countyEntity.polygon.extrudedHeight.getValue(Cesium.JulianDate.now()) + 10000);
+                                        var countyExtrusionHeightOffset = Cesium.Cartesian3.fromRadians(countyCartographicCenter.longitude, countyCartographicCenter.latitude, countyEntity.polygon.extrudedHeight.getValue(Cesium.JulianDate.now()) + 4000);
                                         countyEntity.position = countyExtrusionHeightOffset;
                                         
                                         countyEntity.label = {
@@ -1402,7 +1403,7 @@
 
                 }).otherwise(function(error){
                     //Display any errrors encountered while loading.
-                    window.alert(error + " Univariate Extr");
+                    window.alert(error + " Pearson Heatmap");
                 });
             }
 
