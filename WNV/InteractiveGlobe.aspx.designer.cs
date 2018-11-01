@@ -76,22 +76,40 @@ namespace WNV {
         protected global::System.Web.UI.WebControls.DropDownList ddlUniExtrStat;
         
         /// <summary>
-        /// ddlPearsonHeatStartYear control.
+        /// ddlPearsonHeatMosquitoVar control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlPearsonHeatStartYear;
+        protected global::System.Web.UI.HtmlControls.HtmlSelect ddlPearsonHeatMosquitoVar;
         
         /// <summary>
-        /// ddlPearsonHeatEndYear control.
+        /// ddlPearsonHeatDelayWeeks control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlPearsonHeatEndYear;
+        protected global::System.Web.UI.HtmlControls.HtmlSelect ddlPearsonHeatDelayWeeks;
+        
+        /// <summary>
+        /// ddlPearsonHeatWeatherVar control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlSelect ddlPearsonHeatWeatherVar;
+        
+        /// <summary>
+        /// ddlPearsonHeatWeekOfInterest control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlSelect ddlPearsonHeatWeekOfInterest;
         
         /// <summary>
         /// upnlbtnRender control.

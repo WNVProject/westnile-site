@@ -340,23 +340,17 @@
                         </div>
                         <div id="pnlVisualization3" class="mb-0 mt-1 collapse">
                             <div class="row mb-1">
-                                <div class="col-lg-3">
+                                <div class="col-lg-6">
                                     <h6 class="text-white">Mosquito Vairable</h6>
                                 </div>
-                                <div class="col-lg-5">
-                                    <h6 class="text-white">Weather Vairable</h6>
-                                </div>
-                                <div class="col-lg-2">
-                                    <h6 class="text-white">Start Year</h6>
-                                </div>
-                                <div class="col-lg-2">
-                                    <h6 class="text-white">End Year</h6>
+                                <div class="col-lg-6">
+                                    <h6 class="text-white">Mosquito Delay Weeks</h6>
                                 </div>
                             </div>
                             <div class="row mb-2">
-                                <div class="col-lg-3">
-                                    <select id="ddlPearsonHeatMosquitoVar" class="cesium-button p-1 m-0 w-100 aspnet-width-fix">
-                                        <option value="Mosquitoes">All</option>
+                                <div class="col-lg-6">
+                                    <select id="ddlPearsonHeatMosquitoVar" runat="server" class="cesium-button p-1 m-0 w-100 aspnet-width-fix">
+                                        <option value="All Mosquitoes">All</option>
                                         <option value="Males">Males</option>
                                         <option value="Females">Females</option>
                                         <option value="Other">Other</option>
@@ -369,26 +363,56 @@
                                         <option value="Culiseta">Culiseta</option>
                                     </select>
                                 </div>
-                                <div class="col-lg-5">
-                                    <select id="ddlPearsonHeatWeatherVar" class="cesium-button p-1 m-0 w-100 aspnet-width-fix">
-                                        <option value="Temp">Mean Temp (F&deg;)</option>
+                                <div class="col-lg-6">
+                                    <select id="ddlPearsonHeatDelayWeeks" runat="server" class="cesium-button p-1 m-0 w-100 aspnet-width-fix">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-1">
+                                <div class="col-lg-6">
+                                    <h6 class="text-white">Weather Vairable</h6>
+                                </div>
+                                <div class="col-lg-6">
+                                    <h6 class="text-white">Week Of Summer</h6>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-lg-6">
+                                    <select id="ddlPearsonHeatWeatherVar" runat="server" class="cesium-button p-1 m-0 w-100 aspnet-width-fix">
+                                        <option value="Avg Temp">Mean Temp (F&deg;)</option>
                                         <option value="Max Temp">Max Temp (F&deg;)</option>
                                         <option value="Min Temp">Min Temp (F&deg;)</option>
                                         <option value="Bare Soil Temp">Bare Soil Temp (F&deg;)</option>
                                         <option value="Turf Soil Temp">Turf Soil Temp (F&deg;)</option>
                                         <option value="Dew Point">Dew Point (F&deg;)</option>
                                         <option value="Wind Chill">Wind Chill (F&deg;)</option>
-                                        <option value="Mean Wind Speed">Mean Wind Speed (mph)</option>
+                                        <option value="Avg Wind Speed">Mean Wind Speed (mph)</option>
                                         <option value="Max Wind Speed">Max Wind Speed (mph)</option>
-                                        <option value="Solar Radiation">Solar Radiation (W/m&sup2;)</option>
+                                        <option value="Solar Rad">Solar Radiation (W/m&sup2;)</option>
                                         <option value="Rainfall">Rainfall (in)</option>
                                     </select>
                                 </div>
-                                <div class="col-lg-2">
-                                    <asp:DropDownList ID="ddlPearsonHeatStartYear" runat="server" CssClass="cesium-button p-1 m-0 w-100 aspnet-width-fix" Width="100%"></asp:DropDownList>
-                                </div>
-                                <div class="col-lg-2">
-                                    <asp:DropDownList ID="ddlPearsonHeatEndYear" runat="server" CssClass="cesium-button p-1 m-0 w-100 aspnet-width-fix" Width="100%"></asp:DropDownList>
+                                <div class="col-lg-6">
+                                    <select id="ddlPearsonHeatWeekOfInterest" runat="server" class="cesium-button p-1 m-0 w-100 aspnet-width-fix">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                        <option value="13">13</option>
+                                        <option value="14">14</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -1170,39 +1194,9 @@
 
 
 
-            function renderPearsonCorrelationHeatmap(mosquitoJsonString,weatherJsonString) {
+            function renderPearsonCorrelationHeatmap(jsonString) {
 
-                var mosquitoJson = JSON.parse(mosquitoJsonString);
-                var weatherJson = JSON.parse(weatherJsonString);
-
-                var mosquitoVariable = document.getElementById("ddlPearsonHeatMosquitoVar").value;
-                var weatherVariable = document.getElementById("ddlPearsonHeatWeatherVar").value;
-                var mosquitoColumnOfInterest = mosquitoVariable;
-                var weatherColumnOfInterest = weatherVariable;
-
-                var meanMosquitoVariable;
-                var meanWeatherVariable;
-                var mosquitoVariableSum = 0;
-                var weatherVariableSum = 0;
-                var mosquitoVarInstanceCount = 0;
-                var weatherVarInstanceCount = 0;
-
-                for (var i = 0; i < mosquitoJson.length; i++){
-                    var mosquitoDataRow = mosquitoJson[i];
-                    mosquitoVariableSum = mosquitoVariableSum + mosquitoDataRow[mosquitoColumnOfInterest];
-                    mosquitoVarInstanceCount++;
-                }
-                meanMosquitoVariable = mosquitoVariableSum / mosquitoVarInstanceCount;
-
-                for (var i = 0; i < weatherJson.length; i++){
-                    var weatherDataRow = weatherJson[i];
-                    weatherVariableSum = weatherVariableSum + weatherDataRow[weatherColumnOfInterest];
-                    weatherVarInstanceCount++;
-                }
-                meanWeatherVariable = weatherVariableSum / weatherVarInstanceCount;
-
-
-
+                
                 var btnHide = document.getElementById("btnHide");
                 if (btnHide.innerHTML == "Show") {
                     btnHide.click();
