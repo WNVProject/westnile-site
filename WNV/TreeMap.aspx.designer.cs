@@ -22,6 +22,33 @@ namespace WNV {
         protected global::System.Web.UI.WebControls.DropDownList yearDDL;
         
         /// <summary>
+        /// locationDDL control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList locationDDL;
+        
+        /// <summary>
+        /// renderBtn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button renderBtn;
+        
+        /// <summary>
+        /// totalFemsLbl control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label totalFemsLbl;
+        
+        /// <summary>
         /// hiddenVals control.
         /// </summary>
         /// <remarks>
