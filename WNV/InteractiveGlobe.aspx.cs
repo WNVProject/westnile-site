@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace WNV
 {
@@ -24,9 +25,7 @@ namespace WNV
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            fillYearDropdowns();
-            //fillPearsonWeekDropdowns();
-            
+            fillYearDropdowns();            
 
             if (!IsPostBack)
             {
@@ -86,26 +85,34 @@ namespace WNV
                             ddlUniExtrEndYear.SelectedIndex = ddlUniHeatEndYear.Items.Count - 1;
                         }
 
-                        //procedure = "USP_Select_WeatherYear";
-                        //cmd = new MySqlCommand(procedure, conn);
-                        //cmd.CommandType = CommandType.StoredProcedure;
+                        procedure = "USP_Select_WeatherYear";
+                        cmd = new MySqlCommand(procedure, conn);
+                        cmd.CommandType = CommandType.StoredProcedure;
 
-                        //using (MySqlDataAdapter da = new MySqlDataAdapter(cmd))
-                        //{
-                        //    DataTable dt = new DataTable();
-                        //    da.Fill(dt);
+                        using (MySqlDataAdapter da = new MySqlDataAdapter(cmd))
+                        {
+                            DataTable dt = new DataTable();
+                            da.Fill(dt);
                             
-                        //    ddlPearsonHeatYear.DataSource = dt;
+                            ddlMultiExtrStartYear.DataSource = dt;
+                            ddlMultiExtrEndYear.DataSource = dt;
 
-                        //    ddlPearsonHeatYear.DataValueField = "WeatherYear";
+                            ddlMultiExtrStartYear.DataValueField = "WeatherYear";
+                            ddlMultiExtrEndYear.DataValueField = "WeatherYear";
 
-                        //    ddlPearsonHeatYear.DataTextField = "WeatherYear";
+                            ddlMultiExtrStartYear.DataTextField = "WeatherYear";
+                            ddlMultiExtrEndYear.DataTextField = "WeatherYear";
 
-                        //    ddlPearsonHeatYear.DataBind();
+                            ddlMultiExtrStartYear.DataBind();
+                            ddlMultiExtrEndYear.DataBind();
 
-                        //    ddlPearsonHeatYear.SelectedIndex = 0;
-                        //    ddlPearsonHeatYear.SelectedIndex = ddlUniHeatEndYear.Items.Count - 1;
-                        //}
+                            ddlMultiExtrStartYear.Items.RemoveAt(ddlMultiExtrStartYear.Items.Count - 1);
+                            ddlMultiExtrEndYear.Items.RemoveAt(ddlMultiExtrEndYear.Items.Count - 1);
+
+                            ddlMultiExtrStartYear.SelectedIndex = 0;
+                            ddlMultiExtrEndYear.SelectedIndex = ddlMultiExtrEndYear.Items.Count - 1;
+
+                        }
                     }
                 }
             }
@@ -114,68 +121,6 @@ namespace WNV
                 ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Could not retrieve Years: " + ex.Message + "');", true);
             }
         }
-        protected void fillPearsonWeekDropdowns()
-        {
-            ddlPearsonWeekStartFill();
-            ddlPearsonWeekEndFill();
-        }
-
-        protected void ddlPearsonWeekStartFill()
-        {
-            //try
-            //{
-            //    using (MySqlConnection conn = new MySqlConnection(cs))
-            //    {
-            //        var procedure = "USP_Get_Select_WeatherWeekStart";
-            //        MySqlCommand cmd = new MySqlCommand(procedure, conn);
-            //        cmd.CommandType = CommandType.StoredProcedure;
-            //        cmd.Parameters.AddWithValue("WeatherYear", ddlPearsonHeatYear.SelectedValue);
-
-            //        using (MySqlDataAdapter da = new MySqlDataAdapter(cmd))
-            //        {
-            //            DataTable dt = new DataTable();
-            //            da.Fill(dt);
-            //            ddlPearsonHeatWeekStart.DataSource = dt;
-            //            ddlPearsonHeatWeekStart.DataValueField = "WeekStart";
-            //            ddlPearsonHeatWeekStart.DataTextField = "WeekStart";
-            //            ddlPearsonHeatWeekStart.DataBind();
-            //        }
-            //    }
-            //}
-            //catch (MySqlException ex)
-            //{
-            //    ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Could not retrieve Start Weeks: " + ex.Message + "');", true);
-            //}
-        }
-        protected void ddlPearsonWeekEndFill()
-        {
-            //try
-            //{
-            //    using (MySqlConnection conn = new MySqlConnection(cs))
-            //    {
-            //        var procedure = "USP_Get_Select_WeatherWeekEnd";
-            //        MySqlCommand cmd = new MySqlCommand(procedure, conn);
-            //        cmd.CommandType = CommandType.StoredProcedure;
-            //        cmd.Parameters.AddWithValue("WeatherYear", ddlPearsonHeatYear.SelectedValue);
-
-            //        using (MySqlDataAdapter da = new MySqlDataAdapter(cmd))
-            //        {
-            //            DataTable dt = new DataTable();
-            //            da.Fill(dt);
-            //            ddlPearsonHeatWeekEnd.DataSource = dt;
-            //            ddlPearsonHeatWeekEnd.DataValueField = "WeekEnd";
-            //            ddlPearsonHeatWeekEnd.DataTextField = "WeekEnd";
-            //            ddlPearsonHeatWeekEnd.DataBind();
-            //            ddlPearsonHeatWeekEnd.SelectedIndex = ddlPearsonHeatWeekEnd.Items.Count - 1;
-            //        }
-            //    }
-            //}
-            //catch (MySqlException ex)
-            //{
-            //    ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Could not retrieve End Weeks: " + ex.Message + "');", true);
-            //}
-        }
-
 
 
         protected void btnRender_Click(object sender, EventArgs e)
@@ -244,13 +189,18 @@ namespace WNV
             }
             else if (ddlVisType.SelectedValue == "3")
             {
+
+            }
+            else if (ddlVisType.SelectedValue == "4")
+            {
                 DataTable counties = new DataTable();
                 string currentCounty = "";
                 List<double> mosquitoVarDiffsFromAvg = new List<double>();
                 List<double> weatherVarDiffsFromAvg = new List<double>();
                 List<double> allPearsonCoefficients = new List<double>();
                 StringBuilder jsonToRender = new StringBuilder();
-
+                Stopwatch sw = new Stopwatch();
+                TimeSpan totalElapsed = new TimeSpan();
                 try
                 {
                     using (MySqlConnection conn = new MySqlConnection(cs))
@@ -274,14 +224,16 @@ namespace WNV
                 foreach (DataRow county in counties.Rows)
                 {
                     currentCounty = county["CountyName"].ToString();
-                    int weekOfInterest = Convert.ToInt32(ddlPearsonHeatWeekOfInterest.Value);
+                    int weekOfInterest = Convert.ToInt32(ddlPearsonHeatWeekOfInterest.SelectedValue);
                     string mosquitoVar = ddlPearsonHeatMosquitoVar.Value;
                     string weatherVar = ddlPearsonHeatWeatherVar.Value;
+                    int delayWeeks = Convert.ToInt32(ddlPearsonHeatDelayWeeks.SelectedValue);
                     DataTable mosquitoDiffsFromAvg = new DataTable();
                     DataTable weatherDiffsFromAvg = new DataTable();
 
                     try
                     {
+                        sw.Start();
                         using (MySqlConnection conn = new MySqlConnection(cs))
                         {
                             procedure = "USP_Get_Select_CountyMosquitoVarDiffFromAvgByWeekOfSummer";
@@ -290,12 +242,16 @@ namespace WNV
                             cmd.Parameters.AddWithValue("WeekOfSummer", weekOfInterest);
                             cmd.Parameters.AddWithValue("CountyName", currentCounty);
                             cmd.Parameters.AddWithValue("VariableChosen", mosquitoVar);
+                            cmd.Parameters.AddWithValue("DelayWeeks", delayWeeks);
 
                             using (MySqlDataAdapter da = new MySqlDataAdapter(cmd))
                             {
                                 da.Fill(mosquitoDiffsFromAvg);
                             }
                         }
+                        sw.Stop();
+                        totalElapsed = totalElapsed.Add(sw.Elapsed);
+                        sw.Reset();
                         using (MySqlConnection conn = new MySqlConnection(cs))
                         {
                             procedure = "USP_Get_Select_CountyWeatherVarDiffFromAvgByWeekOfSummer";
@@ -378,10 +334,11 @@ namespace WNV
                         weatherVariance += Math.Round(Math.Pow(weatherVarDiffsFromAvg[i], 2), 5);
                     }
                     //covariance = covariance / (leastRowCount - 1);
+
                     mosquitoStdDeviation = Math.Sqrt(mosquitoVariance);
                     weatherStdDeviation = Math.Sqrt(weatherVariance);
 
-                    if (mosquitoStdDeviation == 0.0 || weatherStdDeviation == 0.0 || leastRowCount < 3)
+                    if (mosquitoStdDeviation == 0.0 || weatherStdDeviation == 0.0)
                     {
                         skipThisCounty = true;
                     }
@@ -401,6 +358,8 @@ namespace WNV
                         jsonToRender.Append("\"WeatherRowCount\":" + weatherRowCount + ",");
                         jsonToRender.Append("\"LeastRowCount\":" + leastRowCount + ",");
                         jsonToRender.Append("\"Covariance\":" + covariance + ",");
+                        jsonToRender.Append("\"MosquitoStdDev\":" + mosquitoStdDeviation + ",");
+                        jsonToRender.Append("\"WeatherStdDev\":" + weatherStdDeviation + ",");
                         jsonToRender.Append("\"PearsonCoefficient\":" + pearsonCorrelationCoefficient + "},");
                     }
                 }
@@ -414,13 +373,8 @@ namespace WNV
                 jsonToRender.Remove(jsonToRender.Length - 1, 1);
                 jsonToRender.Append("]");
 
-                using (StreamWriter sr = new StreamWriter(Server.MapPath("/Scripts/GeoJSON/testPearson.json")))
-                {
-                    sr.Write(jsonToRender);
-                    sr.Dispose();
-                    ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Average Pearson Correlation: r = "+avgPearsonCorrelation+"');", true);
-                }
-
+                //ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Average Pearson Correlation: r = "+avgPearsonCorrelation+"');", true);
+                //ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Time to calculate = " + totalElapsed + "');", true);
                 ScriptManager.RegisterStartupScript(this, GetType(), "renderPearsonCorrelationHeatmap", "renderPearsonCorrelationHeatmap('" + jsonToRender + "','" + ddlPearsonHeatMosquitoVar.Value + "','"+ddlPearsonHeatWeatherVar.Value+"');", true);
             }
         }
@@ -531,10 +485,46 @@ namespace WNV
             }
             return json;
         }
-
-        protected void ddlPearsonHeatYear_SelectedIndexChanged(object sender, EventArgs e)
+        
+        protected void ddlPearsonHeatDelayWeeks_SelectedIndexChanged(object sender, EventArgs e)
         {
-            fillPearsonWeekDropdowns();
+            adjustDelayWeeks();
+        }
+
+        protected void ddlPearsonHeatWeekOfInterest_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            adjustDelayWeeks();
+        }
+
+        protected void adjustDelayWeeks()
+        {
+            int availableDelayWeeks = 14 - Convert.ToInt32(ddlPearsonHeatWeekOfInterest.SelectedValue);
+
+            int delayWeeksSelectedIndex = ddlPearsonHeatDelayWeeks.SelectedIndex;
+            ddlPearsonHeatDelayWeeks.Items.Clear();
+
+            if (availableDelayWeeks >= 4)
+            {
+                for (int i = 0; i <=4; i++)
+                {
+                    ddlPearsonHeatDelayWeeks.Items.Add(new ListItem(i.ToString(), i.ToString()));
+                }
+            }
+            else
+            {
+                for (int i = 0; i <= availableDelayWeeks; i++)
+                {
+                    ddlPearsonHeatDelayWeeks.Items.Add(new ListItem(i.ToString(), i.ToString()));
+                }
+            }
+            if (delayWeeksSelectedIndex <= ddlPearsonHeatDelayWeeks.Items.Count - 1)
+            {
+                ddlPearsonHeatDelayWeeks.SelectedIndex = delayWeeksSelectedIndex;
+            }
+            else
+            {
+                ddlPearsonHeatDelayWeeks.SelectedIndex = ddlPearsonHeatDelayWeeks.Items.Count - 1;
+            }
         }
     }
 }

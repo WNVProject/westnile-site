@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Web.UI.HtmlControls;
 using MySql;
 using MySql.Data;
 using MySql.Data.MySqlClient;
@@ -209,7 +210,7 @@ namespace WNV
             int weatherVariableTypeCount = 0;
 
             ICollection countsKeys = chktblCounts.Keys;
-            foreach (CheckBox chkBox in countsKeys)
+            foreach (HtmlInputCheckBox chkBox in countsKeys)
             {
                 if (chkBox.Checked)
                 {
@@ -218,7 +219,7 @@ namespace WNV
                 }
             }
             ICollection weatherKeys = chktblWeather.Keys;
-            foreach (CheckBox chkBox in weatherKeys)
+            foreach (HtmlInputCheckBox chkBox in weatherKeys)
             {
                 if (chkBox.Checked)
                 {

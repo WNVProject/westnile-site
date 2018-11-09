@@ -73,7 +73,7 @@ namespace WNV {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkSplineWeather;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkSplineWeather;
         
         /// <summary>
         /// chkSplineCount control.
@@ -82,7 +82,7 @@ namespace WNV {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkSplineCount;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkSplineCount;
         
         /// <summary>
         /// chkMeanTemp control.
@@ -91,7 +91,7 @@ namespace WNV {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkMeanTemp;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkMeanTemp;
         
         /// <summary>
         /// chkMeanMaxTemp control.
@@ -100,7 +100,7 @@ namespace WNV {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkMeanMaxTemp;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkMeanMaxTemp;
         
         /// <summary>
         /// chkMeanMinTemp control.
@@ -109,7 +109,7 @@ namespace WNV {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkMeanMinTemp;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkMeanMinTemp;
         
         /// <summary>
         /// chkMeanBareSoilTemp control.
@@ -118,7 +118,7 @@ namespace WNV {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkMeanBareSoilTemp;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkMeanBareSoilTemp;
         
         /// <summary>
         /// chkMeanTurfSoilTemp control.
@@ -127,7 +127,7 @@ namespace WNV {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkMeanTurfSoilTemp;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkMeanTurfSoilTemp;
         
         /// <summary>
         /// chkMeanWindChill control.
@@ -136,7 +136,7 @@ namespace WNV {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkMeanWindChill;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkMeanWindChill;
         
         /// <summary>
         /// chkMeanWindSpeed control.
@@ -145,7 +145,7 @@ namespace WNV {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkMeanWindSpeed;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkMeanWindSpeed;
         
         /// <summary>
         /// chkMeanMaxWindSpeed control.
@@ -154,7 +154,7 @@ namespace WNV {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkMeanMaxWindSpeed;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkMeanMaxWindSpeed;
         
         /// <summary>
         /// chkMeanDewPoint control.
@@ -163,7 +163,7 @@ namespace WNV {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkMeanDewPoint;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkMeanDewPoint;
         
         /// <summary>
         /// chkMeanTotalRainfall control.
@@ -172,7 +172,7 @@ namespace WNV {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkMeanTotalRainfall;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkMeanTotalRainfall;
         
         /// <summary>
         /// chkMeanTotalSolarRad control.
@@ -181,7 +181,7 @@ namespace WNV {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkMeanTotalSolarRad;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkMeanTotalSolarRad;
         
         /// <summary>
         /// chkMeanTotalMosquitoes control.
@@ -190,7 +190,7 @@ namespace WNV {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkMeanTotalMosquitoes;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkMeanTotalMosquitoes;
         
         /// <summary>
         /// chkMeanTotalMales control.
@@ -199,7 +199,7 @@ namespace WNV {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkMeanTotalMales;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkMeanTotalMales;
         
         /// <summary>
         /// chkMeanTotalFemales control.
@@ -208,7 +208,7 @@ namespace WNV {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkMeanTotalFemales;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkMeanTotalFemales;
         
         /// <summary>
         /// chkMeanOther control.
@@ -217,7 +217,7 @@ namespace WNV {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkMeanOther;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkMeanOther;
         
         /// <summary>
         /// chkMeanAedes control.
@@ -226,7 +226,7 @@ namespace WNV {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkMeanAedes;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkMeanAedes;
         
         /// <summary>
         /// chkMeanAedesVexans control.
@@ -235,7 +235,7 @@ namespace WNV {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkMeanAedesVexans;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkMeanAedesVexans;
         
         /// <summary>
         /// chkMeanAnopheles control.
@@ -244,7 +244,7 @@ namespace WNV {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkMeanAnopheles;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkMeanAnopheles;
         
         /// <summary>
         /// chkMeanCulex control.
@@ -253,7 +253,7 @@ namespace WNV {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkMeanCulex;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkMeanCulex;
         
         /// <summary>
         /// chkMeanCulexSalinarius control.
@@ -262,7 +262,7 @@ namespace WNV {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkMeanCulexSalinarius;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkMeanCulexSalinarius;
         
         /// <summary>
         /// chkMeanCulexTarsalis control.
@@ -271,7 +271,7 @@ namespace WNV {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkMeanCulexTarsalis;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkMeanCulexTarsalis;
         
         /// <summary>
         /// chkMeanCuliseta control.
@@ -280,7 +280,7 @@ namespace WNV {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkMeanCuliseta;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkMeanCuliseta;
         
         /// <summary>
         /// upnlDropdowns control.
@@ -310,6 +310,15 @@ namespace WNV {
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvCounty;
         
         /// <summary>
+        /// UpdatePanel1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel UpdatePanel1;
+        
+        /// <summary>
         /// ddlYear control.
         /// </summary>
         /// <remarks>
@@ -328,6 +337,15 @@ namespace WNV {
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvYear;
         
         /// <summary>
+        /// UpdatePanel2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel UpdatePanel2;
+        
+        /// <summary>
         /// ddlWeekStart control.
         /// </summary>
         /// <remarks>
@@ -344,6 +362,15 @@ namespace WNV {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvStartDate;
+        
+        /// <summary>
+        /// UpdatePanel3 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel UpdatePanel3;
         
         /// <summary>
         /// ddlWeekEnd control.

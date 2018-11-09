@@ -81,7 +81,8 @@
                                 <asp:DropDownList ID="ddlVisType" runat="server" CssClass="cesium-button p-1 m-0 aspnet-width-fix" Width="100%" onchange="toggleParameterPanel(this);">
                                     <asp:ListItem Value="1" Text="Univariate County Heatmap" ></asp:ListItem>
                                     <asp:ListItem Value="2" Text="Univariate County Extrusion" ></asp:ListItem>
-                                    <asp:ListItem Value="3" Text="Pearson's Correlation Heatmap" ></asp:ListItem>
+                                    <%--<asp:ListItem Value="3" Text="Bivariate County Extrusion" ></asp:ListItem>--%>
+                                    <asp:ListItem Value="4" Text="Pearson's Correlation County Heatmap" ></asp:ListItem>
                                 </asp:DropDownList>
                             </div>
                             <div class="col-lg-3">
@@ -340,6 +341,97 @@
                         </div>
                         <div id="pnlVisualization3" class="mb-0 mt-1 collapse">
                             <div class="row mb-1">
+                                <div class="col-lg-4">
+                                    <h6 class="text-white">Mosquito Vairable</h6>
+                                </div>
+                                <div class="col-lg-fivehalves">
+                                    <h6 class="text-white">Start Year</h6>
+                                </div>
+                                <div class="col-lg-fivehalves">
+                                    <h6 class="text-white">End Year</h6>
+                                </div>
+                                <div class="col-lg-3">
+                                    <h6 class="text-white">Statistic</h6>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-lg-4">
+                                    <select id="ddlMultiExtrMosquitoVariable" class="cesium-button p-1 m-0 w-100 aspnet-width-fix">
+                                        <option value="Mosquitoes">All</option>
+                                        <option value="Males">Males</option>
+                                        <option value="Females">Females</option>
+                                        <option value="Other">Other</option>
+                                        <option value="Aedes">Aedes</option>
+                                        <option value="Aedes Vexans">Aedes Vexans</option>
+                                        <option value="Anopheles">Anopheles</option>
+                                        <option value="Culex">Culex</option>
+                                        <option value="Culex Salinarius">Culex Salinarius</option>
+                                        <option value="Culex Tarsalis">Culex Tarsalis</option>
+                                        <option value="Culiseta">Culiseta</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-fivehalves">
+                                    <asp:DropDownList ID="ddlMultiExtrStartYear" runat="server" CssClass="cesium-button p-1 m-0 w-100 aspnet-width-fix" Width="100%"></asp:DropDownList>
+                                </div>
+                                <div class="col-lg-fivehalves">
+                                    <asp:DropDownList ID="ddlMultiExtrEndYear" runat="server" CssClass="cesium-button p-1 m-0 w-100 aspnet-width-fix" Width="100%"></asp:DropDownList>
+                                </div>
+                                <div class="col-lg-3">
+                                    <asp:DropDownList ID="ddlMultiExtrStat" runat="server" CssClass="cesium-button p-1 m-0 aspnet-width-fix" Width="100%">
+                                        <asp:ListItem Value="Mean" Text="Average" ></asp:ListItem>
+                                        <asp:ListItem Value="Total" Text="Sum" ></asp:ListItem>
+                                    </asp:DropDownList>
+                                </div>
+                            </div>
+                            <div class="row mb-1">
+                                <div class="col-lg-4">
+                                    <h6 class="text-white">Weather Variable</h6>
+                                </div>
+                                <div class="col-lg-4">
+                                    <h6 class="text-white">Extrusion Factor</h6>
+                                </div>
+                                <div class="col-lg-4">
+                                    <h6 class="text-white">Data Opacity</h6>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-lg-4">
+                                    <select id="Select1" runat="server" class="cesium-button p-1 m-0 w-100 aspnet-width-fix">
+                                        <option value="Avg Temp">Mean Temp (F&deg;)</option>
+                                        <option value="Max Temp">Max Temp (F&deg;)</option>
+                                        <option value="Min Temp">Min Temp (F&deg;)</option>
+                                        <option value="Bare Soil Temp">Bare Soil Temp (F&deg;)</option>
+                                        <option value="Turf Soil Temp">Turf Soil Temp (F&deg;)</option>
+                                        <option value="Dew Point">Dew Point (F&deg;)</option>
+                                        <option value="Wind Chill">Wind Chill (F&deg;)</option>
+                                        <option value="Avg Wind Speed">Mean Wind Speed (mph)</option>
+                                        <option value="Max Wind Speed">Max Wind Speed (mph)</option>
+                                        <option value="Solar Rad">Solar Radiation (W/m&sup2;)</option>
+                                        <option value="Rainfall">Rainfall (in)</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="slideContainer">
+                                        <input id="rngMultiExtrExtrusionFactor" class="ctrlSlider cesium-button p-3 m-0 w-100" type="range" value="100" min="10" max="100" step="1" onchange="valMultiExtrExtrusionFactor.value=value;" onmouseover="toggleTooltip('valMultiExtrExtrusionFactor');" onmouseout="toggleTooltip('valMultiExtrExtrusionFactor');" onmousemove="updateSlideOutputLive(this,'valMultiExtrExtrusionFactor');"/>
+                                        <output id="valMultiExtrExtrusionFactor" class="tooltip-hide cesium-button text-white p-1 m-0 w-100 text-center">100</output>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="slideContainer">
+                                        <input id="rngMultiExtrDataOpacity" class="ctrlSlider cesium-button p-3 m-0 w-100" type="range" value="100" min="10" max="100" step="1" onchange="valMultiExtrDataOpacity.value=value;" onmouseover="toggleTooltip('valMultiExtrDataOpacity');" onmouseout="toggleTooltip('valMultiExtrDataOpacity');" onmousemove="updateSlideOutputLive(this,'valMultiExtrDataOpacity');"/>
+                                        <output id="valMultiExtrDataOpacity" class="tooltip-hide cesium-button text-white p-1 m-0 w-100 text-center">100</output>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-0">
+                            <div class="col-lg-12 text-white mb-0">
+                                <div class="m-0 dropdown-toggle" data-toggle="collapse" data-target="#pnlVisualization4" aria-expanded="false" aria-controls="pnlVisualization4">
+                                </div>
+                            </div>
+                        </div>
+                        <div id="pnlVisualization4" class="mb-0 mt-1 collapse">
+                            <div class="row mb-1">
                                 <div class="col-lg-6">
                                     <h6 class="text-white">Mosquito Vairable</h6>
                                 </div>
@@ -364,12 +456,20 @@
                                     </select>
                                 </div>
                                 <div class="col-lg-6">
-                                    <select id="ddlPearsonHeatDelayWeeks" runat="server" class="cesium-button p-1 m-0 w-100 aspnet-width-fix">
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                    </select>
+                                    <asp:UpdatePanel ID="upnlPearsonDelayWeeks" runat="server">
+                                        <Triggers>
+                                            <asp:AsyncPostBackTrigger ControlID="ddlPearsonHeatDelayWeeks" /> 
+                                        </Triggers>
+                                        <ContentTemplate>
+                                            <asp:DropDownList ID="ddlPearsonHeatDelayWeeks" runat="server" CssClass="cesium-button p-1 m-0 aspnet-width-fix" Width="100%" AutoPostBack="true" OnSelectedIndexChanged="ddlPearsonHeatDelayWeeks_SelectedIndexChanged">
+                                                <asp:ListItem Value="0" Text="0" ></asp:ListItem>
+                                                <asp:ListItem Value="1" Text="1" ></asp:ListItem>
+                                                <asp:ListItem Value="2" Text="2" ></asp:ListItem>
+                                                <asp:ListItem Value="3" Text="3" ></asp:ListItem>
+                                                <asp:ListItem Value="4" Text="4" ></asp:ListItem>
+                                            </asp:DropDownList>
+                                        </ContentTemplate>
+                                    </asp:UpdatePanel>
                                 </div>
                             </div>
                             <div class="row mb-1">
@@ -397,22 +497,29 @@
                                     </select>
                                 </div>
                                 <div class="col-lg-6">
-                                    <select id="ddlPearsonHeatWeekOfInterest" runat="server" class="cesium-button p-1 m-0 w-100 aspnet-width-fix">
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                        <option value="6">6</option>
-                                        <option value="7">7</option>
-                                        <option value="8">8</option>
-                                        <option value="9">9</option>
-                                        <option value="10">10</option>
-                                        <option value="11">11</option>
-                                        <option value="12">12</option>
-                                        <option value="13">13</option>
-                                        <option value="14">14</option>
-                                    </select>
+                                    <asp:UpdatePanel ID="upnlPearsonWeekOfInterest" runat="server">
+                                        <Triggers>
+                                            <asp:AsyncPostBackTrigger ControlID="ddlPearsonHeatWeekOfInterest" /> 
+                                        </Triggers>
+                                        <ContentTemplate>
+                                            <asp:DropDownList ID="ddlPearsonHeatWeekOfInterest" runat="server" CssClass="cesium-button p-1 m-0 aspnet-width-fix" Width="100%" AutoPostBack="true" OnSelectedIndexChanged="ddlPearsonHeatWeekOfInterest_SelectedIndexChanged">
+                                                <asp:ListItem Value="1" Text="1" ></asp:ListItem>
+                                                <asp:ListItem Value="2" Text="2" ></asp:ListItem>
+                                                <asp:ListItem Value="3" Text="3" ></asp:ListItem>
+                                                <asp:ListItem Value="4" Text="4" ></asp:ListItem>
+                                                <asp:ListItem Value="5" Text="5" ></asp:ListItem>
+                                                <asp:ListItem Value="6" Text="6" ></asp:ListItem>
+                                                <asp:ListItem Value="7" Text="7" ></asp:ListItem>
+                                                <asp:ListItem Value="8" Text="8" ></asp:ListItem>
+                                                <asp:ListItem Value="9" Text="9" ></asp:ListItem>
+                                                <asp:ListItem Value="10" Text="10" ></asp:ListItem>
+                                                <asp:ListItem Value="11" Text="11" ></asp:ListItem>
+                                                <asp:ListItem Value="12" Text="12" ></asp:ListItem>
+                                                <asp:ListItem Value="13" Text="13" ></asp:ListItem>
+                                                <asp:ListItem Value="14" Text="14" ></asp:ListItem>
+                                            </asp:DropDownList>
+                                        </ContentTemplate>
+                                    </asp:UpdatePanel>
                                 </div>
                             </div>
                         </div>
@@ -1310,7 +1417,7 @@
                                         countyEntity.polygon.material = color;
                                         
                                         var valueOfInterestLegendOffsetText = "";
-                                        var valueOfInterestLegendOffsetValue = Math.round(((1 - valueOfInterest) / 1) * 298);
+                                        var valueOfInterestLegendOffsetValue = Math.round(((1 - valueOfInterest) * 298)/2);
                                         if (!valueOfInterestLegendOffsetValue == 0) {
                                             valueOfInterestLegendOffsetText = '<div class="row" style="height:' + valueOfInterestLegendOffsetValue + 'px"><div class="col-xs-12"></div></div>';
                                         }
@@ -1346,7 +1453,7 @@
                                                     infoBoxMessage +
                                                 '</div>' +
                                                 '<div class="col-xs-4 text-center">' +
-                                                    'Intensity' +
+                                                    'Correlation' +
                                                 '</div>' +
                                                 '<div class="col-xs-4 text-left">' +
                                                     columnCountyName +
@@ -1695,6 +1802,7 @@
                 $('#pnlVisualization1').collapse('hide');
                 $('#pnlVisualization2').collapse('hide');
                 $('#pnlVisualization3').collapse('hide');
+                $('#pnlVisualization4').collapse('hide');
 
                 if (caller.value == "1") {
                     setTimeout(function () { $('#pnlVisualization1').collapse('show') }, 350);
@@ -1702,6 +1810,8 @@
                     setTimeout(function () { $('#pnlVisualization2').collapse('show') }, 350);
                 } else if (caller.value == "3") {
                     setTimeout(function () { $('#pnlVisualization3').collapse('show') }, 350);
+                } else if (caller.value == "4") {
+                    setTimeout(function () { $('#pnlVisualization4').collapse('show') }, 350);
                 }
             }
         </script>
