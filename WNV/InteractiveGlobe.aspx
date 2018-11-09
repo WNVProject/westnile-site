@@ -4,6 +4,7 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MapContent" runat="server">
     <script src="/Scripts/Cesium/Build/Cesium/Cesium.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
     <style>
         @import url(Scripts/Cesium/Build/Cesium/Widgets/widgets.css);
         html, body, #cesiumContainer {
@@ -81,7 +82,8 @@
                                 <asp:DropDownList ID="ddlVisType" runat="server" CssClass="cesium-button p-1 m-0 aspnet-width-fix" Width="100%" onchange="toggleParameterPanel(this);">
                                     <asp:ListItem Value="1" Text="Univariate County Heatmap" ></asp:ListItem>
                                     <asp:ListItem Value="2" Text="Univariate County Extrusion" ></asp:ListItem>
-                                    <%--<asp:ListItem Value="3" Text="Multivariate County Extrusion" ></asp:ListItem>--%>
+                                    <%--<asp:ListItem Value="3" Text="Bivariate County Extrusion" ></asp:ListItem>--%>
+                                    <asp:ListItem Value="4" Text="Pearson's Correlation County Heatmap" ></asp:ListItem>
                                 </asp:DropDownList>
                             </div>
                             <div class="col-lg-3">
@@ -341,57 +343,184 @@
                         <div id="pnlVisualization3" class="mb-0 mt-1 collapse">
                             <div class="row mb-1">
                                 <div class="col-lg-4">
-                                    <h6 class="text-white">County Border Quality</h6>
+                                    <h6 class="text-white">Mosquito Vairable</h6>
                                 </div>
-                                <div class="col-lg-offset-onehalf">
+                                <div class="col-lg-fivehalves">
+                                    <h6 class="text-white">Start Year</h6>
+                                </div>
+                                <div class="col-lg-fivehalves">
+                                    <h6 class="text-white">End Year</h6>
                                 </div>
                                 <div class="col-lg-3">
-                                    <h6 class="text-white">Data Opacity</h6>
-                                </div>
-                                <div class="col-lg-2">
-                                    <h6 class="text-white">Outline Color</h6>
+                                    <h6 class="text-white">Statistic</h6>
                                 </div>
                             </div>
                             <div class="row mb-2">
-                                <div class="col-lg-threehalves">
-                                    <div class="form-check-inline">
-                                        <input id="testIn9" name="rdoCountyQuality" class="form-check-input" type="radio" checked="checked" />
-                                        <label class="form-check-label text-light" for="rdoCountyLowQual">Low</label>
-                                    </div>
-                                </div>
-                                <div class="col-lg-threehalves">
-                                    <div class="form-check-inline">
-                                        <input id="testIn10" name="rdoCountyQuality" class="form-check-input" type="radio" />
-                                        <label class="form-check-label text-light"for="rdoCountyMedQual">Med</label>
-                                    </div>
-                                </div>
-                                <div class="col-lg-threehalves">
-                                    <div class="form-check-inline">
-                                        <input id="testIn11" name="rdoCountyQuality" class="form-check-input" type="radio" />
-                                        <label class="form-check-label text-light"for="rdoCountyHighQual">High</label>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3">
-                                    <div class="slideContainer">
-                                        <input id="rngDataOpacity" class="ctrlSlider cesium-button p-3 m-0 w-100" type="range" value="100" min="40" max="100" step="2" onchange="valDataOpacity.value=value;" onmouseover="toggleTooltip('valDataOpacity');" onmouseout="toggleTooltip('valDataOpacity');" onmousemove="updateSlideOutputLive(this,'valDataOpacity');"/>
-                                        <output id="valDataOpacity" class="tooltip-hide cesium-button text-white p-1 m-0 w-100 text-center">100</output>
-                                    </div>
-                                </div>
-                                <div class="col-lg-2">
-                                    <select id="ddlTest3" class="cesium-button p-1 m-0 w-100 aspnet-width-fix">
-                                        <option value="01" selected="selected">None</option>
-                                        <option value="02">Black</option>
-                                        <option value="03">Red</option>
-                                        <option value="04">Green</option>
-                                        <option value="05">Blue</option>
-                                        <option value="06">Yellow</option>
+                                <div class="col-lg-4">
+                                    <select id="ddlMultiExtrMosquitoVariable" class="cesium-button p-1 m-0 w-100 aspnet-width-fix">
+                                        <option value="Mosquitoes">All</option>
+                                        <option value="Males">Males</option>
+                                        <option value="Females">Females</option>
+                                        <option value="Other">Other</option>
+                                        <option value="Aedes">Aedes</option>
+                                        <option value="Aedes Vexans">Aedes Vexans</option>
+                                        <option value="Anopheles">Anopheles</option>
+                                        <option value="Culex">Culex</option>
+                                        <option value="Culex Salinarius">Culex Salinarius</option>
+                                        <option value="Culex Tarsalis">Culex Tarsalis</option>
+                                        <option value="Culiseta">Culiseta</option>
                                     </select>
                                 </div>
                                 <div class="col-lg-fivehalves">
-                                    <div class="form-check-inline">
-                                        <input id="chkTest3" type="checkbox" class="form-check-input" onclick="showTraps();" />
-                                        <label class="form-check-label text-light" for="chkShowTraps">Show Traps</label>
+                                    <asp:DropDownList ID="ddlMultiExtrStartYear" runat="server" CssClass="cesium-button p-1 m-0 w-100 aspnet-width-fix" Width="100%"></asp:DropDownList>
+                                </div>
+                                <div class="col-lg-fivehalves">
+                                    <asp:DropDownList ID="ddlMultiExtrEndYear" runat="server" CssClass="cesium-button p-1 m-0 w-100 aspnet-width-fix" Width="100%"></asp:DropDownList>
+                                </div>
+                                <div class="col-lg-3">
+                                    <asp:DropDownList ID="ddlMultiExtrStat" runat="server" CssClass="cesium-button p-1 m-0 aspnet-width-fix" Width="100%">
+                                        <asp:ListItem Value="Mean" Text="Average" ></asp:ListItem>
+                                        <asp:ListItem Value="Total" Text="Sum" ></asp:ListItem>
+                                    </asp:DropDownList>
+                                </div>
+                            </div>
+                            <div class="row mb-1">
+                                <div class="col-lg-4">
+                                    <h6 class="text-white">Weather Variable</h6>
+                                </div>
+                                <div class="col-lg-4">
+                                    <h6 class="text-white">Extrusion Factor</h6>
+                                </div>
+                                <div class="col-lg-4">
+                                    <h6 class="text-white">Data Opacity</h6>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-lg-4">
+                                    <select id="Select1" runat="server" class="cesium-button p-1 m-0 w-100 aspnet-width-fix">
+                                        <option value="Avg Temp">Mean Temp (F&deg;)</option>
+                                        <option value="Max Temp">Max Temp (F&deg;)</option>
+                                        <option value="Min Temp">Min Temp (F&deg;)</option>
+                                        <option value="Bare Soil Temp">Bare Soil Temp (F&deg;)</option>
+                                        <option value="Turf Soil Temp">Turf Soil Temp (F&deg;)</option>
+                                        <option value="Dew Point">Dew Point (F&deg;)</option>
+                                        <option value="Wind Chill">Wind Chill (F&deg;)</option>
+                                        <option value="Avg Wind Speed">Mean Wind Speed (mph)</option>
+                                        <option value="Max Wind Speed">Max Wind Speed (mph)</option>
+                                        <option value="Solar Rad">Solar Radiation (W/m&sup2;)</option>
+                                        <option value="Rainfall">Rainfall (in)</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="slideContainer">
+                                        <input id="rngMultiExtrExtrusionFactor" class="ctrlSlider cesium-button p-3 m-0 w-100" type="range" value="100" min="10" max="100" step="1" onchange="valMultiExtrExtrusionFactor.value=value;" onmouseover="toggleTooltip('valMultiExtrExtrusionFactor');" onmouseout="toggleTooltip('valMultiExtrExtrusionFactor');" onmousemove="updateSlideOutputLive(this,'valMultiExtrExtrusionFactor');"/>
+                                        <output id="valMultiExtrExtrusionFactor" class="tooltip-hide cesium-button text-white p-1 m-0 w-100 text-center">100</output>
                                     </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="slideContainer">
+                                        <input id="rngMultiExtrDataOpacity" class="ctrlSlider cesium-button p-3 m-0 w-100" type="range" value="100" min="10" max="100" step="1" onchange="valMultiExtrDataOpacity.value=value;" onmouseover="toggleTooltip('valMultiExtrDataOpacity');" onmouseout="toggleTooltip('valMultiExtrDataOpacity');" onmousemove="updateSlideOutputLive(this,'valMultiExtrDataOpacity');"/>
+                                        <output id="valMultiExtrDataOpacity" class="tooltip-hide cesium-button text-white p-1 m-0 w-100 text-center">100</output>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-0">
+                            <div class="col-lg-12 text-white mb-0">
+                                <div class="m-0 dropdown-toggle" data-toggle="collapse" data-target="#pnlVisualization4" aria-expanded="false" aria-controls="pnlVisualization4">
+                                </div>
+                            </div>
+                        </div>
+                        <div id="pnlVisualization4" class="mb-0 mt-1 collapse">
+                            <div class="row mb-1">
+                                <div class="col-lg-6">
+                                    <h6 class="text-white">Mosquito Vairable</h6>
+                                </div>
+                                <div class="col-lg-6">
+                                    <h6 class="text-white">Mosquito Delay Weeks</h6>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-lg-6">
+                                    <select id="ddlPearsonHeatMosquitoVar" runat="server" class="cesium-button p-1 m-0 w-100 aspnet-width-fix">
+                                        <option value="All Mosquitoes">All</option>
+                                        <option value="Males">Males</option>
+                                        <option value="Females">Females</option>
+                                        <option value="Other">Other</option>
+                                        <option value="Aedes">Aedes</option>
+                                        <option value="Aedes Vexans">Aedes Vexans</option>
+                                        <option value="Anopheles">Anopheles</option>
+                                        <option value="Culex">Culex</option>
+                                        <option value="Culex Salinarius">Culex Salinarius</option>
+                                        <option value="Culex Tarsalis">Culex Tarsalis</option>
+                                        <option value="Culiseta">Culiseta</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-6">
+                                    <asp:UpdatePanel ID="upnlPearsonDelayWeeks" runat="server">
+                                        <Triggers>
+                                            <asp:AsyncPostBackTrigger ControlID="ddlPearsonHeatDelayWeeks" /> 
+                                        </Triggers>
+                                        <ContentTemplate>
+                                            <asp:DropDownList ID="ddlPearsonHeatDelayWeeks" runat="server" CssClass="cesium-button p-1 m-0 aspnet-width-fix" Width="100%" AutoPostBack="true" OnSelectedIndexChanged="ddlPearsonHeatDelayWeeks_SelectedIndexChanged">
+                                                <asp:ListItem Value="0" Text="0" ></asp:ListItem>
+                                                <asp:ListItem Value="1" Text="1" ></asp:ListItem>
+                                                <asp:ListItem Value="2" Text="2" ></asp:ListItem>
+                                                <asp:ListItem Value="3" Text="3" ></asp:ListItem>
+                                                <asp:ListItem Value="4" Text="4" ></asp:ListItem>
+                                            </asp:DropDownList>
+                                        </ContentTemplate>
+                                    </asp:UpdatePanel>
+                                </div>
+                            </div>
+                            <div class="row mb-1">
+                                <div class="col-lg-6">
+                                    <h6 class="text-white">Weather Vairable</h6>
+                                </div>
+                                <div class="col-lg-6">
+                                    <h6 class="text-white">Week Of Summer</h6>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-lg-6">
+                                    <select id="ddlPearsonHeatWeatherVar" runat="server" class="cesium-button p-1 m-0 w-100 aspnet-width-fix">
+                                        <option value="Avg Temp">Mean Temp (F&deg;)</option>
+                                        <option value="Max Temp">Max Temp (F&deg;)</option>
+                                        <option value="Min Temp">Min Temp (F&deg;)</option>
+                                        <option value="Bare Soil Temp">Bare Soil Temp (F&deg;)</option>
+                                        <option value="Turf Soil Temp">Turf Soil Temp (F&deg;)</option>
+                                        <option value="Dew Point">Dew Point (F&deg;)</option>
+                                        <option value="Wind Chill">Wind Chill (F&deg;)</option>
+                                        <option value="Avg Wind Speed">Mean Wind Speed (mph)</option>
+                                        <option value="Max Wind Speed">Max Wind Speed (mph)</option>
+                                        <option value="Solar Rad">Solar Radiation (W/m&sup2;)</option>
+                                        <option value="Rainfall">Rainfall (in)</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-6">
+                                    <asp:UpdatePanel ID="upnlPearsonWeekOfInterest" runat="server">
+                                        <Triggers>
+                                            <asp:AsyncPostBackTrigger ControlID="ddlPearsonHeatWeekOfInterest" /> 
+                                        </Triggers>
+                                        <ContentTemplate>
+                                            <asp:DropDownList ID="ddlPearsonHeatWeekOfInterest" runat="server" CssClass="cesium-button p-1 m-0 aspnet-width-fix" Width="100%" AutoPostBack="true" OnSelectedIndexChanged="ddlPearsonHeatWeekOfInterest_SelectedIndexChanged">
+                                                <asp:ListItem Value="1" Text="1" ></asp:ListItem>
+                                                <asp:ListItem Value="2" Text="2" ></asp:ListItem>
+                                                <asp:ListItem Value="3" Text="3" ></asp:ListItem>
+                                                <asp:ListItem Value="4" Text="4" ></asp:ListItem>
+                                                <asp:ListItem Value="5" Text="5" ></asp:ListItem>
+                                                <asp:ListItem Value="6" Text="6" ></asp:ListItem>
+                                                <asp:ListItem Value="7" Text="7" ></asp:ListItem>
+                                                <asp:ListItem Value="8" Text="8" ></asp:ListItem>
+                                                <asp:ListItem Value="9" Text="9" ></asp:ListItem>
+                                                <asp:ListItem Value="10" Text="10" ></asp:ListItem>
+                                                <asp:ListItem Value="11" Text="11" ></asp:ListItem>
+                                                <asp:ListItem Value="12" Text="12" ></asp:ListItem>
+                                                <asp:ListItem Value="13" Text="13" ></asp:ListItem>
+                                                <asp:ListItem Value="14" Text="14" ></asp:ListItem>
+                                            </asp:DropDownList>
+                                        </ContentTemplate>
+                                    </asp:UpdatePanel>
                                 </div>
                             </div>
                         </div>
@@ -761,7 +890,6 @@
                     var ddlState = document.getElementById("ddlState");
                     var ddlOutlineColor = document.getElementById("ddlOutlineColor");
                     var chkShowLabels = document.getElementById("chkShowLabels").checked;
-                    var valDataOpacity = document.getElementById("valDataOpacity").value;
                     
                     var countyGeoEntities = countyDataSource.entities;
                     if (!chkAllStates) {
@@ -824,7 +952,7 @@
                                         var colorBytes = color.toBytes();
 
                                         var valueOfInterestLegendOffsetText = "";
-                                        var valueOfInterestLegendOffsetValue = Math.round(((maxColumnValue - valueOfInterest) / maxColumnValue) * 300);
+                                        var valueOfInterestLegendOffsetValue = Math.round(((maxColumnValue - valueOfInterest) / maxColumnValue) * 298);
                                         if (!valueOfInterestLegendOffsetValue == 0) {
                                             valueOfInterestLegendOffsetText = '<div class="row" style="height:' + valueOfInterestLegendOffsetValue + 'px"><div class="col-xs-12"></div></div>';
                                         }
@@ -917,7 +1045,7 @@
 
                 }).otherwise(function(error){
                     //Display any errrors encountered while loading.
-                    window.alert(error);
+                    window.alert(error + " Univariate Heatmap");
                 });
             }
 
@@ -1066,7 +1194,7 @@
                                         countyEntity.polygon.material = color;
                                         
                                         var valueOfInterestLegendOffsetText = "";
-                                        var valueOfInterestLegendOffsetValue = Math.round(((maxColumnValue - valueOfInterest) / maxColumnValue) * 300);
+                                        var valueOfInterestLegendOffsetValue = Math.round(((maxColumnValue - valueOfInterest) / maxColumnValue) * 298);
                                         if (!valueOfInterestLegendOffsetValue == 0) {
                                             valueOfInterestLegendOffsetText = '<div class="row" style="height:' + valueOfInterestLegendOffsetValue + 'px"><div class="col-xs-12"></div></div>';
                                         }
@@ -1159,7 +1287,7 @@
 
                 }).otherwise(function(error){
                     //Display any errrors encountered while loading.
-                    window.alert(error);
+                    window.alert(error + " Univariate Extr");
                 });
             }
 
@@ -1167,6 +1295,225 @@
 
 
 
+
+
+
+
+
+
+
+            function renderPearsonCorrelationHeatmap(jsonString, mosquitoVarOfInterest, weatherVarOfInterest) {
+
+                
+                var jsonToRender = JSON.parse(jsonString);
+                var btnHide = document.getElementById("btnHide");
+                if (btnHide.innerHTML == "Show") {
+                    btnHide.click();
+                }
+
+                var rdoCountyLowQual = document.getElementById("rdoCountyLowQual");
+                var rdoCountyMedQual = document.getElementById("rdoCountyMedQual");
+                var rdoCountyHighQual = document.getElementById("rdoCountyHighQual");
+                if (viewer.dataSources.get(viewer.dataSources.indexOf(globalRefCountyDataSource))) {
+                    viewer.dataSources.remove(globalRefCountyDataSource, false);
+                }
+                var infoBoxMessage = "Pearson's Coefficient";
+                
+                var countyGeoJson;
+                if (rdoCountyLowQual.checked) {
+                    countyGeoJson = Cesium.GeoJsonDataSource.load('/Scripts/GeoJSON/gz_2010_us_050_00_20m.json');
+                } else if (rdoCountyMedQual.checked) {
+                    countyGeoJson = Cesium.GeoJsonDataSource.load('/Scripts/GeoJSON/gz_2010_us_050_00_5m.json');
+                } else if (rdoCountyHighQual.checked) {
+                    countyGeoJson = Cesium.GeoJsonDataSource.load('/Scripts/GeoJSON/gz_2010_us_050_00_500k.json');
+                }
+                
+                countyGeoJson.then(function (countyDataSource) {
+                    
+                    var chkAllStates = document.getElementById("chkAllStates").checked;
+                    var ddlState = document.getElementById("ddlState");
+                    var ddlOutlineColor = document.getElementById("ddlOutlineColor");
+                    var chkShowLabels = document.getElementById("chkShowLabels").checked;
+                    //var extrusionFactor = document.getElementById("valUniExtrExtrusionFactor").value;
+                    //var dataOpacity = document.getElementById("valUniExtrDataOpacity").value;
+                    
+                    var countyGeoEntities = countyDataSource.entities;
+                    if (!chkAllStates) {
+                        var countyGeoEntitiesValues = countyGeoEntities.values;
+                        for (var i = 0; i < countyGeoEntitiesValues.length; i++) {
+                            var countyEntity = countyGeoEntitiesValues[i];
+                            if (countyEntity.properties.State != ddlState.options[ddlState.selectedIndex].value) {
+                                countyGeoEntities.remove(countyEntity);
+                            }
+                        }
+                    }
+                    
+
+                    
+                    countyGeoEntitiesValues = countyGeoEntities.values;
+                    
+                    var date0 = new Date();
+                    var time0 = date0.getTime();
+                    for (var i = 0; i < countyGeoEntitiesValues.length; i++) {
+
+                        var countyEntity = countyGeoEntitiesValues[i];
+                        var name = countyEntity.name;
+
+                        if (countyEntity.properties.State == ddlState.options[ddlState.selectedIndex].value || chkAllStates) {
+                            
+                            countyEntity.polygon.show = false;
+                            countyEntity.polygon.outline = false;
+
+                            ddlOutlineColor.value == "01" ? countyEntity.polygon.outline = false : countyEntity.polygon.outline = true;
+                            if (countyEntity.polygon.outline) {
+                                if (ddlOutlineColor.value == "02") {
+                                    countyEntity.polygon.outlineColor = Cesium.Color.BLACK;
+                                } else if (ddlOutlineColor.value == "03") {
+                                    countyEntity.polygon.outlineColor = Cesium.Color.RED;
+                                } else if (ddlOutlineColor.value == "04") {
+                                    countyEntity.polygon.outlineColor = Cesium.Color.GREEN;
+                                } else if (ddlOutlineColor.value == "05") {
+                                    countyEntity.polygon.outlineColor = Cesium.Color.BLUE;
+                                } else if (ddlOutlineColor.value == "06") {
+                                    countyEntity.polygon.outlineColor = Cesium.Color.YELLOW;
+                                }
+                            }
+
+                            for (var j = 0; j < jsonToRender.length; j++){
+                                
+                                var dataRow = jsonToRender[j];
+                                for (var key in dataRow){
+                                    var columnHeader = key;
+                                    var columnValue = dataRow[columnHeader];
+                                    if (columnValue == name) {
+                                        countyEntity.polygon.show = true;
+                                        var columnCountyName = columnValue;
+                                        var mosquitoVarOfInterest = dataRow["MosquitoVar"];
+                                        var weatherVarOfInterest = dataRow["WeatherVar"];
+                                        var valueOfInterest = dataRow["PearsonCoefficient"];
+                                        countyEntity.polygon.extrudedHeight = 0;
+                                        var color;
+                                        if (valueOfInterest <= 0) {
+                                            color = new Cesium.Color.fromBytes(
+                                                0,
+                                                0,
+                                                255,
+                                                Math.floor((valueOfInterest*-1) * 255)
+                                            );
+                                        } else if (valueOfInterest == 0) {
+                                            color = new Cesium.Color.fromBytes(
+                                                0,
+                                                0,
+                                                0,
+                                                0
+                                            );
+                                        } else {
+                                            color = new Cesium.Color.fromBytes(
+                                                255,
+                                                0,
+                                                0,
+                                                Math.floor((valueOfInterest) * 255)
+                                            );
+                                        }
+                                        countyEntity.polygon.material = color;
+                                        
+                                        var valueOfInterestLegendOffsetText = "";
+                                        var valueOfInterestLegendOffsetValue = Math.round(((1 - valueOfInterest) * 298)/2);
+                                        if (!valueOfInterestLegendOffsetValue == 0) {
+                                            valueOfInterestLegendOffsetText = '<div class="row" style="height:' + valueOfInterestLegendOffsetValue + 'px"><div class="col-xs-12"></div></div>';
+                                        }
+
+                                        countyEntity.description =
+                                            '<h2 class="text-center">' + columnCountyName + ' County</h2>' +
+                                            '<div class="row" style="margin-bottom:20px">'+
+                                                '<div class="col-xs-6 text-right">' +
+                                                    infoBoxMessage +
+                                                '</div>' +
+                                                '<div class="col-xs-6">' +
+                                                    valueOfInterest +
+                                                '</div>' +
+                                            '</div>' +
+                                            '<div class="row">'+
+                                                '<div class="col-xs-4 text-right" style="padding-right:0px">' +
+                                                    '<div class="row" style="height:150px"><div class="col-xs-12">' + "1" + '&nbsp;&nbsp;&mdash;'+'</div></div>'+
+                                                    '<div class="row" style="height:150px"><div class="col-xs-12"></div></div>'+
+                                                    '<div class="row" style="height:22px"><div class="col-xs-12">'+ "-1" + '&nbsp;&nbsp;&mdash;'+'</div></div>'+
+                                                '</div>' +
+                                                '<div class="col-xs-4" style="margin-top:12px">' +
+                                                    '<div style="height:300px;background-image: linear-gradient(rgba(255,0,0),rgba(0,0,0,0),rgba(0,0,255))">' +
+                                                        
+                                                    '</div>' +
+                                                '</div>' +
+                                                '<div class="col-xs-4" style="padding-left:0px">' +
+                                                    valueOfInterestLegendOffsetText +
+                                                    '<div class="row"><div class="col-xs-12"><span style="font-size:18px">&larr;</span>&nbsp;&nbsp;' + valueOfInterest +'</div></div>'+
+                                                '</div>' +
+                                            '</div>' +
+                                            '<div class="row" style="margin-top:20px">'+
+                                                '<div class="col-xs-4 text-right">' +
+                                                    infoBoxMessage +
+                                                '</div>' +
+                                                '<div class="col-xs-4 text-center">' +
+                                                    'Correlation' +
+                                                '</div>' +
+                                                '<div class="col-xs-4 text-left">' +
+                                                    columnCountyName +
+                                                '</div>' +
+                                            '</div>' 
+                                            ;
+                                        
+                                        countyEntity.polygon.heightReference = Cesium.HeightReference.CLAMP_TO_GROUND;
+                                        countyEntity.polygon.shadows = Cesium.ShadowMode.CAST_ONLY;
+
+                                        var countyPolygonPositions = countyEntity.polygon.hierarchy.getValue(Cesium.JulianDate.now()).positions;
+                                        //var countyCenter = Cesium.BoundingSphere.fromPoints(countyPolygonPositions).center;
+                                        //countyEntity.position = countyCenter;
+
+                                        var countyPolygonBoundingSphere = Cesium.BoundingSphere.fromPoints(countyPolygonPositions);
+                                        var countyCartographicCenter = Cesium.Cartographic.fromCartesian(countyPolygonBoundingSphere.center);
+                                        var countyExtrusionHeightOffset = Cesium.Cartesian3.fromRadians(countyCartographicCenter.longitude, countyCartographicCenter.latitude, countyEntity.polygon.extrudedHeight.getValue(Cesium.JulianDate.now()) + 4000);
+                                        countyEntity.position = countyExtrusionHeightOffset;
+                                        
+                                        countyEntity.label = {
+                                            show: chkShowLabels,
+                                            text : valueOfInterest + '',
+                                            font : '30px "Helvetiva Neue", Helvetica, Arial, sans-serif',
+                                            fillColor : Cesium.Color.WHITE,
+                                            outlineColor : Cesium.Color.BLACK,
+                                            outlineWidth: 4,
+                                            style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+                                            scale: 1.0,
+                                            scaleByDistance: new Cesium.NearFarScalar(1.0e2, 1.3, 1.0e7, 0.1)
+                                        };
+                                    }
+                                }
+                            }
+
+                        } else {
+                            countyEntity.polygon.show = false;
+                            countyEntity.polygon.outline = false;
+                        }
+                    }
+                    
+                    var heading = Cesium.Math.toRadians(0);
+                    var pitch = Cesium.Math.toRadians(-90);
+                    viewer.flyTo(countyGeoEntitiesValues, {
+                        duration: 2.0,
+                        offset: new Cesium.HeadingPitchRange(heading, pitch)
+                    });
+                    viewer.dataSources.add(countyDataSource);
+                    globalRefCountyDataSource = countyDataSource;
+
+                    
+                    var date1 = new Date();
+                    var time1 = date1.getTime();
+                    //console.log("Retrieving the data took " + (time1 - time0) + " milliseconds.");
+
+                }).otherwise(function(error){
+                    //Display any errrors encountered while loading.
+                    window.alert(error + " Pearson Heatmap");
+                });
+            }
 
 
 
@@ -1456,6 +1803,7 @@
                 $('#pnlVisualization1').collapse('hide');
                 $('#pnlVisualization2').collapse('hide');
                 $('#pnlVisualization3').collapse('hide');
+                $('#pnlVisualization4').collapse('hide');
 
                 if (caller.value == "1") {
                     setTimeout(function () { $('#pnlVisualization1').collapse('show') }, 350);
@@ -1463,6 +1811,8 @@
                     setTimeout(function () { $('#pnlVisualization2').collapse('show') }, 350);
                 } else if (caller.value == "3") {
                     setTimeout(function () { $('#pnlVisualization3').collapse('show') }, 350);
+                } else if (caller.value == "4") {
+                    setTimeout(function () { $('#pnlVisualization4').collapse('show') }, 350);
                 }
             }
         </script>

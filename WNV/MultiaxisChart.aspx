@@ -12,7 +12,7 @@
     <asp:HiddenField ID="chartWidth" runat="server" Value="" />
     <asp:HiddenField ID="chartHeight" runat="server" Value="" />
     <asp:Button ID="btnRedraw" runat="server" Visible="false" />
-    <div class="text-center">
+    <div class="text-center mt-3">
         <h3>Multivariate Trends - North Dakota West Nile Virus Forecasting</h3>
     </div>
     <div class="jumbotron" style="padding:10px;">
@@ -68,84 +68,176 @@
         })();
     </script>
     <div class="row">
-        <div class="col-lg-3">
+        <div class="col-lg-4">
             <h4>Mean Weather Variables</h4>
         </div>
-        <div class="col-lg-3">
-            <asp:CheckBox ID="chkSplineWeather" runat="server" Text="Use Splines" CssClass="checkbox"/>
+        <div class="col-lg-2">
+            <input id="chkSplineWeather" runat="server" class="form-check-input" type="checkbox" />
+            <label class="form-check-label" for="<%= chkSplineWeather.ClientID %>">Use Splines</label>
         </div>
-        <div class="col-lg-3">
+        <div class="col-lg-4">
             <h4>Mean Mosquito Count Variables</h4>
         </div>
+        <div class="col-lg-2">
+            <input id="chkSplineCount" runat="server" class="form-check-input" type="checkbox" />
+            <label class="form-check-label" for="<%= chkSplineCount.ClientID %>">Use Splines</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-2">
+            <div class="form-check">
+                <input id="chkMeanTemp" runat="server" class="form-check-input" type="checkbox" />
+                <label class="form-check-label" for="<%= chkMeanTemp.ClientID %>">Mean Temp (F&deg;)</label>
+            </div>
+            <div class="form-check">
+                <input id="chkMeanMaxTemp" runat="server" class="form-check-input" type="checkbox" />
+                <label class="form-check-label" for="<%= chkMeanMaxTemp.ClientID %>">Max Temp (F&deg;)</label>
+            </div>
+            <div class="form-check">
+                <input id="chkMeanMinTemp" runat="server" class="form-check-input" type="checkbox" />
+                <label class="form-check-label" for="<%= chkMeanMinTemp.ClientID %>">Min Temp (F&deg;)</label>
+            </div>
+            <div class="form-check">
+                <input id="chkMeanBareSoilTemp" runat="server" class="form-check-input" type="checkbox" />
+                <label class="form-check-label" for="<%= chkMeanBareSoilTemp.ClientID %>">Bare Soil Temp (F&deg;)</label>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="form-check">
+                <input id="chkMeanTurfSoilTemp" runat="server" class="form-check-input" type="checkbox" />
+                <label class="form-check-label" for="<%= chkMeanTurfSoilTemp.ClientID %>">Turf Soil Temp (F&deg;)</label>
+            </div>
+            <div class="form-check">
+                <input id="chkMeanWindChill" runat="server" class="form-check-input" type="checkbox" />
+                <label class="form-check-label" for="<%= chkMeanWindChill.ClientID %>">Wind Chill (F&deg;)</label>
+            </div>
+            <div class="form-check">
+                <input id="chkMeanWindSpeed" runat="server" class="form-check-input" type="checkbox" />
+                <label class="form-check-label" for="<%= chkMeanWindSpeed.ClientID %>">Wind Speed (mph)</label>
+            </div>
+            <div class="form-check">
+                <input id="chkMeanMaxWindSpeed" runat="server" class="form-check-input" type="checkbox" />
+                <label class="form-check-label" for="<%= chkMeanMaxWindSpeed.ClientID %>">Max Wind Speed (mph)</label>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="form-check">
+                <input id="chkMeanDewPoint" runat="server" class="form-check-input" type="checkbox" />
+                <label class="form-check-label" for="<%= chkMeanDewPoint.ClientID %>">Dew Point (F&deg;)</label>
+            </div>
+            <div class="form-check">
+                <input id="chkMeanTotalRainfall" runat="server" class="form-check-input" type="checkbox" />
+                <label class="form-check-label" for="<%= chkMeanTotalRainfall.ClientID %>">Total Rainfall (in)</label>
+            </div>
+            <div class="form-check">
+                <input id="chkMeanTotalSolarRad" runat="server" class="form-check-input" type="checkbox" />
+                <label class="form-check-label" for="<%= chkMeanTotalSolarRad.ClientID %>">Total Solar Rad. (W/m<sup>2</sup>)</label>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="form-check">
+                <input id="chkMeanTotalMosquitoes" runat="server" class="form-check-input" type="checkbox" />
+                <label class="form-check-label" for="<%= chkMeanTotalMosquitoes.ClientID %>">Total Mosquitoes</label>
+            </div>
+            <div class="form-check">
+                <input id="chkMeanTotalMales" runat="server" class="form-check-input" type="checkbox" />
+                <label class="form-check-label" for="<%= chkMeanTotalMales.ClientID %>">Total Males</label>
+            </div>
+            <div class="form-check">
+                <input id="chkMeanTotalFemales" runat="server" class="form-check-input" type="checkbox" />
+                <label class="form-check-label" for="<%= chkMeanTotalFemales.ClientID %>">Total Females</label>
+            </div>
+            <div class="form-check">
+                <input id="chkMeanOther" runat="server" class="form-check-input" type="checkbox" />
+                <label class="form-check-label" for="<%= chkMeanOther.ClientID %>">Other</label>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="form-check">
+                <input id="chkMeanAedes" runat="server" class="form-check-input" type="checkbox" />
+                <label class="form-check-label" for="<%= chkMeanAedes.ClientID %>">Aedes</label>
+            </div>
+            <div class="form-check">
+                <input id="chkMeanAedesVexans" runat="server" class="form-check-input" type="checkbox" />
+                <label class="form-check-label" for="<%= chkMeanAedesVexans.ClientID %>">Aedes Vexans</label>
+            </div>
+            <div class="form-check">
+                <input id="chkMeanAnopheles" runat="server" class="form-check-input" type="checkbox" />
+                <label class="form-check-label" for="<%= chkMeanAnopheles.ClientID %>">Anopheles</label>
+            </div>
+            <div class="form-check">
+                <input id="chkMeanCulex" runat="server" class="form-check-input" type="checkbox" />
+                <label class="form-check-label" for="<%= chkMeanCulex.ClientID %>">Culex</label>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="form-check">
+                <input id="chkMeanCulexSalinarius" runat="server" class="form-check-input" type="checkbox" />
+                <label class="form-check-label" for="<%= chkMeanCulexSalinarius.ClientID %>">Culex Salinarius</label>
+            </div>
+            <div class="form-check">
+                <input id="chkMeanCulexTarsalis" runat="server" class="form-check-input" type="checkbox" />
+                <label class="form-check-label" for="<%= chkMeanCulexTarsalis.ClientID %>">Culex Tarsalis</label>
+            </div>
+            <div class="form-check">
+                <input id="chkMeanCuliseta" runat="server" class="form-check-input" type="checkbox" />
+                <label class="form-check-label" for="<%= chkMeanCuliseta.ClientID %>">Culiseta</label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-lg-3">
-            <asp:CheckBox ID="chkSplineCount" runat="server" Text="Use Splines" CssClass="checkbox" />
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-2">
-            <asp:CheckBox ID="chkMeanTemp" runat="server" CssClass="checkbox" Text="Temp (F&deg;)" />
-            <asp:CheckBox ID="chkMeanMaxTemp" runat="server" CssClass="checkbox" Text="Max Temp (F&deg;)" />
-            <asp:CheckBox ID="chkMeanMinTemp" runat="server" CssClass="checkbox" Text="Min Temp (F&deg;)" />
-            <asp:CheckBox ID="chkMeanBareSoilTemp" runat="server" CssClass="checkbox" Text="Bare Soil Temp (F&deg;)" />
-        </div>
-        <div class="col-lg-2">
-            <asp:CheckBox ID="chkMeanTurfSoilTemp" runat="server" CssClass="checkbox" Text="Turf Soil Temp (F&deg;)" />
-            <asp:CheckBox ID="chkMeanWindChill" runat="server" CssClass="checkbox" Text="Wind Chill (F&deg;)" />
-            <asp:CheckBox ID="chkMeanWindSpeed" runat="server" CssClass="checkbox" Text="Wind Speed (mph)" />
-            <asp:CheckBox ID="chkMeanMaxWindSpeed" runat="server" CssClass="checkbox" Text="Max Wind Speed (mph)" />
-        </div>
-        <div class="col-lg-2">
-            <asp:CheckBox ID="chkMeanDewPoint" runat="server" CssClass="checkbox" Text="Dew Point (F&deg;)" />
-            <asp:CheckBox ID="chkMeanTotalRainfall" runat="server" CssClass="checkbox" Text="Total Rainfall (in)" />
-            <asp:CheckBox ID="chkMeanTotalSolarRad" runat="server" CssClass="checkbox" Text="Total Solar Rad. (W/m<sup>2</sup>)" />
-        </div>
-        <div class="col-lg-2">
-            <asp:CheckBox ID="chkMeanTotalMosquitoes" runat="server" CssClass="checkbox" Text="Total Mosquitoes" />
-            <asp:CheckBox ID="chkMeanTotalMales" runat="server" CssClass="checkbox" Text="Total Males" />
-            <asp:CheckBox ID="chkMeanTotalFemales" runat="server" CssClass="checkbox" Text="Total Females" />
-            <asp:CheckBox ID="chkMeanOther" runat="server" CssClass="checkbox" Text="Other" />
-        </div>
-        <div class="col-lg-2">
-            <asp:CheckBox ID="chkMeanAedes" runat="server" CssClass="checkbox" Text="Aedes" />
-            <asp:CheckBox ID="chkMeanAedesVexans" runat="server" CssClass="checkbox" Text="Aedes Vexans" />
-            <asp:CheckBox ID="chkMeanAnopheles" runat="server" CssClass="checkbox" Text="Anopheles" />
-            <asp:CheckBox ID="chkMeanCulex" runat="server" CssClass="checkbox" Text="Culex" />
-        </div>
-        <div class="col-lg-2">
-            <asp:CheckBox ID="chkMeanCulexSalinarius" runat="server" CssClass="checkbox" Text="Culex Salinarius" />
-            <asp:CheckBox ID="chkMeanCulexTarsalis" runat="server" CssClass="checkbox" Text="Culex Tarsalis" />
-            <asp:CheckBox ID="chkMeanCuliseta" runat="server" CssClass="checkbox" Text="Culiseta" />
-        </div>
-    </div>
-    <div class="row">
-        <asp:UpdatePanel runat="server" ID="upnlDropdowns" UpdateMode="Conditional">
-            <Triggers>
+            <asp:UpdatePanel runat="server" ID="upnlDropdowns" UpdateMode="Conditional">
+                <Triggers>
                     <asp:AsyncPostBackTrigger ControlID="ddlYear" />
                     <asp:AsyncPostBackTrigger ControlID="chkStatewide" />
-            </Triggers>
-            <ContentTemplate>
-                <div class="col-lg-3">
+                </Triggers>
+                <ContentTemplate>
                     <h4>County</h4>
                     <asp:DropDownList ID="ddlCounty" runat="server" CssClass="form-control" Width="100%"></asp:DropDownList>
                     <asp:RequiredFieldValidator ID="rfvCounty" runat="server" Text="County is required." ForeColor="Red" Display="Static" ControlToValidate="ddlCounty" ValidationGroup="vgMultiaxisChart"></asp:RequiredFieldValidator>
-                </div>
-                <div class="col-lg-3">
+                </ContentTemplate>
+            </asp:UpdatePanel>
+        </div>
+        <div class="col-lg-3">
+            <asp:UpdatePanel runat="server" ID="UpdatePanel1" UpdateMode="Conditional">
+                <Triggers>
+                    <asp:AsyncPostBackTrigger ControlID="ddlYear" />
+                    <asp:AsyncPostBackTrigger ControlID="chkStatewide" />
+                </Triggers>
+                <ContentTemplate>
                     <h4>Year</h4>
                     <asp:DropDownList ID="ddlYear" runat="server" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlYear_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
                     <asp:RequiredFieldValidator ID="rfvYear" runat="server" Text="Year is required." ForeColor="Red" Display="Static" ControlToValidate="ddlYear" ValidationGroup="vgMultiaxisChart"></asp:RequiredFieldValidator>
-                </div>
-                <div class="col-lg-3">
+                </ContentTemplate>
+            </asp:UpdatePanel>
+        </div>
+        <div class="col-lg-3">
+            <asp:UpdatePanel runat="server" ID="UpdatePanel2" UpdateMode="Conditional">
+                <Triggers>
+                    <asp:AsyncPostBackTrigger ControlID="ddlYear" />
+                    <asp:AsyncPostBackTrigger ControlID="chkStatewide" />
+                </Triggers>
+                <ContentTemplate>
                     <h4>Start Date</h4>
                     <asp:DropDownList ID="ddlWeekStart" runat="server" CssClass="form-control" Width="100%" DataTextFormatString="{0:MMMM d, yyyy}"></asp:DropDownList>
                     <asp:RequiredFieldValidator ID="rfvStartDate" runat="server" Text="Start Date is required." ForeColor="Red" Display="Static" ControlToValidate="ddlWeekStart" ValidationGroup="vgMultiaxisChart"></asp:RequiredFieldValidator>
-                </div>
-                <div class="col-lg-3">
+                </ContentTemplate>
+            </asp:UpdatePanel>
+        </div>
+        <div class="col-lg-3">
+            <asp:UpdatePanel runat="server" ID="UpdatePanel3" UpdateMode="Conditional">
+                <Triggers>
+                    <asp:AsyncPostBackTrigger ControlID="ddlYear" />
+                    <asp:AsyncPostBackTrigger ControlID="chkStatewide" />
+                </Triggers>
+                <ContentTemplate>
                     <h4>End Date</h4>
                     <asp:DropDownList ID="ddlWeekEnd" runat="server" CssClass="form-control" Width="100%" DataTextFormatString="{0:MMMM d, yyyy}"></asp:DropDownList>
                     <asp:RequiredFieldValidator ID="rfvEndDate" runat="server" Text="End Date is required." ForeColor="Red" Display="Static" ControlToValidate="ddlWeekEnd" ValidationGroup="vgMultiaxisChart"></asp:RequiredFieldValidator>
-                </div>
-            </ContentTemplate>
-        </asp:UpdatePanel>
+                </ContentTemplate>
+            </asp:UpdatePanel>
+        </div>
     </div>
     <div class="row">
         <br />
@@ -153,7 +245,7 @@
             <asp:Button ID="btnRender" runat="server" Text="Render Graph" CssClass="btn btn-success btn-lg btn-block" ValidationGroup="vgMultiaxisChart" OnClick="btnRender_Click"/>
         </div>
         <div class="col-lg-3">
-            <asp:CheckBox ID="chkStatewide" runat="server" Text="Statewide Data" CssClass="checkbox" AutoPostBack="true" OnCheckedChanged="chkStatewide_CheckChanged" />
+            <asp:CheckBox ID="chkStatewide" runat="server" Text="&nbsp;Statewide Data" CssClass="checkbox" AutoPostBack="true" OnCheckedChanged="chkStatewide_CheckChanged" />
         </div>
         <div class="col-lg-6">
             <asp:Label ID="lblError" runat="server" ForeColor="Red"></asp:Label>
