@@ -149,6 +149,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="photos\TempImages\temp.txt" />
     <Content Include="TreeMap.aspx" />
     <Content Include="About.aspx" />
     <Content Include="Contact.aspx" />
@@ -6167,11 +6168,6 @@
     <Content Include="Scripts\Cesium\Specs\Data\WMS\GetFeatureInfo-GeoJSON.json" />
     <Content Include="Scripts\Cesium\Specs\TestWorkers\TestWasm\testWasm.wasm" />
     <Content Include="Scripts\Cesium\ThirdParty\codemirror-4.6\AUTHORS" />
-    <Content Include="Scripts\Cesium\ThirdParty\codemirror-4.6\bin\authors.sh" />
-    <Content Include="Scripts\Cesium\ThirdParty\codemirror-4.6\bin\compress" />
-    <Content Include="Scripts\Cesium\ThirdParty\codemirror-4.6\bin\lint" />
-    <Content Include="Scripts\Cesium\ThirdParty\codemirror-4.6\bin\release" />
-    <Content Include="Scripts\Cesium\ThirdParty\codemirror-4.6\bin\source-highlight" />
     <Content Include="Scripts\Cesium\ThirdParty\codemirror-4.6\bower.json" />
     <Content Include="Scripts\Cesium\ThirdParty\codemirror-4.6\CONTRIBUTING.md" />
     <Content Include="Scripts\Cesium\ThirdParty\codemirror-4.6\LICENSE" />
@@ -6361,6 +6357,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Scripts\Cesium\Apps\Sandcastle\gallery\development\" />
+    <Folder Include="Scripts\Cesium\ThirdParty\codemirror-4.6\bin\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">
