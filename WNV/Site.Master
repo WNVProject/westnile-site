@@ -67,7 +67,7 @@
                     Chartings
                 </a>
                 <div class="dropdown-menu text-left" aria-labelledby="navbarDropdownMenuLink">
-                  <a class="dropdown-item" href="TreeMap.aspx">Tree Map</a>
+                  <a class="dropdown-item" href="TreeMap2.aspx">Tree Map</a>
                   <a class="dropdown-item" href="#">Another action</a>
                   <a class="dropdown-item" href="#">Something else here</a>
                 </div>
