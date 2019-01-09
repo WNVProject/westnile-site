@@ -4,6 +4,7 @@
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
     <script type="text/javascript" src="Scripts/jquery.ui.treemap.js"></script>
+    <script type="text/javascript" src="Scripts/colorbrewer.js"></script>
     <script src="//d3js.org/d3.v3.min.js"></script>
     
     <style>
@@ -72,7 +73,8 @@
             treeMapHeight = 750,
             x = d3.scale.linear().range([0, treeMapWidth]),
             y = d3.scale.linear().range([0, treeMapHeight]),
-            color = d3.scale.category20c(),
+            color = d3.scale.quantize()
+                .range(colorbrewer.YlGn[15]),
             root,
             node;
 
@@ -110,13 +112,27 @@
                   .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
                   .on("click", function(d) { return zoom(node == d.parent ? root : d.parent); });
 
+            color.domain([data.min, data.max]);
+
             cell.append("svg:rect")
                 .attr("width", function (d) { return d.dx - 1; })
                 .attr("height", function (d) { return d.dy - 1; })
-                .style("fill", function (d) { return color(d.parent.name); })
+                .style("fill", function (d) {
+                    if (d.name != "Culex Tarsalis") {
+                        return color(d.size);
+                    } else {
+                        return "#F00";
+                    }
+                })
                   .on("mouseover", function (d) {
                       tooltip.style("opacity", "1");
-                      tooltip.style("border", "7px solid " + color(d.parent.name));
+                      tooltip.style("border", function () {
+                          if (d.name != "Culex Tarsalis") {
+                              return "7px solid " + color(d.size);
+                          } else {
+                              return "7px solid #F00";
+                          }
+                      });
                       tooltip.style("color", this.getAttribute("fill"));
                       tooltip.text(d.parent.name + ": " +d.name + " - " + d.size);
                   })

@@ -149,6 +149,8 @@ namespace WNV
                         StringBuilder treeMapJson = new StringBuilder();
                         treeMapJson.Append("{\"name\":\"AllMosquitoes\",\"children\":[{");
                         bool trapHasData = false;
+                        int domainMax = -1;
+                        int domainMin = -1;
                         foreach (DataRow row in dt.Rows)
                         {
                             string trapArea = "\"name\":\"" + row["Trap Area"] + "\",\"children\":[{";
@@ -159,6 +161,20 @@ namespace WNV
                                 string columnValue = row[col.ColumnName].ToString();
                                 if (!columnName.Equals("Trap Area") && !columnName.Equals("Males") && !columnName.Equals("Females") && !columnName.Equals("Total Mosquitoes") && !columnValue.Equals("0"))
                                 {
+                                    if (domainMax == -1 && domainMax == -1)
+                                    {
+                                        domainMax = Int32.Parse(columnValue);
+                                        domainMin = Int32.Parse(columnValue);
+                                    }
+                                    else if (domainMax < Int32.Parse(columnValue))
+                                    {
+                                        domainMax = Int32.Parse(columnValue);
+                                    }
+                                    else if (domainMin > Int32.Parse(columnValue))
+                                    {
+                                        domainMin = Int32.Parse(columnValue);
+                                    }
+                                    
                                     trapArea = trapArea + "\"name\":\"" + columnName + "\","+ "\"size\":\"" + columnValue + "\"},{";
                                     mosquitoTypeAdded = true;
                                     trapHasData = true;
@@ -172,7 +188,7 @@ namespace WNV
                             }
                         }
                         treeMapJson.Remove(treeMapJson.Length - 2, 2);
-                        treeMapJson.Append("]}");
+                        treeMapJson.Append("],\"max\":\"" + domainMax + "\"," + "\"min\":\"" + domainMin + "\"}");
 
                         //var json = JsonConvert.SerializeObject(dt);
                         using (StreamWriter sr = new StreamWriter(Server.MapPath("/Scripts/TreeMapJSON/" + fileName)))
