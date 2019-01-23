@@ -294,7 +294,7 @@
             <div class="row aspnet-rfv-heightOffset-fix">
                 <div class="col-lg-7">
                     <div class="slideContainer">
-                        <input id="rngLabelSize" class="formSlider p-3 m-0 w-100" type="range" value="16" min="10" max="25" step="1" onmouseover="toggleTooltip('valLabelSize');" onmouseout="toggleTooltip('valLabelSize');" onmousemove="updateSlideOutputLive(this,'valLabelSize');valLabelSize.value=value;if(!this.disabled){changeLabelSize(value,'txtLabelSize')};"/>
+                        <input id="rngLabelSize" class="form-control m-0 w-100" type="range" value="16" min="10" max="25" step="1" onmouseover="toggleTooltip('valLabelSize');" onmouseout="toggleTooltip('valLabelSize');" onmousemove="updateSlideOutputLive(this,'valLabelSize');valLabelSize.value=value;if(!this.disabled){changeLabelSize(value,'txtLabelSize')};"/>
                         <output id="valLabelSize" class="formTooltip-hide text-white p-1 m-0 w-100 text-center">16</output>
                     </div>
                 </div>

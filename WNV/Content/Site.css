@@ -151,18 +151,6 @@ textarea {
 .ctrlSlider:hover {
     background: initial !important;
 }
-.formSlider {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    width: 100%;
-    max-width: none;
-    height: 1.25rem;
-    border-radius: 3px;
-    outline: none;
-}
-.formSlider:hover {
-    background: initial !important;
-}
 
 .ctrlOpacity {
     display:none;
