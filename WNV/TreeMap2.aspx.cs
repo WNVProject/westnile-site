@@ -26,6 +26,7 @@ namespace WNV
         {
             fillYearDDLs();
             fillLocationDDL();
+            //ScriptManager.RegisterStartupScript(this, GetType(), "alert", "generateTreeMap(\"" + ddlGradientDropdownValue.SelectedValue + "\",$(\"#valLabelSize\").val());setActiveGradient(\"" + ddlGradientDropdownValue.SelectedValue + "\");updateGradientDropdownToggleBackground(\""+ ddlGradientDropdownValue.SelectedValue + "\"); ", true);
         }
 
         protected void fillYearDDLs()
@@ -114,12 +115,16 @@ namespace WNV
 
         protected void renderBtn_Click(object sender, EventArgs e)
         {
-            Hashtable parameters = new Hashtable();
-            parameters.Add("TrapArea", chkStatewide.Checked ? "%" : ddlLocation.SelectedValue);
-            parameters.Add("StartWeek", ddlYearStart.SelectedValue.ToString() + "-01-01");
-            parameters.Add("EndWeek", ddlYearEnd.SelectedValue.ToString() + "-12-31");
+            if (Page.IsValid)
+            {
+                Hashtable parameters = new Hashtable();
+                parameters.Add("TrapArea", chkStatewide.Checked ? "%" : ddlLocation.SelectedValue);
+                parameters.Add("StartWeek", ddlYearStart.SelectedValue.ToString() + "-01-01");
+                parameters.Add("EndWeek", ddlYearEnd.SelectedValue.ToString() + "-12-31");
 
-            generateTreeMapJson("USP_Get_Select_MosquitoCountsByTrapByDate", parameters, "TreeMapData.json");
+                generateTreeMapJson("USP_Get_Select_MosquitoCountsByTrapByDate", parameters, "TreeMapData.json");
+                //ScriptManager.RegisterStartupScript(this, GetType(), "alert", "generateTreeMap(\"" + ddlGradientDropdownValue.SelectedValue + "\",$(\"#valLabelSize\").val());setActiveGradient(\"" + ddlGradientDropdownValue.SelectedValue + "\");updateGradientDropdownToggleBackground(\"" + ddlGradientDropdownValue.SelectedValue + "\"); ", true);
+            }
         }
 
 
@@ -159,7 +164,7 @@ namespace WNV
                             {
                                 string columnName = col.ColumnName;
                                 string columnValue = row[col.ColumnName].ToString();
-                                if (!columnName.Equals("Trap Area") && !columnName.Equals("Males") && !columnName.Equals("Females") && !columnName.Equals("Total Mosquitoes") && !columnValue.Equals("0"))
+                                if (!columnName.Equals("Trap Area") && !columnName.Equals("Males") && !columnName.Equals("Females") && !columnName.Equals("Total Mosquitoes") && !columnValue.Equals("0") && !columnValue.Equals(""))
                                 {
                                     if (domainMax == -1 && domainMax == -1)
                                     {
