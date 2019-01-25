@@ -25,7 +25,6 @@ namespace WNV
         protected void Page_Load(object sender, EventArgs e)
         {
             fillYearDDLs();
-            fillLocationDDL();
             //ScriptManager.RegisterStartupScript(this, GetType(), "alert", "generateTreeMap(\"" + ddlGradientDropdownValue.SelectedValue + "\",$(\"#valLabelSize\").val());setActiveGradient(\"" + ddlGradientDropdownValue.SelectedValue + "\");updateGradientDropdownToggleBackground(\""+ ddlGradientDropdownValue.SelectedValue + "\"); ", true);
         }
 
@@ -53,8 +52,8 @@ namespace WNV
                             ddlYearEnd.DataTextField = "TrapYear";
                             ddlYearStart.DataBind();
                             ddlYearEnd.DataBind();
-                            ddlYearStart.Items.Insert(0, new ListItem("Select...", ""));
-                            ddlYearEnd.Items.Insert(0, new ListItem("Select...", ""));
+                            ddlYearStart.SelectedIndex = 0;
+                            ddlYearEnd.SelectedIndex = ddlYearEnd.Items.Count - 1;
                         }
                     }
                 }
@@ -65,73 +64,82 @@ namespace WNV
                 lblError.Visible = true;
             }
         }
-
-
-        protected void fillLocationDDL()
-        {
-            if (!IsPostBack)
-            {
-                try
-                {
-                    using (MySqlConnection conn = new MySqlConnection(cs))
-                    {
-                        MySqlCommand cmd = new MySqlCommand("SELECT TrapLocationID, TrapArea from trap_locations ORDER BY TrapArea", conn);
-                        cmd.CommandType = CommandType.Text;
-                        DataSet ds = new DataSet();
-
-                        using (MySqlDataAdapter da = new MySqlDataAdapter(cmd))
-                        {
-                            da.Fill(ds, "trap_locations");
-                        }
-                        ddlLocation.DataSource = ds.Tables["trap_locations"];
-                        ddlLocation.DataValueField = "TrapArea";
-                        ddlLocation.DataTextField = "TrapArea";
-                        ddlLocation.DataBind();
-                        ddlLocation.Items.Insert(0, new ListItem("Select...", ""));
-                    }
-                }
-                catch (Exception ex)
-                {
-                    lblError.ForeColor = System.Drawing.Color.Red;
-                    lblError.Text = "Could not retrieve Trap Locations: " + ex.ToString();
-                }
-            }
-        }
-
-
-        protected void chkStatewide_CheckChanged(object sender, EventArgs e)
-        {
-            if (chkStatewide.Checked)
-            {
-                ddlLocation.Enabled = false;
-                rfvLocation.Enabled = false;
-            }
-            else
-            {
-                ddlLocation.Enabled = true;
-                rfvLocation.Enabled = true;
-            }
-        }
-
+        
         protected void renderBtn_Click(object sender, EventArgs e)
         {
-            if (Page.IsValid)
+            if (ddlSizeRepresents.Text.Contains("Species") && ddlColorRepresents.Text.Contains("Species"))
             {
-                Hashtable parameters = new Hashtable();
-                parameters.Add("TrapArea", chkStatewide.Checked ? "%" : ddlLocation.SelectedValue);
-                parameters.Add("StartWeek", ddlYearStart.SelectedValue.ToString() + "-01-01");
-                parameters.Add("EndWeek", ddlYearEnd.SelectedValue.ToString() + "-12-31");
-
-                generateTreeMapJson("USP_Get_Select_MosquitoCountsByTrapByDate", parameters, "TreeMapData.json");
-                //ScriptManager.RegisterStartupScript(this, GetType(), "alert", "generateTreeMap(\"" + ddlGradientDropdownValue.SelectedValue + "\",$(\"#valLabelSize\").val());setActiveGradient(\"" + ddlGradientDropdownValue.SelectedValue + "\");updateGradientDropdownToggleBackground(\"" + ddlGradientDropdownValue.SelectedValue + "\"); ", true);
+                ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Please select only one weather variable in the \"Size Represents\" and \"Color Represents\" dropdowns.')", true);
+                return;
             }
+            else if (!ddlSizeRepresents.Text.Contains("Species") && !ddlColorRepresents.Text.Contains("Species"))
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Please select only one weather variable in the \"Size Represents\" and \"Color Represents\" dropdowns.')", true);
+                return;
+            }
+
+            Hashtable parameters = new Hashtable();
+            parameters.Add("TrapArea", "%");
+            parameters.Add("StartWeek", ddlYearStart.SelectedValue.ToString() + "-01-01");
+            parameters.Add("EndWeek", ddlYearEnd.SelectedValue.ToString() + "-12-31");
+            generateTreeMapJson("USP_Get_Select_TreeMapCategorizedByTrap", parameters, "TreeMapData.json");
+            //ScriptManager.RegisterStartupScript(this, GetType(), "alert", "generateTreeMap(\"" + ddlGradientDropdownValue.SelectedValue + "\",$(\"#valLabelSize\").val());setActiveGradient(\"" + ddlGradientDropdownValue.SelectedValue + "\");updateGradientDropdownToggleBackground(\"" + ddlGradientDropdownValue.SelectedValue + "\"); ", true);
         }
-
-
-
-
+        
         protected void generateTreeMapJson(String procedure, Hashtable parameters, String fileName)
         {
+            String sizeBy = ddlSizeRepresents.SelectedValue;
+            String colorBy = ddlColorRepresents.SelectedValue;
+            String categorizeBy = ddlCategory.SelectedValue;
+            String colorUnit = "";
+            String sizeUnit = "";
+            String category = "";
+            String categoryPlural = "";
+
+            if (colorBy.Equals("Mean Temp") || colorBy.Equals("Max Temp") || colorBy.Equals("Min Temp") || colorBy.Equals("Bare Soil Temp") || colorBy.Equals("Turf Soil Temp") || colorBy.Equals("Dew Point") || colorBy.Equals("Wind Chill"))
+            {
+                colorUnit = " (F\x00B0)";
+            }
+            else if (colorBy.Equals("Mean Wind Speed") || colorBy.Equals("Max Wind Speed"))
+            {
+                colorUnit = " (mph)";
+            }
+            else if (colorBy.Equals("Solar Rad"))
+            {
+                colorUnit = " (W/m\xB2)";
+            }
+            else if (colorBy.Equals("Rainfall"))
+            {
+                colorUnit = " (in)";
+            }
+
+            if (sizeBy.Equals("Mean Temp") || sizeBy.Equals("Max Temp") || sizeBy.Equals("Min Temp") || sizeBy.Equals("Bare Soil Temp") || sizeBy.Equals("Turf Soil Temp") || sizeBy.Equals("Dew Point") || sizeBy.Equals("Wind Chill"))
+            {
+                sizeUnit = " (F\x00B0)";
+            }
+            else if (sizeBy.Equals("Mean Wind Speed") || sizeBy.Equals("Max Wind Speed"))
+            {
+                sizeUnit = " (mph)";
+            }
+            else if (sizeBy.Equals("Solar Rad"))
+            {
+                sizeUnit = " (W/m\xB2)";
+            }
+            else if (sizeBy.Equals("Rainfall"))
+            {
+                sizeUnit = " (in)";
+            }
+
+            if (categorizeBy.Equals("Trap Locations"))
+            {
+                category = "Trap";
+                categoryPlural = "All Traps";
+            }
+            else if (categorizeBy.Equals("Counties"))
+            {
+                category = "County";
+                categoryPlural = "All Counties";
+            }
             try
             {
                 using (MySqlConnection conn = new MySqlConnection(cs))
@@ -145,60 +153,199 @@ namespace WNV
                             cmd.Parameters.AddWithValue(param.Key.ToString(), param.Value.ToString());
                         }
                     }
-
                     using (MySqlDataAdapter da = new MySqlDataAdapter(cmd))
                     {
                         DataTable dt = new DataTable();
                         da.Fill(dt);
 
                         StringBuilder treeMapJson = new StringBuilder();
-                        treeMapJson.Append("{\"name\":\"AllMosquitoes\",\"children\":[{");
-                        bool trapHasData = false;
-                        int domainMax = -1;
-                        int domainMin = -1;
+                        treeMapJson.Append("{\"name\":\""+ categoryPlural + "\",\"children\":[{");
+
+                        bool itemHasData = false;
+                        int speciesDomainMax = -1;
+                        int speciesDomainMin = -1;
+                        double weatherDomainMax = -1.0;
+                        double weatherDomainMin = -1.0;
+                        
                         foreach (DataRow row in dt.Rows)
                         {
-                            string trapArea = "\"name\":\"" + row["Trap Area"] + "\",\"children\":[{";
-                            bool mosquitoTypeAdded = false;
-                            foreach (DataColumn col in dt.Columns)
+                            string trapArea = "";
+                            string county = "";
+
+                            if (categorizeBy.Equals("Trap Locations"))
                             {
-                                string columnName = col.ColumnName;
-                                string columnValue = row[col.ColumnName].ToString();
-                                if (!columnName.Equals("Trap Area") && !columnName.Equals("Males") && !columnName.Equals("Females") && !columnName.Equals("Total Mosquitoes") && !columnValue.Equals("0") && !columnValue.Equals(""))
+                                trapArea = "\"name\":\"" + row["Trap Area"] + "\",\"children\":[{";
+                                bool mosquitoTypeAdded = false;
+                                foreach (DataColumn col in dt.Columns)
                                 {
-                                    if (domainMax == -1 && domainMax == -1)
+                                    string columnName = col.ColumnName;
+                                    string columnValue = row[col.ColumnName].ToString();
+                                    if (sizeBy.Equals("Species"))
                                     {
-                                        domainMax = Int32.Parse(columnValue);
-                                        domainMin = Int32.Parse(columnValue);
+                                        if (columnName.Equals("Aedes") || columnName.Equals("Aedes Vexans") || columnName.Equals("Anopheles") || columnName.Equals("Culex") || columnName.Equals("Culex Salinarius") || columnName.Equals("Culex Tarsalis") || columnName.Equals("Culiseta") || columnName.Equals("Other"))
+                                        {
+                                            if (!columnValue.Equals("0") && !columnValue.Equals(""))
+                                            {
+                                                if (weatherDomainMax == -1 && weatherDomainMin == -1)
+                                                {
+                                                    weatherDomainMax = Double.Parse(row[colorBy].ToString());
+                                                    weatherDomainMin = Double.Parse(row[colorBy].ToString());
+                                                }
+                                                else if (weatherDomainMax < Double.Parse(row[colorBy].ToString()))
+                                                {
+                                                    weatherDomainMax = Double.Parse(row[colorBy].ToString());
+                                                }
+                                                else if (weatherDomainMin > Double.Parse(row[colorBy].ToString()))
+                                                {
+                                                    weatherDomainMin = Double.Parse(row[colorBy].ToString());
+                                                }
+                                                if (!colorBy.Equals("Species"))
+                                                {
+                                                    trapArea = trapArea + "\"name\":\"" + columnName + "\"," + "\"size\":\"" + columnValue + "\"," + "\"colorValue\":\"" + row[colorBy].ToString() + "\"," + "\"colorUnit\":\"" + colorBy + colorUnit + "\"," + "\"sizeUnit\":\"" + "Count" + "\"," + "\"category\":\"" + category + "\"," + "\"categoryPlural\":\"" + categoryPlural + "\"},{";
+                                                }
+                                                else
+                                                {
+                                                    trapArea = trapArea + "\"name\":\"" + columnName + "\"," + "\"size\":\"" + columnValue + "\"," + "\"category\":\"" + category + "\"," + "\"categoryPlural\":\"" + categoryPlural + "\"},{";
+                                                }
+                                                mosquitoTypeAdded = true;
+                                                itemHasData = true;
+                                            }
+                                        }
                                     }
-                                    else if (domainMax < Int32.Parse(columnValue))
+                                    else
                                     {
-                                        domainMax = Int32.Parse(columnValue);
+                                        if (columnName.Equals("Aedes") || columnName.Equals("Aedes Vexans") || columnName.Equals("Anopheles") || columnName.Equals("Culex") || columnName.Equals("Culex Salinarius") || columnName.Equals("Culex Tarsalis") || columnName.Equals("Culiseta") || columnName.Equals("Other"))
+                                        {
+                                            if (!columnValue.Equals("0") && !columnValue.Equals(""))
+                                            {
+                                                if (speciesDomainMax == -1 && speciesDomainMin == -1)
+                                                {
+                                                    speciesDomainMax = Int32.Parse(columnValue);
+                                                    speciesDomainMin = Int32.Parse(columnValue);
+                                                }
+                                                else if (speciesDomainMax < Int32.Parse(columnValue))
+                                                {
+                                                    speciesDomainMax = Int32.Parse(columnValue);
+                                                }
+                                                else if (speciesDomainMin > Int32.Parse(columnValue))
+                                                {
+                                                    speciesDomainMin = Int32.Parse(columnValue);
+                                                }
+                                                if (colorBy.Equals("Species"))
+                                                {
+                                                    trapArea = trapArea + "\"name\":\"" + columnName + "\"," + "\"size\":\"" + row[sizeBy].ToString() + "\"," + "\"colorValue\":\"" + columnValue.ToString() + "\"," + "\"colorUnit\":\"" + "Count" + "\"," + "\"sizeUnit\":\"" + sizeBy + sizeUnit + "\"," + "\"category\":\"" + category + "\"," + "\"categoryPlural\":\"" + categoryPlural + "\"},{";
+                                                }
+                                                else
+                                                {
+                                                    trapArea = trapArea + "\"name\":\"" + columnName + "\"," + "\"size\":\"" + columnValue + "\"," + "\"category\":\"" + category + "\"," + "\"categoryPlural\":\"" + categoryPlural + "\"},{";
+                                                }
+                                                mosquitoTypeAdded = true;
+                                                itemHasData = true;
+                                            }
+                                        }
                                     }
-                                    else if (domainMin > Int32.Parse(columnValue))
-                                    {
-                                        domainMin = Int32.Parse(columnValue);
-                                    }
-                                    
-                                    trapArea = trapArea + "\"name\":\"" + columnName + "\","+ "\"size\":\"" + columnValue + "\"},{";
-                                    mosquitoTypeAdded = true;
-                                    trapHasData = true;
+                                }
+                                if (mosquitoTypeAdded)
+                                {
+                                    treeMapJson.Append(trapArea);
+                                    treeMapJson.Remove(treeMapJson.Length - 2, 2);
+                                    treeMapJson.Append("]},{");
                                 }
                             }
-                            if (mosquitoTypeAdded)
+                            else if (categorizeBy.Equals("Counties"))
                             {
-                                treeMapJson.Append(trapArea);
-                                treeMapJson.Remove(treeMapJson.Length - 2, 2);
-                                treeMapJson.Append("]},{");
+                                county = "\"name\":\"" + row["County"] + "\",\"children\":[{";
+                                bool mosquitoTypeAdded = false;
+                                foreach (DataColumn col in dt.Columns)
+                                {
+                                    string columnName = col.ColumnName;
+                                    string columnValue = row[col.ColumnName].ToString();
+                                    if (sizeBy.Equals("Species"))
+                                    {
+                                        if (columnName.Equals("Aedes") || columnName.Equals("Aedes Vexans") || columnName.Equals("Anopheles") || columnName.Equals("Culex") || columnName.Equals("Culex Salinarius") || columnName.Equals("Culex Tarsalis") || columnName.Equals("Culiseta") || columnName.Equals("Other"))
+                                        {
+                                            if (!columnValue.Equals("0") && !columnValue.Equals(""))
+                                            {
+                                                if (weatherDomainMax == -1 && weatherDomainMin == -1)
+                                                {
+                                                    weatherDomainMax = Double.Parse(row[colorBy].ToString());
+                                                    weatherDomainMin = Double.Parse(row[colorBy].ToString());
+                                                }
+                                                else if (weatherDomainMax < Double.Parse(row[colorBy].ToString()))
+                                                {
+                                                    weatherDomainMax = Double.Parse(row[colorBy].ToString());
+                                                }
+                                                else if (weatherDomainMin > Double.Parse(row[colorBy].ToString()))
+                                                {
+                                                    weatherDomainMin = Double.Parse(row[colorBy].ToString());
+                                                }
+                                                if (!colorBy.Equals("Species"))
+                                                {
+                                                    county = county + "\"name\":\"" + columnName + "\"," + "\"size\":\"" + columnValue + "\"," + "\"colorValue\":\"" + row[colorBy].ToString() + "\"," + "\"colorUnit\":\"" + colorBy + colorUnit + "\"," + "\"sizeUnit\":\"" + "Count" + "\"," + "\"category\":\"" + category + "\"," + "\"categoryPlural\":\"" + categoryPlural + "\"},{";
+                                                }
+                                                else
+                                                {
+                                                    county = county + "\"name\":\"" + columnName + "\"," + "\"size\":\"" + columnValue + "\"," + "\"category\":\"" + category + "\"," + "\"categoryPlural\":\"" + categoryPlural + "\"},{";
+                                                }
+                                                mosquitoTypeAdded = true;
+                                                itemHasData = true;
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (columnName.Equals("Aedes") || columnName.Equals("Aedes Vexans") || columnName.Equals("Anopheles") || columnName.Equals("Culex") || columnName.Equals("Culex Salinarius") || columnName.Equals("Culex Tarsalis") || columnName.Equals("Culiseta") || columnName.Equals("Other"))
+                                        {
+                                            if (!columnValue.Equals("0") && !columnValue.Equals(""))
+                                            {
+                                                if (speciesDomainMax == -1 && speciesDomainMin == -1)
+                                                {
+                                                    speciesDomainMax = Int32.Parse(columnValue);
+                                                    speciesDomainMin = Int32.Parse(columnValue);
+                                                }
+                                                else if (speciesDomainMax < Int32.Parse(columnValue))
+                                                {
+                                                    speciesDomainMax = Int32.Parse(columnValue);
+                                                }
+                                                else if (speciesDomainMin > Int32.Parse(columnValue))
+                                                {
+                                                    speciesDomainMin = Int32.Parse(columnValue);
+                                                }
+                                                if (colorBy.Equals("Species"))
+                                                {
+                                                    county = county + "\"name\":\"" + columnName + "\"," + "\"size\":\"" + row[sizeBy].ToString() + "\"," + "\"colorValue\":\"" + columnValue.ToString() + "\"," + "\"colorUnit\":\"" + "Count" + "\"," + "\"sizeUnit\":\"" + sizeBy + sizeUnit + "\"," + "\"category\":\"" + category + "\"," + "\"categoryPlural\":\"" + categoryPlural + "\"},{";
+                                                }
+                                                else
+                                                {
+                                                    county = county + "\"name\":\"" + columnName + "\"," + "\"size\":\"" + columnValue + "\"," + "\"category\":\"" + category + "\"," + "\"categoryPlural\":\"" + categoryPlural + "\"},{";
+                                                }
+                                                mosquitoTypeAdded = true;
+                                                itemHasData = true;
+                                            }
+                                        }
+                                    }
+                                }
+                                if (mosquitoTypeAdded)
+                                {
+                                    treeMapJson.Append(county);
+                                    treeMapJson.Remove(treeMapJson.Length - 2, 2);
+                                    treeMapJson.Append("]},{");
+                                }
                             }
                         }
                         treeMapJson.Remove(treeMapJson.Length - 2, 2);
-                        treeMapJson.Append("],\"max\":\"" + domainMax + "\"," + "\"min\":\"" + domainMin + "\"}");
-
-                        //var json = JsonConvert.SerializeObject(dt);
+                        if (colorBy.Equals("Species"))
+                        {
+                            treeMapJson.Append("],\"max\":\"" + speciesDomainMax + "\"," + "\"min\":\"" + speciesDomainMin + "\"," + "\"colorUnit\":\"" + colorUnit + "\"}");
+                        }
+                        else
+                        {
+                            treeMapJson.Append("],\"max\":\"" + weatherDomainMax + "\"," + "\"min\":\"" + weatherDomainMin + "\"," + "\"colorUnit\":\"" + colorUnit + "\"}");
+                        }
+                            
                         using (StreamWriter sr = new StreamWriter(Server.MapPath("/Scripts/TreeMapJSON/" + fileName)))
                         {
-                            if (trapHasData)
+                            if (itemHasData)
                             {
                                 sr.Write(treeMapJson);
                             }

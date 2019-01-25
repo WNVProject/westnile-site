@@ -57,11 +57,12 @@
         div.tooltip {
             background: white;
             position: absolute;
-            min-width: 17em;
+            min-width: 26em;
             text-align:center;
             border-radius:5px;
             font-size: 18px;
             box-sizing:border-box !important;
+            z-index:1003;
         }
 
         .tooltip.stationary {
@@ -69,6 +70,11 @@
             margin-top:-.25rem;
             border-radius:0 0  .25rem .25rem;
             box-shadow: 0 1px 0 1px #ced4da;
+            z-index:1002;
+        }
+
+        .category rect {
+            fill:gray;
         }
 
     </style>
@@ -121,186 +127,120 @@
     <asp:HiddenField ID="gradientDropdownValue" Visible="false" runat="server" Value="YlGn" />
     <div class="row">
         <div class="col-lg-4">
-            <div class="row">
-                <div class="col-lg-12">
-                    <asp:UpdatePanel runat="server" ID="upnlDropdowns" UpdateMode="Conditional">
-                        <Triggers>
-                            <asp:AsyncPostBackTrigger ControlID="ddlLocation" />
-                            <asp:AsyncPostBackTrigger ControlID="chkStatewide" />
-                        </Triggers>
-                        <ContentTemplate>
-                            <div class="row">
-                                <div class="col-lg-5">
-                                    <div class="col-form-label align-right">
-                                        <span class="required">*</span>Trap Location
-                                    </div>
-                                </div>
-                                <div class="col-lg-7">
-                                    <asp:DropDownList ID="ddlLocation" runat="server" CssClass="form-control aspnet-width-fix" Width="100%"></asp:DropDownList>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-12 align-right">
-                                    <asp:RequiredFieldValidator ID="rfvLocation" runat="server" Text="Trap Location is required." ForeColor="Red" Display="Static" ControlToValidate="ddlLocation" ValidationGroup="vgTreeMap" EnableClientScript="true"></asp:RequiredFieldValidator>
-                                </div>
-                            </div>
-                        </ContentTemplate>
-                    </asp:UpdatePanel>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12">
-                    <asp:UpdatePanel runat="server" ID="UpdatePanel2" UpdateMode="Conditional">
-                        <Triggers>
-                            <asp:AsyncPostBackTrigger ControlID="ddlLocation" />
-                            <asp:AsyncPostBackTrigger ControlID="chkStatewide" />
-                        </Triggers>
-                        <ContentTemplate>
-                            <div class="row">
-                                <div class="col-lg-5">
-                                    <div class="col-form-label align-right">
-                                        <span class="required">*</span>Start Year
-                                    </div>
-                                </div>
-                                <div class="col-lg-7">
-                                    <asp:DropDownList ID="ddlYearStart" runat="server" CssClass="form-control aspnet-width-fix" Width="100%"></asp:DropDownList>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-12 align-right">
-                                    <asp:RequiredFieldValidator ID="rfvStartDate" runat="server" Text="Start Year is required." ForeColor="Red" Display="Static" ControlToValidate="ddlYearStart" ValidationGroup="vgTreeMap" EnableClientScript="true"></asp:RequiredFieldValidator>
-                                </div>
-                            </div>
-                        </ContentTemplate>
-                    </asp:UpdatePanel>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12">
-                    <asp:UpdatePanel runat="server" ID="UpdatePanel3" UpdateMode="Conditional">
-                        <Triggers>
-                            <asp:AsyncPostBackTrigger ControlID="ddlLocation" />
-                            <asp:AsyncPostBackTrigger ControlID="chkStatewide" />
-                        </Triggers>
-                        <ContentTemplate>
-                            <div class="row">
-                                <div class="col-lg-5">
-                                    <div class="col-form-label align-right">
-                                        <span class="required">*</span>End Year
-                                    </div>
-                                </div>
-                                <div class="col-lg-7">
-                                    <asp:DropDownList ID="ddlYearEnd" runat="server" CssClass="form-control aspnet-width-fix" Width="100%"></asp:DropDownList>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-12 align-right">
-                                    <asp:RequiredFieldValidator ID="rfvEndDate" runat="server" Text="End Year is required." ForeColor="Red" Display="Static" ControlToValidate="ddlYearEnd" ValidationGroup="vgTreeMap" EnableClientScript="true"></asp:RequiredFieldValidator>
-                                </div>
-                            </div>
-                        </ContentTemplate>
-                    </asp:UpdatePanel>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
             <div class="row aspnet-rfv-heightOffset-fix">
                 <div class="col-lg-12">
-                    <asp:UpdatePanel runat="server" ID="UpdatePanel1" UpdateMode="Conditional">
-                        <Triggers>
-                            <asp:AsyncPostBackTrigger ControlID="ddlLocation" />
-                            <asp:AsyncPostBackTrigger ControlID="chkStatewide" />
-                        </Triggers>
-                        <ContentTemplate>
-                            <div class="row">
-                                <div class="col-lg-5">
-                                    <div class="col-form-label align-right">
-                                        <span class="required">*</span>Categorize By
-                                    </div>
-                                </div>
-                                <div class="col-lg-7">
-                                    <asp:DropDownList ID="ddlCategory" runat="server" CssClass="form-control aspnet-width-fix" Width="100%">
-                                        <asp:ListItem Text="Trap Location" Value="0" Selected="True"></asp:ListItem>
-                                        <asp:ListItem Text="County" Value="1"></asp:ListItem>
-                                        <asp:ListItem Text="Species" Value="2"></asp:ListItem>
-                                    </asp:DropDownList>
-                                </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="col-form-label align-right">
+                                Categorize By
                             </div>
-                            <div class="row">
-                                <div class="col-lg-12 align-right">
-                                    <%--<asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" Text="Category is required." ForeColor="Red" Display="Static" ControlToValidate="ddlLocation" ValidationGroup="vgTreeMap" EnableClientScript="true"></asp:RequiredFieldValidator>--%>
-                                </div>
-                            </div>
-                        </ContentTemplate>
-                    </asp:UpdatePanel>
-                </div>
-            </div>
-            <div class="row aspnet-rfv-heightOffset-fix">
-                <div class="col-lg-12">
-                    <asp:UpdatePanel runat="server" ID="UpdatePanel4" UpdateMode="Conditional">
-                        <Triggers>
-                            <asp:AsyncPostBackTrigger ControlID="ddlLocation" />
-                            <asp:AsyncPostBackTrigger ControlID="chkStatewide" />
-                        </Triggers>
-                        <ContentTemplate>
-                            <div class="row">
-                                <div class="col-lg-5">
-                                    <div class="col-form-label align-right">
-                                        <span class="required">*</span>
-                                    </div>
-                                </div>
-                                <div class="col-lg-7">
-                                    <asp:DropDownList ID="DropDownList2" runat="server" CssClass="form-control aspnet-width-fix" Width="100%"></asp:DropDownList>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-12 align-right">
-                                    <%--<asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" Text=" is required." ForeColor="Red" Display="Static" ControlToValidate="ddlYearStart" ValidationGroup="vgTreeMap" EnableClientScript="true"></asp:RequiredFieldValidator>--%>
-                                </div>
-                            </div>
-                        </ContentTemplate>
-                    </asp:UpdatePanel>
-                </div>
-            </div>
-            <div class="row aspnet-rfv-heightOffset-fix">
-                <div class="col-lg-12">
-                    <asp:UpdatePanel runat="server" ID="UpdatePanel5" UpdateMode="Conditional">
-                        <Triggers>
-                            <asp:AsyncPostBackTrigger ControlID="ddlLocation" />
-                            <asp:AsyncPostBackTrigger ControlID="chkStatewide" />
-                        </Triggers>
-                        <ContentTemplate>
-                            <div class="row">
-                                <div class="col-lg-5">
-                                    <div class="col-form-label align-right">
-                                        <span class="required">*</span>
-                                    </div>
-                                </div>
-                                <div class="col-lg-7">
-                                    <asp:DropDownList ID="DropDownList3" runat="server" CssClass="form-control aspnet-width-fix" Width="100%"></asp:DropDownList>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-12 align-right">
-                                    <%--<asp:RequiredFieldValidator ID="RequiredFieldValidator3" runat="server" Text=" is required." ForeColor="Red" Display="Static" ControlToValidate="ddlYearEnd" ValidationGroup="vgTreeMap" EnableClientScript="true"></asp:RequiredFieldValidator>--%>
-                                </div>
-                            </div>
-                        </ContentTemplate>
-                    </asp:UpdatePanel>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="row aspnet-rfv-heightOffset-fix">
-                <div class="col-lg-7">
-                    <div class="slideContainer">
-                        <input id="rngLabelSize" class="form-control m-0 w-100" type="range" value="16" min="10" max="25" step="1" onmouseover="toggleTooltip('valLabelSize');" onmouseout="toggleTooltip('valLabelSize');" onmousemove="updateSlideOutputLive(this,'valLabelSize');valLabelSize.value=value;if(!this.disabled){changeLabelSize(value,'txtLabelSize')};"/>
-                        <output id="valLabelSize" class="formTooltip-hide text-white p-1 m-0 w-100 text-center">16</output>
+                        </div>
+                        <div class="col-lg-7">
+                            <asp:DropDownList ID="ddlCategory" runat="server" CssClass="form-control aspnet-width-fix" Width="100%">
+                                <asp:ListItem Text="Trap Location" Value="Trap Locations" Selected="True"></asp:ListItem>
+                                <asp:ListItem Text="County" Value="Counties"></asp:ListItem>
+                            </asp:DropDownList>
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-5">
-                    <div id="txtLabelSize" class="col-form-label align-center">
-                        Label Size
+            </div>
+            <div class="row aspnet-rfv-heightOffset-fix">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="col-form-label align-right">
+                                Start Year
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <asp:DropDownList ID="ddlYearStart" runat="server" CssClass="form-control aspnet-width-fix" Width="100%"></asp:DropDownList>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row aspnet-rfv-heightOffset-fix">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="col-form-label align-right">
+                                End Year
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <asp:DropDownList ID="ddlYearEnd" runat="server" CssClass="form-control aspnet-width-fix" Width="100%"></asp:DropDownList>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="row aspnet-rfv-heightOffset-fix">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="col-form-label align-right">
+                                Size Represents
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+                                <Triggers>
+                                    <asp:AsyncPostBackTrigger ControlID="ddlSizeRepresents" />
+                                    <asp:AsyncPostBackTrigger ControlID="ddlColorRepresents" />
+                                </Triggers>
+                                <ContentTemplate>
+                                    <asp:DropDownList ID="ddlSizeRepresents" runat="server" CssClass="form-control aspnet-width-fix" Width="100%">
+                                        <asp:ListItem Text="Species Count" Value="Species" Selected="True"></asp:ListItem>
+                                        <asp:ListItem Text="Mean Temp (F&deg;)" Value="Mean Temp" ></asp:ListItem>
+                                        <asp:ListItem Text="Max Temp (F&deg;)" Value="Max Temp" ></asp:ListItem>
+                                        <asp:ListItem Text="Min Temp (F&deg;)" Value="Min Temp" ></asp:ListItem>
+                                        <asp:ListItem Text="Bare Soil Temp (F&deg;)" Value="Bare Soil Temp" ></asp:ListItem>
+                                        <asp:ListItem Text="Turf Soil Temp (F&deg;)" Value="Turf Soil Temp" ></asp:ListItem>
+                                        <asp:ListItem Text="Dew Point (F&deg;)" Value="Dew Point" ></asp:ListItem>
+                                        <asp:ListItem Text="Wind Chill (F&deg;)" Value="Wind Chill" ></asp:ListItem>
+                                        <asp:ListItem Text="Mean Wind Speed (mph)" Value="Mean Wind Speed" ></asp:ListItem>
+                                        <asp:ListItem Text="Max Wind Speed (mph)" Value="Max Wind Speed" ></asp:ListItem>
+                                        <asp:ListItem Text="Solar Rad (W/m&sup2;)" Value="Solar Rad" ></asp:ListItem>
+                                        <asp:ListItem Text="Rainfall (in)" Value="Rainfall" ></asp:ListItem>
+                                    </asp:DropDownList>
+                                </ContentTemplate>
+                            </asp:UpdatePanel>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row aspnet-rfv-heightOffset-fix">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="col-form-label align-right">
+                                Color Represents
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <asp:UpdatePanel ID="upDdlColorRepresents" runat="server">
+                                <Triggers>
+                                    <asp:AsyncPostBackTrigger ControlID="ddlSizeRepresents" />
+                                    <asp:AsyncPostBackTrigger ControlID="ddlColorRepresents" />
+                                </Triggers>
+                                <ContentTemplate>
+                                    <asp:DropDownList ID="ddlColorRepresents" runat="server" CssClass="form-control aspnet-width-fix" Width="100%">
+                                        <asp:ListItem Text="Species Count" Value="Species"></asp:ListItem>
+                                        <asp:ListItem Text="Mean Temp (F&deg;)" Value="Mean Temp" Selected="True"></asp:ListItem>
+                                        <asp:ListItem Text="Max Temp (F&deg;)" Value="Max Temp" ></asp:ListItem>
+                                        <asp:ListItem Text="Min Temp (F&deg;)" Value="Min Temp" ></asp:ListItem>
+                                        <asp:ListItem Text="Bare Soil Temp (F&deg;)" Value="Bare Soil Temp" ></asp:ListItem>
+                                        <asp:ListItem Text="Turf Soil Temp (F&deg;)" Value="Turf Soil Temp" ></asp:ListItem>
+                                        <asp:ListItem Text="Dew Point (F&deg;)" Value="Dew Point" ></asp:ListItem>
+                                        <asp:ListItem Text="Wind Chill (F&deg;)" Value="Wind Chill" ></asp:ListItem>
+                                        <asp:ListItem Text="Mean Wind Speed (mph)" Value="Mean Wind Speed" ></asp:ListItem>
+                                        <asp:ListItem Text="Max Wind Speed (mph)" Value="Max Wind Speed" ></asp:ListItem>
+                                        <asp:ListItem Text="Solar Rad (W/m&sup2;)" Value="Solar Rad" ></asp:ListItem>
+                                        <asp:ListItem Text="Rainfall (in)" Value="Rainfall" ></asp:ListItem>
+                                    </asp:DropDownList>
+                                </ContentTemplate>
+                            </asp:UpdatePanel>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -320,7 +260,20 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6">
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="row aspnet-rfv-heightOffset-fix">
+                <div class="col-lg-7">
+                    <div class="slideContainer">
+                        <input id="rngLabelSize" class="form-control m-0 w-100" type="range" value="16" min="10" max="25" step="1" onmouseover="toggleTooltip('valLabelSize');" onmouseout="toggleTooltip('valLabelSize');" onmousemove="updateSlideOutputLive(this,'valLabelSize');valLabelSize.value=value;if(!this.disabled){changeLabelSize(value,'txtLabelSize')};"/>
+                        <output id="valLabelSize" class="formTooltip-hide text-white p-1 m-0 w-100 text-center">16</output>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div id="txtLabelSize" class="col-form-label align-center">
+                        Label Size
+                    </div>
                 </div>
             </div>
             <div class="row aspnet-rfv-heightOffset-fix">
@@ -353,7 +306,7 @@
             <asp:Button ID="renderBtn" runat="server" Text="Generate Tree Map" CssClass="btn btn-success btn-lg btn-block aspnet-width-fix" ValidationGroup="vgTreeMap" OnClick="renderBtn_Click" />
         </div>
         <div class="col-lg-4">
-            <asp:CheckBox ID="chkStatewide" runat="server" Text="&nbsp;Statewide Data" CssClass="checkbox" AutoPostBack="true" OnCheckedChanged="chkStatewide_CheckChanged"/>
+            <%--<asp:CheckBox ID="chkStatewide" runat="server" Text="&nbsp;Statewide Data" CssClass="checkbox" AutoPostBack="true" OnCheckedChanged="chkStatewide_CheckChanged"/>--%>
         </div>
         <div class="col-lg-4">
             <asp:Label ID="lblError" runat="server" ForeColor="Red"></asp:Label>
@@ -362,7 +315,6 @@
 
     <script>
         d3.json("/Scripts/TreeMapJSON/TreeMapData.json", function () { });
-        console.log("start()");
         var bckgrndImgSelector = "background-image: linear-gradient(90deg,";
         var gradientColorList = "";
         var activeGradient = '<%= gradientDropdownValue.Value %>';
@@ -384,7 +336,6 @@
                 //.mode("slice-dice");
         
             $("#gradientDropdown").children().addClass("noPointerEvents");
-            console.log("generateTreeMap()");
 
             var color = d3.scale.quantize()
                 .range(colorbrewer[gradient][1]);
@@ -406,33 +357,48 @@
                     .attr("transform", "translate(.5,.5)");
         
                 d3.json("/Scripts/TreeMapJSON/TreeMapData.json", function (data) {
-                    console.log(data);
+                    //console.log(data);
                     node = root = data;
-                
+
+                    var categories = treemap.nodes(root).filter(function(d) {
+                        return d.children;
+                    });
+                    //console.log(categories);
+
+                    //var parents = svg.selectAll("g").data(categories).enter()
+                    //    .append("svg:g")
+                    //    .attr("class", "category")
+                    //    .append("svg:rect")
+                    //    .attr("width", function (d) {
+                    //        return d.dx - 1;
+                    //    })
+                    //    .attr("height", "0.5rem");
+                    
                       var nodes = treemap.nodes(root)
                           .filter(function(d) {return !d.children; });
-
+                      
                       var cell = svg.selectAll("g")
                           .data(nodes)
-                        .enter().append("svg:g")
+                        .enter()
+                          .append("svg:g")
                           .attr("class", "cell")
                           .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
                           .on("click", function(d) { return zoom(node == d.parent ? root : d.parent); });
-
+                    //console.log(cell);
                     color.domain([data.min, data.max]);
-
-                    document.getElementById("minValueLabel").innerHTML = data.min;
-                    document.getElementById("middleValueLabel").innerHTML = Math.round((data.max / 2) * 100) / 100;
-                    document.getElementById("maxValueLabel").innerHTML = data.max;
+                    var middle = ((data.max - data.min) / 2) + Number(data.min);
+                    document.getElementById("minValueLabel").innerHTML = data.min
+                    document.getElementById("middleValueLabel").innerHTML = String(Math.round(Number(middle) * 1000) / 1000)
+                    document.getElementById("maxValueLabel").innerHTML = data.max + data.colorUnit;
 
                     cell.append("svg:rect")
                         .attr("width", function (d) {if(d.parent.dx) d.xRatioToParent = d.dx / d.parent.dx; return d.dx - 1; })
                         .attr("height", function (d) {if(d.parent.dy) d.yRatioToParent = d.dy / d.parent.dy; return d.dy - 1; })
                         .style("fill", function (d) {
                             if (d.name != "Culex Tarsalis") {
-                                return color(d.size);
+                                return color(d.colorValue);
                             } else {
-                                return color(d.size);
+                                return color(d.colorValue);
                                 //return "#F00";
                             }
                         })
@@ -440,9 +406,9 @@
                               tooltip.style("opacity", "1");
                               tooltip.style("border", function () {
                                   if (d.name != "Culex Tarsalis") {
-                                      return "7px solid " + color(d.size);
+                                      return "9px solid " + color(d.colorValue);
                                   } else {
-                                      return "7px solid " + color(d.size);
+                                      return "9px solid " + color(d.colorValue);
                                       //return "7px solid #F00";
                                   }
                               });
@@ -460,7 +426,7 @@
                                   "</div>" +
                                   "<div class='row'>" +
                                   "<div class='col-lg-6 align-right'>" +
-                                  "Count: " +
+                                  d.sizeUnit + ": " +
                                   "</div>" +
                                   "<div class='col-lg-6 align-left'>" +
                                   d.size +
@@ -468,18 +434,26 @@
                                   "</div>" +
                                   "<div class='row'>" +
                                   "<div class='col-lg-6 align-right'>" +
-                                  "% of Total: " +
+                                  d.colorUnit + ": " +
                                   "</div>" +
                                   "<div class='col-lg-6 align-left'>" +
-                                  Math.round((d.size/d.parent.parent.value * 100) * 100)/100 + "%" +
+                                  d.colorValue +
                                   "</div>" +
                                   "</div>" +
                                   "<div class='row'>" +
                                   "<div class='col-lg-6 align-right'>" +
-                                  "% of this Trap:" +
+                                  "% of this "+ d.category + ": " +
                                   "</div>" +
                                   "<div class='col-lg-6 align-left'>" +
                                   Math.round((d.size/d.parent.value * 100) * 100)/100 + "%" +
+                                  "</div>" +
+                                  "</div>" +
+                                  "<div class='row'>" +
+                                  "<div class='col-lg-6 align-right'>" +
+                                  "% of "+ d.categoryPlural + ": " +
+                                  "</div>" +
+                                  "<div class='col-lg-6 align-left'>" +
+                                  Math.round((d.size/d.parent.parent.value * 100) * 100)/100 + "%" +
                                   "</div>" +
                                   "</div>");
                           })
@@ -506,7 +480,7 @@
                             return d.dx > d.labelWidth && d.dy > d.labelHeight ? 1 : 0;
                         })
                         .style("fill", function (d) {
-                            var rectColor = hexToRgb(color(d.size));
+                            var rectColor = hexToRgb(color(d.colorValue));
                             var brightness = (0.2126 * rectColor.r) + (0.7152 * rectColor.g) + (0.0722 * rectColor.b);
                             if (brightness >= 127.5) {
                                 return "#000";
@@ -541,11 +515,11 @@
             for (var gradientName in colorbrewer) {
                 if (colorbrewer.hasOwnProperty(gradientName)) {
                     var gradientOptions = colorbrewer[gradientName];
-                    console.log(gradientName);
+                    //console.log(gradientName);
                     gradientSelectHTML += "<div class='gradientDropdown-item' id='" + gradientName + "' onclick='changeGradient(\""+gradientName+"\",$(\"#valLabelSize\").val())' style='"+bckgrndImgSelector;
                     for (var gradientResolution in gradientOptions) {
                         if (gradientOptions.hasOwnProperty(gradientResolution)) {
-                            console.log(gradientResolution + " -> " + gradientOptions[gradientResolution]);
+                            //console.log(gradientResolution + " -> " + gradientOptions[gradientResolution]);
                             var gradientColors = gradientOptions[gradientResolution];
                             for (var i = 0; i < gradientColors.length; i++) {
                                 gradientSelectHTML += gradientColors[i] + ",";
@@ -568,7 +542,7 @@
                     var gradientColors = gradientOptions[gradientResolution];
                     for (var i = 0; i < gradientColors.length; i++) {
                         gradientColorList += gradientColors[i] + ",";
-                        console.log(gradientColors[i] + ",");
+                        //console.log(gradientColors[i] + ",");
                     }
                     gradientColorList = gradientColorList.slice(0, -1) + ");";
                 }
