@@ -79,10 +79,20 @@ namespace WNV
             }
 
             Hashtable parameters = new Hashtable();
-            parameters.Add("TrapArea", "%");
-            parameters.Add("StartWeek", ddlYearStart.SelectedValue.ToString() + "-01-01");
-            parameters.Add("EndWeek", ddlYearEnd.SelectedValue.ToString() + "-12-31");
-            generateTreeMapJson("USP_Get_Select_TreeMapCategorizedByTrap", parameters, "TreeMapData.json");
+            if (ddlCategory.SelectedValue.Equals("Trap Locations"))
+            {
+                parameters.Add("TrapArea", "%");
+                parameters.Add("StartWeek", ddlYearStart.SelectedValue.ToString() + "-01-01");
+                parameters.Add("EndWeek", ddlYearEnd.SelectedValue.ToString() + "-12-31");
+                generateTreeMapJson("USP_Get_Select_TreeMapCategorizedByTrap", parameters, "TreeMapData.json");
+            }
+            else if (ddlCategory.SelectedValue.Equals("Counties"))
+            {
+                parameters.Add("TrapCounty", "%");
+                parameters.Add("StartWeek", ddlYearStart.SelectedValue.ToString() + "-01-01");
+                parameters.Add("EndWeek", ddlYearEnd.SelectedValue.ToString() + "-12-31");
+                generateTreeMapJson("USP_Get_Select_TreeMapCategorizedByCounty", parameters, "TreeMapData.json");
+            }
             //ScriptManager.RegisterStartupScript(this, GetType(), "alert", "generateTreeMap(\"" + ddlGradientDropdownValue.SelectedValue + "\",$(\"#valLabelSize\").val());setActiveGradient(\"" + ddlGradientDropdownValue.SelectedValue + "\");updateGradientDropdownToggleBackground(\"" + ddlGradientDropdownValue.SelectedValue + "\"); ", true);
         }
         
@@ -140,8 +150,8 @@ namespace WNV
                 category = "County";
                 categoryPlural = "All Counties";
             }
-            try
-            {
+            //try
+            //{
                 using (MySqlConnection conn = new MySqlConnection(cs))
                 {
                     MySqlCommand cmd = new MySqlCommand(procedure, conn);
@@ -183,6 +193,7 @@ namespace WNV
                                     if (sizeBy.Equals("Species"))
                                     {
                                         if (columnName.Equals("Aedes") || columnName.Equals("Aedes Vexans") || columnName.Equals("Anopheles") || columnName.Equals("Culex") || columnName.Equals("Culex Salinarius") || columnName.Equals("Culex Tarsalis") || columnName.Equals("Culiseta") || columnName.Equals("Other"))
+                                        //if (columnName.Equals("Culex Tarsalis"))
                                         {
                                             if (!columnValue.Equals("0") && !columnValue.Equals(""))
                                             {
@@ -215,6 +226,7 @@ namespace WNV
                                     else
                                     {
                                         if (columnName.Equals("Aedes") || columnName.Equals("Aedes Vexans") || columnName.Equals("Anopheles") || columnName.Equals("Culex") || columnName.Equals("Culex Salinarius") || columnName.Equals("Culex Tarsalis") || columnName.Equals("Culiseta") || columnName.Equals("Other"))
+                                        //if (columnName.Equals("Culex Tarsalis"))
                                         {
                                             if (!columnValue.Equals("0") && !columnValue.Equals(""))
                                             {
@@ -263,6 +275,7 @@ namespace WNV
                                     if (sizeBy.Equals("Species"))
                                     {
                                         if (columnName.Equals("Aedes") || columnName.Equals("Aedes Vexans") || columnName.Equals("Anopheles") || columnName.Equals("Culex") || columnName.Equals("Culex Salinarius") || columnName.Equals("Culex Tarsalis") || columnName.Equals("Culiseta") || columnName.Equals("Other"))
+                                        //if (columnName.Equals("Culex Tarsalis"))
                                         {
                                             if (!columnValue.Equals("0") && !columnValue.Equals(""))
                                             {
@@ -295,6 +308,7 @@ namespace WNV
                                     else
                                     {
                                         if (columnName.Equals("Aedes") || columnName.Equals("Aedes Vexans") || columnName.Equals("Anopheles") || columnName.Equals("Culex") || columnName.Equals("Culex Salinarius") || columnName.Equals("Culex Tarsalis") || columnName.Equals("Culiseta") || columnName.Equals("Other"))
+                                        //if (columnName.Equals("Culex Tarsalis"))
                                         {
                                             if (!columnValue.Equals("0") && !columnValue.Equals(""))
                                             {
@@ -358,11 +372,11 @@ namespace WNV
                         }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('" + ex.Message + "');", true);
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('" + ex.Message + "');", true);
+            //}
         }
     }
 }
