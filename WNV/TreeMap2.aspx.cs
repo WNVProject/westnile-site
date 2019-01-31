@@ -24,7 +24,11 @@ namespace WNV
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            fillYearDDLs();
+            if (!IsPostBack)
+            {
+                fillYearDDLs();
+                fillLocationDDL("Counties");
+            }
             //ScriptManager.RegisterStartupScript(this, GetType(), "alert", "generateTreeMap(\"" + ddlGradientDropdownValue.SelectedValue + "\",$(\"#valLabelSize\").val());setActiveGradient(\"" + ddlGradientDropdownValue.SelectedValue + "\");updateGradientDropdownToggleBackground(\""+ ddlGradientDropdownValue.SelectedValue + "\"); ", true);
         }
 
@@ -64,25 +68,96 @@ namespace WNV
                 lblError.Visible = true;
             }
         }
-        
+
+        protected void fillLocationDDL(String type)
+        {
+            {
+                try
+                {
+                    using (MySqlConnection conn = new MySqlConnection(cs))
+                    {
+                        var procedure = "USP_Select_" + type;
+                        MySqlCommand cmd = new MySqlCommand(procedure, conn);
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        using (MySqlDataAdapter da = new MySqlDataAdapter(cmd))
+                        {
+                            DataTable dt = new DataTable();
+                            da.Fill(dt);
+                            ddlLocation.DataSource = dt;
+                            if(type.Equals("Counties"))
+                            {
+                                ddlLocation.DataValueField = "TrapCounty";
+                                ddlLocation.DataTextField = "TrapCounty";
+                            }
+                            else
+                            {
+                                ddlLocation.DataValueField = "name";
+                                ddlLocation.DataTextField = "name";
+                            }
+                            ddlLocation.DataBind();
+                            ddlLocation.SelectedIndex = 0;
+                        }
+                    }
+                }
+                catch (MySqlException ex)
+                {
+                    lblError.Text = "Could not retrieve Counties/Traps: " + ex.ToString();
+                    lblError.Visible = true;
+                }
+            }
+        }
+
         protected void renderBtn_Click(object sender, EventArgs e)
         {
-            if (ddlSizeRepresents.Text.Contains("Species") && ddlColorRepresents.Text.Contains("Species"))
+            if ((ddlSizeRepresents.Text.Contains("Species") && ddlColorRepresents.Text.Contains("Species")) || (ddlSizeRepresents.Text.Contains("Tarsalis") && ddlColorRepresents.Text.Contains("Tarsalis")))
             {
-                ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Please select only one weather variable in the \"Size Represents\" and \"Color Represents\" dropdowns.')", true);
-                return;
+                //TODO - FIX PLS
+                //ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Please select only one weather variable in the \"Size Represents\" and \"Color Represents\" dropdowns.')", true);
+                //return;
             }
-            else if (!ddlSizeRepresents.Text.Contains("Species") && !ddlColorRepresents.Text.Contains("Species"))
+            else if ((!ddlSizeRepresents.Text.Contains("Species") && !ddlColorRepresents.Text.Contains("Species")) || (!ddlSizeRepresents.Text.Contains("Tarsalis") && !ddlColorRepresents.Text.Contains("Tarsalis")))
             {
-                ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Please select only one weather variable in the \"Size Represents\" and \"Color Represents\" dropdowns.')", true);
-                return;
+                //TODO - FIX PLS
+                //ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Please select only one weather variable in the \"Size Represents\" and \"Color Represents\" dropdowns.')", true);
+                //return;
             }
 
             Hashtable parameters = new Hashtable();
-            parameters.Add("TrapArea", "%");
-            parameters.Add("StartWeek", ddlYearStart.SelectedValue.ToString() + "-01-01");
-            parameters.Add("EndWeek", ddlYearEnd.SelectedValue.ToString() + "-12-31");
-            generateTreeMapJson("USP_Get_Select_TreeMapCategorizedByTrap", parameters, "TreeMapData.json");
+            if (ddlLocationType.SelectedValue.Equals("TrapLocations"))
+            {
+                if(chkStatewide.Checked)
+                {
+                    parameters.Add("TrapArea", "%");
+                    parameters.Add("StartWeek", ddlYearStart.SelectedValue.ToString() + "-01-01");
+                    parameters.Add("EndWeek", ddlYearEnd.SelectedValue.ToString() + "-12-31");
+                    generateTreeMapJson("USP_Get_Select_TreeMapCategorizedByTrap", parameters, "TreeMapData.json");
+                }
+                else
+                {
+                    parameters.Add("TrapArea", ddlLocation.SelectedValue.ToString());
+                    parameters.Add("StartWeek", ddlYearStart.SelectedValue.ToString() + "-01-01");
+                    parameters.Add("EndWeek", ddlYearEnd.SelectedValue.ToString() + "-12-31");
+                    generateTreeMapJson("USP_Get_Select_TreeMapCategorizedByTrap", parameters, "TreeMapData.json");
+                }
+            }
+            else if (ddlLocationType.SelectedValue.Equals("Counties"))
+            {
+                if(chkStatewide.Checked)
+                {
+                    parameters.Add("TrapCounty", "%");
+                    parameters.Add("StartWeek", ddlYearStart.SelectedValue.ToString() + "-01-01");
+                    parameters.Add("EndWeek", ddlYearEnd.SelectedValue.ToString() + "-12-31");
+                    generateTreeMapJson("USP_Get_Select_TreeMapCategorizedByCounty", parameters, "TreeMapData.json");
+                }
+                else
+                {
+                    parameters.Add("TrapCounty", ddlLocation.SelectedValue.ToString());
+                    parameters.Add("StartWeek", ddlYearStart.SelectedValue.ToString() + "-01-01");
+                    parameters.Add("EndWeek", ddlYearEnd.SelectedValue.ToString() + "-12-31");
+                    generateTreeMapJson("USP_Get_Select_TreeMapCategorizedByCounty", parameters, "TreeMapData.json");
+                }
+            }
             //ScriptManager.RegisterStartupScript(this, GetType(), "alert", "generateTreeMap(\"" + ddlGradientDropdownValue.SelectedValue + "\",$(\"#valLabelSize\").val());setActiveGradient(\"" + ddlGradientDropdownValue.SelectedValue + "\");updateGradientDropdownToggleBackground(\"" + ddlGradientDropdownValue.SelectedValue + "\"); ", true);
         }
         
@@ -90,7 +165,7 @@ namespace WNV
         {
             String sizeBy = ddlSizeRepresents.SelectedValue;
             String colorBy = ddlColorRepresents.SelectedValue;
-            String categorizeBy = ddlCategory.SelectedValue;
+            String categorizeBy = ddlLocationType.SelectedValue;
             String colorUnit = "";
             String sizeUnit = "";
             String category = "";
@@ -130,7 +205,7 @@ namespace WNV
                 sizeUnit = " (in)";
             }
 
-            if (categorizeBy.Equals("Trap Locations"))
+            if (categorizeBy.Equals("TrapLocations"))
             {
                 category = "Trap";
                 categoryPlural = "All Traps";
@@ -166,13 +241,15 @@ namespace WNV
                         int speciesDomainMin = -1;
                         double weatherDomainMax = -1.0;
                         double weatherDomainMin = -1.0;
+
+
                         
                         foreach (DataRow row in dt.Rows)
                         {
                             string trapArea = "";
                             string county = "";
-
-                            if (categorizeBy.Equals("Trap Locations"))
+                            int num;
+                            if (categorizeBy.Equals("TrapLocations"))
                             {
                                 trapArea = "\"name\":\"" + row["Trap Area"] + "\",\"children\":[{";
                                 bool mosquitoTypeAdded = false;
@@ -183,6 +260,37 @@ namespace WNV
                                     if (sizeBy.Equals("Species"))
                                     {
                                         if (columnName.Equals("Aedes") || columnName.Equals("Aedes Vexans") || columnName.Equals("Anopheles") || columnName.Equals("Culex") || columnName.Equals("Culex Salinarius") || columnName.Equals("Culex Tarsalis") || columnName.Equals("Culiseta") || columnName.Equals("Other"))
+                                        {
+                                            if (!columnValue.Equals("0") && !columnValue.Equals(""))
+                                            {
+                                                if (weatherDomainMax == -1 && weatherDomainMin == -1)
+                                                {
+                                                    weatherDomainMax = Double.Parse(row[colorBy].ToString());
+                                                    weatherDomainMin = Double.Parse(row[colorBy].ToString());
+                                                }
+                                                else if (weatherDomainMax < Double.Parse(row[colorBy].ToString()))
+                                                {
+                                                    weatherDomainMax = Double.Parse(row[colorBy].ToString());
+                                                }
+                                                else if (weatherDomainMin > Double.Parse(row[colorBy].ToString()))
+                                                {
+                                                    weatherDomainMin = Double.Parse(row[colorBy].ToString());
+                                                }
+                                                if (!colorBy.Equals("Species"))
+                                                {
+                                                    trapArea = trapArea + "\"name\":\"" + columnName + "\"," + "\"size\":\"" + columnValue + "\"," + "\"colorValue\":\"" + row[colorBy].ToString() + "\"," + "\"colorUnit\":\"" + colorBy + colorUnit + "\"," + "\"sizeUnit\":\"" + "Count" + "\"," + "\"category\":\"" + category + "\"," + "\"categoryPlural\":\"" + categoryPlural + "\"},{";
+                                                }
+                                                else
+                                                {
+                                                    trapArea = trapArea + "\"name\":\"" + columnName + "\"," + "\"size\":\"" + columnValue + "\"," + "\"category\":\"" + category + "\"," + "\"categoryPlural\":\"" + categoryPlural + "\"},{";
+                                                }
+                                                mosquitoTypeAdded = true;
+                                                itemHasData = true;
+                                            }
+                                        }
+                                    }
+                                    else if(!(Int32.TryParse(sizeBy.Substring(sizeBy.Length - 1), out num))) {
+                                        if (columnName.Equals(sizeBy))
                                         {
                                             if (!columnValue.Equals("0") && !columnValue.Equals(""))
                                             {
@@ -292,6 +400,38 @@ namespace WNV
                                             }
                                         }
                                     }
+                                    else if (!(Int32.TryParse(sizeBy.Substring(sizeBy.Length - 1), out num)))
+                                    {
+                                        if (columnName.Equals(sizeBy))
+                                        {
+                                            if (!columnValue.Equals("0") && !columnValue.Equals(""))
+                                            {
+                                                if (weatherDomainMax == -1 && weatherDomainMin == -1)
+                                                {
+                                                    weatherDomainMax = Double.Parse(row[colorBy].ToString());
+                                                    weatherDomainMin = Double.Parse(row[colorBy].ToString());
+                                                }
+                                                else if (weatherDomainMax < Double.Parse(row[colorBy].ToString()))
+                                                {
+                                                    weatherDomainMax = Double.Parse(row[colorBy].ToString());
+                                                }
+                                                else if (weatherDomainMin > Double.Parse(row[colorBy].ToString()))
+                                                {
+                                                    weatherDomainMin = Double.Parse(row[colorBy].ToString());
+                                                }
+                                                if (!colorBy.Equals("Species"))
+                                                {
+                                                    county = county + "\"name\":\"" + columnName + "\"," + "\"size\":\"" + columnValue + "\"," + "\"colorValue\":\"" + row[colorBy].ToString() + "\"," + "\"colorUnit\":\"" + colorBy + colorUnit + "\"," + "\"sizeUnit\":\"" + "Count" + "\"," + "\"category\":\"" + category + "\"," + "\"categoryPlural\":\"" + categoryPlural + "\"},{";
+                                                }
+                                                else
+                                                {
+                                                    county = county + "\"name\":\"" + columnName + "\"," + "\"size\":\"" + columnValue + "\"," + "\"category\":\"" + category + "\"," + "\"categoryPlural\":\"" + categoryPlural + "\"},{";
+                                                }
+                                                mosquitoTypeAdded = true;
+                                                itemHasData = true;
+                                            }
+                                        }
+                                    }
                                     else
                                     {
                                         if (columnName.Equals("Aedes") || columnName.Equals("Aedes Vexans") || columnName.Equals("Anopheles") || columnName.Equals("Culex") || columnName.Equals("Culex Salinarius") || columnName.Equals("Culex Tarsalis") || columnName.Equals("Culiseta") || columnName.Equals("Other"))
@@ -363,6 +503,35 @@ namespace WNV
             {
                 ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('" + ex.Message + "');", true);
             }
+        }
+
+        protected void chkStatewide_CheckedChanged(object sender, EventArgs e)
+        {
+            if(chkStatewide.Checked)
+            {
+                ddlLocation.Enabled = false;
+            }
+            else
+            {
+                ddlLocation.Enabled = true;
+            }
+        }
+
+        protected void ddlTimeType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var type = ddlTimeType.SelectedItem.Value;
+            if(type.Equals("Years")) {
+                System.Diagnostics.Debug.WriteLine(type);
+            } else
+            {
+                System.Diagnostics.Debug.WriteLine(type);
+            }
+        }
+
+        protected void ddlLocationType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            String type = ddlLocationType.SelectedItem.Value.ToString();
+            fillLocationDDL(type);
         }
     }
 }

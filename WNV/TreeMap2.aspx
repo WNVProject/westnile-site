@@ -125,20 +125,37 @@
         </div>
     </div>
     <asp:HiddenField ID="gradientDropdownValue" Visible="false" runat="server" Value="YlGn" />
-    <div class="row">
-        <div class="col-lg-4">
+    <div class="row">  
+        <div class ="col-lg-3">
             <div class="row aspnet-rfv-heightOffset-fix">
                 <div class="col-lg-12">
                     <div class="row">
                         <div class="col-lg-5">
                             <div class="col-form-label align-right">
-                                Categorize By
+                                Location Type
                             </div>
                         </div>
                         <div class="col-lg-7">
-                            <asp:DropDownList ID="ddlCategory" runat="server" CssClass="form-control aspnet-width-fix" Width="100%">
-                                <asp:ListItem Text="Trap Location" Value="Trap Locations" Selected="True"></asp:ListItem>
-                                <asp:ListItem Text="County" Value="Counties"></asp:ListItem>
+                            <asp:DropDownList ID="ddlLocationType" runat="server" AutoPostBack="true" CssClass="form-control aspnet-width-fix" Width="100%" OnSelectedIndexChanged="ddlLocationType_SelectedIndexChanged">
+                                <asp:ListItem Text="Counties" Value="Counties" Selected="True"></asp:ListItem>
+                                <asp:ListItem Text="Trap Locations" Value="TrapLocations"></asp:ListItem>
+                            </asp:DropDownList>
+                        </div>
+                    </div>
+                </div>
+            </div>      
+            <div class="row aspnet-rfv-heightOffset-fix">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="col-form-label align-right">
+                                Time Type
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <asp:DropDownList ID="ddlTimeType" AutoPostBack="true" runat="server" CssClass="form-control aspnet-width-fix" Width="100%" OnSelectedIndexChanged="ddlTimeType_SelectedIndexChanged">
+                                <asp:ListItem Text="Years" Value="Years" Selected="True"></asp:ListItem>
+                                <asp:ListItem Text="Weeks" Value="Weeks"></asp:ListItem>
                             </asp:DropDownList>
                         </div>
                     </div>
@@ -149,7 +166,48 @@
                     <div class="row">
                         <div class="col-lg-5">
                             <div class="col-form-label align-right">
-                                Start Year
+                                <label class="form-check-label" >Statewide</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <asp:CheckBox ID="chkStatewide" runat="server" AutoPostBack="true" OnCheckedChanged="chkStatewide_CheckedChanged"  />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3">
+            <div class="row aspnet-rfv-heightOffset-fix">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="col-form-label align-right">
+                                Location
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <asp:UpdatePanel runat="server" ID="UpdatePanel2" UpdateMode="Conditional">
+                                <Triggers>
+                                    <asp:AsyncPostBackTrigger ControlID="chkStatewide" />
+                                    <asp:AsyncPostBackTrigger ControlID="ddlLocationType" />
+                                </Triggers>
+                                    <ContentTemplate>
+                                    <asp:DropDownList ID="ddlLocation" runat="server" CssClass="form-control aspnet-width-fix" Width="100%">
+                                        <asp:ListItem Text="Placeholder" Value="Counties" Selected="True"></asp:ListItem>
+                                    </asp:DropDownList>
+                                </ContentTemplate>
+                            </asp:UpdatePanel>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row aspnet-rfv-heightOffset-fix">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="col-form-label align-right">
+                                Start Time
                             </div>
                         </div>
                         <div class="col-lg-7">
@@ -163,7 +221,7 @@
                     <div class="row">
                         <div class="col-lg-5">
                             <div class="col-form-label align-right">
-                                End Year
+                                End Time
                             </div>
                         </div>
                         <div class="col-lg-7">
@@ -173,7 +231,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4">
+        <div class="col-lg-3">
             <div class="row aspnet-rfv-heightOffset-fix">
                 <div class="col-lg-12">
                     <div class="row">
@@ -183,24 +241,32 @@
                             </div>
                         </div>
                         <div class="col-lg-7">
-                            <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+                            <asp:UpdatePanel ID="UpdatePanel3" runat="server">
                                 <Triggers>
                                     <asp:AsyncPostBackTrigger ControlID="ddlSizeRepresents" />
                                     <asp:AsyncPostBackTrigger ControlID="ddlColorRepresents" />
                                 </Triggers>
                                 <ContentTemplate>
                                     <asp:DropDownList ID="ddlSizeRepresents" runat="server" CssClass="form-control aspnet-width-fix" Width="100%">
-                                        <asp:ListItem Text="Species Count" Value="Species" Selected="True"></asp:ListItem>
-                                        <asp:ListItem Text="Mean Temp (F&deg;)" Value="Mean Temp" ></asp:ListItem>
-                                        <asp:ListItem Text="Max Temp (F&deg;)" Value="Max Temp" ></asp:ListItem>
-                                        <asp:ListItem Text="Min Temp (F&deg;)" Value="Min Temp" ></asp:ListItem>
-                                        <asp:ListItem Text="Bare Soil Temp (F&deg;)" Value="Bare Soil Temp" ></asp:ListItem>
-                                        <asp:ListItem Text="Turf Soil Temp (F&deg;)" Value="Turf Soil Temp" ></asp:ListItem>
-                                        <asp:ListItem Text="Dew Point (F&deg;)" Value="Dew Point" ></asp:ListItem>
-                                        <asp:ListItem Text="Wind Chill (F&deg;)" Value="Wind Chill" ></asp:ListItem>
-                                        <asp:ListItem Text="Mean Wind Speed (mph)" Value="Mean Wind Speed" ></asp:ListItem>
-                                        <asp:ListItem Text="Max Wind Speed (mph)" Value="Max Wind Speed" ></asp:ListItem>
-                                        <asp:ListItem Text="Solar Rad (W/m&sup2;)" Value="Solar Rad" ></asp:ListItem>
+                                        <asp:ListItem Text="All Species" Value="Species" Selected="True"></asp:ListItem>
+                                        <asp:ListItem Text="Aedes" Value="Aedes" ></asp:ListItem>
+                                        <asp:ListItem Text="Aedes Vexans" Value="Aedes Vexans" ></asp:ListItem>
+                                        <asp:ListItem Text="Anopheles" Value="Anopheles" ></asp:ListItem>
+                                        <asp:ListItem Text="Culex" Value="Culex" ></asp:ListItem>
+                                        <asp:ListItem Text="Culex Salinarius" Value="Culex Salinarius" ></asp:ListItem>
+                                        <asp:ListItem Text="Culex Tarsalis" Value="Culex Tarsalis" ></asp:ListItem>
+                                        <asp:ListItem Text="Culiseta" Value="Culiseta" ></asp:ListItem>
+                                        <asp:ListItem Text="Other Species" Value="Other" ></asp:ListItem>
+                                        <asp:ListItem Text="Mean Temp (F&deg;)" Value="Mean Temp1" ></asp:ListItem>
+                                        <asp:ListItem Text="Max Temp (F&deg;)" Value="Max Temp1" ></asp:ListItem>
+                                        <asp:ListItem Text="Min Temp (F&deg;)" Value="Min Temp1" ></asp:ListItem>
+                                        <asp:ListItem Text="Bare Soil Temp (F&deg;)" Value="Bare Soil Temp1" ></asp:ListItem>
+                                        <asp:ListItem Text="Turf Soil Temp (F&deg;)" Value="Turf Soil Temp1" ></asp:ListItem>
+                                        <asp:ListItem Text="Dew Point (F&deg;)" Value="Dew Point1" ></asp:ListItem>
+                                        <asp:ListItem Text="Wind Chill (F&deg;)" Value="Wind Chill1" ></asp:ListItem>
+                                        <asp:ListItem Text="Mean Wind Speed (mph)" Value="Mean Wind Speed1" ></asp:ListItem>
+                                        <asp:ListItem Text="Max Wind Speed (mph)" Value="Max Wind Speed1" ></asp:ListItem>
+                                        <asp:ListItem Text="Solar Rad (W/m&sup2;)" Value="Solar Rad1" ></asp:ListItem>
                                         <asp:ListItem Text="Rainfall (in)" Value="Rainfall" ></asp:ListItem>
                                     </asp:DropDownList>
                                 </ContentTemplate>
@@ -262,7 +328,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4">
+        <div class="col-lg-3">
             <div class="row aspnet-rfv-heightOffset-fix">
                 <div class="col-lg-7">
                     <div class="slideContainer">

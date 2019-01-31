@@ -154,8 +154,8 @@ namespace WNV
                             DataTable dt = new DataTable();
                             da.Fill(dt);
                             ddlCounty.DataSource = dt;
-                            ddlCounty.DataValueField = "CountyName";
-                            ddlCounty.DataTextField = "CountyName";
+                            ddlCounty.DataValueField = "TrapCounty";
+                            ddlCounty.DataTextField = "TrapCounty";
                             ddlCounty.DataBind();
                             ddlCounty.Items.Insert(0, new ListItem("Select...", ""));
                         }
