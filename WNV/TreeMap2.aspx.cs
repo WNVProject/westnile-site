@@ -25,6 +25,11 @@ namespace WNV
         protected void Page_Load(object sender, EventArgs e)
         {
             fillYearDDLs();
+            string gdv = gradientDropdownValue.Value;
+            if (!IsPostBack)
+            {
+                gradientDropdownValue.Value = "YlGn";
+            }
             //ScriptManager.RegisterStartupScript(this, GetType(), "alert", "generateTreeMap(\"" + ddlGradientDropdownValue.SelectedValue + "\",$(\"#valLabelSize\").val());setActiveGradient(\"" + ddlGradientDropdownValue.SelectedValue + "\");updateGradientDropdownToggleBackground(\""+ ddlGradientDropdownValue.SelectedValue + "\"); ", true);
         }
 
@@ -66,7 +71,7 @@ namespace WNV
         }
         
         protected void renderBtn_Click(object sender, EventArgs e)
-        {
+        { 
             if (ddlSizeRepresents.Text.Contains("Species") && ddlColorRepresents.Text.Contains("Species"))
             {
                 ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Please select only one weather variable in the \"Size Represents\" and \"Color Represents\" dropdowns.')", true);
@@ -92,6 +97,10 @@ namespace WNV
                 parameters.Add("StartWeek", ddlYearStart.SelectedValue.ToString() + "-01-01");
                 parameters.Add("EndWeek", ddlYearEnd.SelectedValue.ToString() + "-12-31");
                 generateTreeMapJson("USP_Get_Select_TreeMapCategorizedByCounty", parameters, "TreeMapData.json");
+            }
+            else if (ddlCategory.SelectedValue.Equals("Weeks"))
+            {
+
             }
             //ScriptManager.RegisterStartupScript(this, GetType(), "alert", "generateTreeMap(\"" + ddlGradientDropdownValue.SelectedValue + "\",$(\"#valLabelSize\").val());setActiveGradient(\"" + ddlGradientDropdownValue.SelectedValue + "\");updateGradientDropdownToggleBackground(\"" + ddlGradientDropdownValue.SelectedValue + "\"); ", true);
         }
