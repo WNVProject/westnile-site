@@ -78,7 +78,6 @@
         }
 
     </style>
-    <asp:HiddenField ID="selectedGradient" runat="server" Value="YlGn" />
     <div class="text-center mt-3">
         <h3>Interactive Tree Map - North Dakota West Nile Virus Forecasting</h3>
     </div>
@@ -124,7 +123,7 @@
             </div>
         </div>
     </div>
-    <asp:HiddenField ID="gradientDropdownValue" Visible="false" runat="server" Value="YlGn" />
+    <asp:HiddenField ID="gradientDropdownValue" runat="server" EnableViewState="false" ClientIDMode="Static"/>
     <div class="row">  
         <div class ="col-lg-3">
             <div class="row aspnet-rfv-heightOffset-fix">
@@ -156,6 +155,7 @@
                             <asp:DropDownList ID="ddlTimeType" AutoPostBack="true" runat="server" CssClass="form-control aspnet-width-fix" Width="100%" OnSelectedIndexChanged="ddlTimeType_SelectedIndexChanged">
                                 <asp:ListItem Text="Years" Value="Years" Selected="True"></asp:ListItem>
                                 <asp:ListItem Text="Weeks" Value="Weeks"></asp:ListItem>
+                                <asp:ListItem Text="Week of Summer" Value="Weeks"></asp:ListItem>
                             </asp:DropDownList>
                         </div>
                     </div>
@@ -383,7 +383,6 @@
         d3.json("/Scripts/TreeMapJSON/TreeMapData.json", function () { });
         var bckgrndImgSelector = "background-image: linear-gradient(90deg,";
         var gradientColorList = "";
-        var activeGradient = '<%= gradientDropdownValue.Value %>';
         var zoomed = false;
         var treeMapWidth = document.getElementById("treemap").clientWidth,
             treeMapHeight = 750;
@@ -624,8 +623,7 @@
         }
 
         function changeGradient(gradient,labelSize) {
-            console.log("changeGradient()");
-            activeGradient = gradient;
+            document.getElementById("gradientDropdownValue").value = gradient;
             generateTreeMap(gradient,labelSize);
             setActiveGradient(gradient);
             updateGradientDropdownToggleBackground(gradient);

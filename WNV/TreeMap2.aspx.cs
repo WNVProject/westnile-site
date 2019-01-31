@@ -24,14 +24,16 @@ namespace WNV
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            string gdv = gradientDropdownValue.Value;
             if (!IsPostBack)
             {
+                gradientDropdownValue.Value = "YlGn";
                 fillYearDDLs();
                 fillLocationDDL("Counties");
             }
             //ScriptManager.RegisterStartupScript(this, GetType(), "alert", "generateTreeMap(\"" + ddlGradientDropdownValue.SelectedValue + "\",$(\"#valLabelSize\").val());setActiveGradient(\"" + ddlGradientDropdownValue.SelectedValue + "\");updateGradientDropdownToggleBackground(\""+ ddlGradientDropdownValue.SelectedValue + "\"); ", true);
         }
-
+        
         protected void fillYearDDLs()
         {
             try
@@ -215,8 +217,8 @@ namespace WNV
                 category = "County";
                 categoryPlural = "All Counties";
             }
-            try
-            {
+            //try
+            //{
                 using (MySqlConnection conn = new MySqlConnection(cs))
                 {
                     MySqlCommand cmd = new MySqlCommand(procedure, conn);
@@ -260,6 +262,7 @@ namespace WNV
                                     if (sizeBy.Equals("Species"))
                                     {
                                         if (columnName.Equals("Aedes") || columnName.Equals("Aedes Vexans") || columnName.Equals("Anopheles") || columnName.Equals("Culex") || columnName.Equals("Culex Salinarius") || columnName.Equals("Culex Tarsalis") || columnName.Equals("Culiseta") || columnName.Equals("Other"))
+                                        //if (columnName.Equals("Culex Tarsalis"))
                                         {
                                             if (!columnValue.Equals("0") && !columnValue.Equals(""))
                                             {
@@ -323,6 +326,7 @@ namespace WNV
                                     else
                                     {
                                         if (columnName.Equals("Aedes") || columnName.Equals("Aedes Vexans") || columnName.Equals("Anopheles") || columnName.Equals("Culex") || columnName.Equals("Culex Salinarius") || columnName.Equals("Culex Tarsalis") || columnName.Equals("Culiseta") || columnName.Equals("Other"))
+                                        //if (columnName.Equals("Culex Tarsalis"))
                                         {
                                             if (!columnValue.Equals("0") && !columnValue.Equals(""))
                                             {
@@ -371,6 +375,7 @@ namespace WNV
                                     if (sizeBy.Equals("Species"))
                                     {
                                         if (columnName.Equals("Aedes") || columnName.Equals("Aedes Vexans") || columnName.Equals("Anopheles") || columnName.Equals("Culex") || columnName.Equals("Culex Salinarius") || columnName.Equals("Culex Tarsalis") || columnName.Equals("Culiseta") || columnName.Equals("Other"))
+                                        //if (columnName.Equals("Culex Tarsalis"))
                                         {
                                             if (!columnValue.Equals("0") && !columnValue.Equals(""))
                                             {
@@ -435,6 +440,7 @@ namespace WNV
                                     else
                                     {
                                         if (columnName.Equals("Aedes") || columnName.Equals("Aedes Vexans") || columnName.Equals("Anopheles") || columnName.Equals("Culex") || columnName.Equals("Culex Salinarius") || columnName.Equals("Culex Tarsalis") || columnName.Equals("Culiseta") || columnName.Equals("Other"))
+                                        //if (columnName.Equals("Culex Tarsalis"))
                                         {
                                             if (!columnValue.Equals("0") && !columnValue.Equals(""))
                                             {
@@ -498,11 +504,11 @@ namespace WNV
                         }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('" + ex.Message + "');", true);
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('" + ex.Message + "');", true);
+            //}
         }
 
         protected void chkStatewide_CheckedChanged(object sender, EventArgs e)
