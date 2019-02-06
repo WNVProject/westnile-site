@@ -131,13 +131,14 @@
                     <div class="row">
                         <div class="col-lg-5">
                             <div class="col-form-label align-right">
-                                Location Type
+                                Categorize By
                             </div>
                         </div>
                         <div class="col-lg-7">
-                            <asp:DropDownList ID="ddlLocationType" runat="server" AutoPostBack="true" CssClass="form-control aspnet-width-fix" Width="100%" OnSelectedIndexChanged="ddlLocationType_SelectedIndexChanged">
+                            <asp:DropDownList ID="ddlCategorizeBy" runat="server" AutoPostBack="true" CssClass="form-control aspnet-width-fix" Width="100%" OnSelectedIndexChanged="ddlCategorizeBy_SelectedIndexChanged">
                                 <asp:ListItem Text="Counties" Value="Counties" Selected="True"></asp:ListItem>
                                 <asp:ListItem Text="Trap Locations" Value="TrapLocations"></asp:ListItem>
+                                <asp:ListItem Text="Weeks Of Summer" Value="WeeksOfSummer"></asp:ListItem>
                             </asp:DropDownList>
                         </div>
                     </div>
@@ -155,46 +156,29 @@
                             <asp:DropDownList ID="ddlTimeType" AutoPostBack="true" runat="server" CssClass="form-control aspnet-width-fix" Width="100%" OnSelectedIndexChanged="ddlTimeType_SelectedIndexChanged">
                                 <asp:ListItem Text="Years" Value="Years" Selected="True"></asp:ListItem>
                                 <asp:ListItem Text="Weeks" Value="Weeks"></asp:ListItem>
-                                <asp:ListItem Text="Week of Summer" Value="Weeks"></asp:ListItem>
                             </asp:DropDownList>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row aspnet-rfv-heightOffset-fix">
-                <div class="col-lg-12">
-                    <div class="row">
-                        <div class="col-lg-5">
-                            <div class="col-form-label align-right">
-                                <label class="form-check-label" >Statewide</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-7">
-                            <asp:CheckBox ID="chkStatewide" runat="server" AutoPostBack="true" OnCheckedChanged="chkStatewide_CheckedChanged"  />
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
-
         <div class="col-lg-3">
             <div class="row aspnet-rfv-heightOffset-fix">
                 <div class="col-lg-12">
                     <div class="row">
                         <div class="col-lg-5">
                             <div class="col-form-label align-right">
-                                Location
+                                Focus On
                             </div>
                         </div>
                         <div class="col-lg-7">
                             <asp:UpdatePanel runat="server" ID="UpdatePanel2" UpdateMode="Conditional">
                                 <Triggers>
-                                    <asp:AsyncPostBackTrigger ControlID="chkStatewide" />
-                                    <asp:AsyncPostBackTrigger ControlID="ddlLocationType" />
+                                    <asp:AsyncPostBackTrigger ControlID="ddlCategorizeBy" />
                                 </Triggers>
                                     <ContentTemplate>
-                                    <asp:DropDownList ID="ddlLocation" runat="server" CssClass="form-control aspnet-width-fix" Width="100%">
-                                        <asp:ListItem Text="Placeholder" Value="Counties" Selected="True"></asp:ListItem>
+                                    <asp:DropDownList ID="ddlFocusOn" runat="server" CssClass="form-control aspnet-width-fix" Width="100%">
+                                        <asp:ListItem Text="All" Value="%" Selected="True"></asp:ListItem>
                                     </asp:DropDownList>
                                 </ContentTemplate>
                             </asp:UpdatePanel>
@@ -371,10 +355,7 @@
         <div class="col-lg-4">
             <asp:Button ID="renderBtn" runat="server" Text="Generate Tree Map" CssClass="btn btn-success btn-lg btn-block aspnet-width-fix" ValidationGroup="vgTreeMap" OnClick="renderBtn_Click" />
         </div>
-        <div class="col-lg-4">
-            <%--<asp:CheckBox ID="chkStatewide" runat="server" Text="&nbsp;Statewide Data" CssClass="checkbox" AutoPostBack="true" OnCheckedChanged="chkStatewide_CheckChanged"/>--%>
-        </div>
-        <div class="col-lg-4">
+        <div class="col-lg-8">
             <asp:Label ID="lblError" runat="server" ForeColor="Red"></asp:Label>
         </div>
     </div>

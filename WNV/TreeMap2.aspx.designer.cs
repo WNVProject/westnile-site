@@ -22,13 +22,13 @@ namespace WNV {
         protected global::System.Web.UI.WebControls.HiddenField gradientDropdownValue;
         
         /// <summary>
-        /// ddlLocationType control.
+        /// ddlCategorizeBy control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlLocationType;
+        protected global::System.Web.UI.WebControls.DropDownList ddlCategorizeBy;
         
         /// <summary>
         /// ddlTimeType control.
@@ -40,15 +40,6 @@ namespace WNV {
         protected global::System.Web.UI.WebControls.DropDownList ddlTimeType;
         
         /// <summary>
-        /// chkStatewide control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkStatewide;
-        
-        /// <summary>
         /// UpdatePanel2 control.
         /// </summary>
         /// <remarks>
@@ -58,13 +49,13 @@ namespace WNV {
         protected global::System.Web.UI.UpdatePanel UpdatePanel2;
         
         /// <summary>
-        /// ddlLocation control.
+        /// ddlFocusOn control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlLocation;
+        protected global::System.Web.UI.WebControls.DropDownList ddlFocusOn;
         
         /// <summary>
         /// ddlYearStart control.
