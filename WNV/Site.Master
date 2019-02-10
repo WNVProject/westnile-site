@@ -50,7 +50,7 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav text-right">
-              <li class="nav-item active">
+              <li class="nav-item">
                 <a class="nav-link" href="Default.aspx">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
@@ -99,7 +99,16 @@
         </div>
         
         <%--<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script> --%>
-	    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>           
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+       
     </form>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var page = location.pathname.substring(1, location.pathname.length)
+            $('li.active').removeClass('active');
+            $('a[href="' + page + '.aspx"]').closest('li').addClass('active');
+        });
+    </script>
 </body>
 </html>
