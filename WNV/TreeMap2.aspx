@@ -195,7 +195,14 @@
                             </div>
                         </div>
                         <div class="col-lg-7">
-                            <asp:DropDownList ID="ddlYearStart" runat="server" CssClass="form-control aspnet-width-fix" Width="100%"></asp:DropDownList>
+                            <asp:UpdatePanel runat="server" ID="UpdatePanel4" UpdateMode="Conditional">
+                                <Triggers>
+                                    <asp:AsyncPostBackTrigger ControlID="ddlTimeType" />
+                                </Triggers>
+                                <ContentTemplate>
+                                    <asp:DropDownList ID="ddlYearStart" runat="server" CssClass="form-control aspnet-width-fix" Width="100%"></asp:DropDownList>
+                                </ContentTemplate>
+                            </asp:UpdatePanel>
                         </div>
                     </div>
                 </div>
@@ -209,7 +216,14 @@
                             </div>
                         </div>
                         <div class="col-lg-7">
-                            <asp:DropDownList ID="ddlYearEnd" runat="server" CssClass="form-control aspnet-width-fix" Width="100%"></asp:DropDownList>
+                            <asp:UpdatePanel runat="server" ID="UpdatePanel5" UpdateMode="Conditional">
+                                <Triggers>
+                                    <asp:AsyncPostBackTrigger ControlID="ddlTimeType" />
+                                </Triggers>
+                                <ContentTemplate>
+                                    <asp:DropDownList ID="ddlYearEnd" runat="server" CssClass="form-control aspnet-width-fix" Width="100%"></asp:DropDownList>
+                                </ContentTemplate>
+                            </asp:UpdatePanel>
                         </div>
                     </div>
                 </div>
@@ -251,7 +265,7 @@
                                         <asp:ListItem Text="Mean Wind Speed (mph)" Value="Mean Wind Speed1" ></asp:ListItem>
                                         <asp:ListItem Text="Max Wind Speed (mph)" Value="Max Wind Speed1" ></asp:ListItem>
                                         <asp:ListItem Text="Solar Rad (W/m&sup2;)" Value="Solar Rad1" ></asp:ListItem>
-                                        <asp:ListItem Text="Rainfall (in)" Value="Rainfall" ></asp:ListItem>
+                                        <asp:ListItem Text="Rainfall (in)" Value="Rainfall1" ></asp:ListItem>
                                     </asp:DropDownList>
                                 </ContentTemplate>
                             </asp:UpdatePanel>
@@ -276,17 +290,17 @@
                                 <ContentTemplate>
                                     <asp:DropDownList ID="ddlColorRepresents" runat="server" CssClass="form-control aspnet-width-fix" Width="100%">
                                         <asp:ListItem Text="Species Count" Value="Species"></asp:ListItem>
-                                        <asp:ListItem Text="Mean Temp (F&deg;)" Value="Mean Temp" Selected="True"></asp:ListItem>
-                                        <asp:ListItem Text="Max Temp (F&deg;)" Value="Max Temp" ></asp:ListItem>
-                                        <asp:ListItem Text="Min Temp (F&deg;)" Value="Min Temp" ></asp:ListItem>
-                                        <asp:ListItem Text="Bare Soil Temp (F&deg;)" Value="Bare Soil Temp" ></asp:ListItem>
-                                        <asp:ListItem Text="Turf Soil Temp (F&deg;)" Value="Turf Soil Temp" ></asp:ListItem>
-                                        <asp:ListItem Text="Dew Point (F&deg;)" Value="Dew Point" ></asp:ListItem>
-                                        <asp:ListItem Text="Wind Chill (F&deg;)" Value="Wind Chill" ></asp:ListItem>
-                                        <asp:ListItem Text="Mean Wind Speed (mph)" Value="Mean Wind Speed" ></asp:ListItem>
-                                        <asp:ListItem Text="Max Wind Speed (mph)" Value="Max Wind Speed" ></asp:ListItem>
-                                        <asp:ListItem Text="Solar Rad (W/m&sup2;)" Value="Solar Rad" ></asp:ListItem>
-                                        <asp:ListItem Text="Rainfall (in)" Value="Rainfall" ></asp:ListItem>
+                                        <asp:ListItem Text="Mean Temp (F&deg;)" Value="Mean Temp1" Selected="True"></asp:ListItem>
+                                        <asp:ListItem Text="Max Temp (F&deg;)" Value="Max Temp1" ></asp:ListItem>
+                                        <asp:ListItem Text="Min Temp (F&deg;)" Value="Min Temp1" ></asp:ListItem>
+                                        <asp:ListItem Text="Bare Soil Temp (F&deg;)" Value="Bare Soil Temp1" ></asp:ListItem>
+                                        <asp:ListItem Text="Turf Soil Temp (F&deg;)" Value="Turf Soil Temp1" ></asp:ListItem>
+                                        <asp:ListItem Text="Dew Point (F&deg;)" Value="Dew Point1" ></asp:ListItem>
+                                        <asp:ListItem Text="Wind Chill (F&deg;)" Value="Wind Chill1" ></asp:ListItem>
+                                        <asp:ListItem Text="Mean Wind Speed (mph)" Value="Mean Wind Speed1" ></asp:ListItem>
+                                        <asp:ListItem Text="Max Wind Speed (mph)" Value="Max Wind Speed1" ></asp:ListItem>
+                                        <asp:ListItem Text="Solar Rad (W/m&sup2;)" Value="Solar Rad1" ></asp:ListItem>
+                                        <asp:ListItem Text="Rainfall (in)" Value="Rainfall1" ></asp:ListItem>
                                     </asp:DropDownList>
                                 </ContentTemplate>
                             </asp:UpdatePanel>

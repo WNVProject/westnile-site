@@ -28,13 +28,15 @@ namespace WNV
             if (!IsPostBack)
             {
                 gradientDropdownValue.Value = "YlGn";
-                fillYearDDLs();
+                fillYearDDLs("years");
                 fillLocationDDL("Counties");
             }
             //ScriptManager.RegisterStartupScript(this, GetType(), "alert", "generateTreeMap(\"" + ddlGradientDropdownValue.SelectedValue + "\",$(\"#valLabelSize\").val());setActiveGradient(\"" + ddlGradientDropdownValue.SelectedValue + "\");updateGradientDropdownToggleBackground(\""+ ddlGradientDropdownValue.SelectedValue + "\"); ", true);
         }
-        
-        protected void fillYearDDLs()
+
+
+        //TODO - Rework to allow the specific weeks via ddlTimeType
+        protected void fillYearDDLs(String type)
         {
             try
             {
@@ -118,6 +120,18 @@ namespace WNV
 
         protected void renderBtn_Click(object sender, EventArgs e)
         {
+            if((ddlColorRepresents.SelectedValue.ToString().Contains("1") && !ddlFocusOn.SelectedValue.ToString().Equals("%") && !ddlSizeRepresents.SelectedValue.ToString().Equals("Species")))
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Please select \"All\" in the \"Focus On\" dropdown when doing one specie for optimal results.')", true);
+                return;
+            }
+
+            if ((ddlColorRepresents.SelectedValue.ToString().Contains("1") && !ddlFocusOn.SelectedValue.ToString().Equals("%") && ddlSizeRepresents.SelectedValue.ToString().Equals("Species")))
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Please select \"Species Count\" in the \"Color Represents\" dropdown when doing a single location for optimal results.')", true);
+                return;
+            }
+
             if ((ddlSizeRepresents.Text.Contains("Species") && ddlColorRepresents.Text.Contains("Species")) || (ddlSizeRepresents.Text.Contains("Tarsalis") && ddlColorRepresents.Text.Contains("Tarsalis")))
             {
                 //TODO - FIX PLS
@@ -159,8 +173,8 @@ namespace WNV
         
         protected void generateTreeMapJson(String procedure, Hashtable parameters, String fileName)
         {
-            String sizeBy = ddlSizeRepresents.SelectedValue;
-            String colorBy = ddlColorRepresents.SelectedValue;
+            String sizeBy = ddlSizeRepresents.SelectedValue.TrimEnd('1'); ;
+            String colorBy = ddlColorRepresents.SelectedValue.TrimEnd('1');
             String categorizeBy = ddlCategorizeBy.SelectedValue;
             String colorUnit = "";
             String sizeUnit = "";
@@ -266,6 +280,7 @@ namespace WNV
                                         {
                                             if (!columnValue.Equals("0") && !columnValue.Equals(""))
                                             {
+                                                colorBy = colorBy.TrimEnd('1');
                                                 if (weatherDomainMax == -1 && weatherDomainMin == -1)
                                                 {
                                                     weatherDomainMax = Double.Parse(row[colorBy].ToString());
@@ -292,7 +307,8 @@ namespace WNV
                                             }
                                         }
                                     }
-                                    else if(!(Int32.TryParse(sizeBy.Substring(sizeBy.Length - 1), out num)))
+                                    //When size represents a singular specie
+                                    else if(!(Int32.TryParse(sizeBy.Substring(sizeBy.Length - 1), out num)) && !ddlColorRepresents.SelectedValue.ToString().Equals("Species"))
                                     {
                                         if (columnName.Equals(sizeBy))
                                         {
@@ -378,7 +394,35 @@ namespace WNV
                                         if (columnName.Equals("Aedes") || columnName.Equals("Aedes Vexans") || columnName.Equals("Anopheles") || columnName.Equals("Culex") || columnName.Equals("Culex Salinarius") || columnName.Equals("Culex Tarsalis") || columnName.Equals("Culiseta") || columnName.Equals("Other"))
                                         //if (columnName.Equals("Culex Tarsalis"))
                                         {
-                                            if (!columnValue.Equals("0") && !columnValue.Equals(""))
+                                        if (!columnValue.Equals("0") && !columnValue.Equals(""))
+                                        {
+                                            if (colorBy.Equals("Species"))
+                                            {
+                                                if (speciesDomainMax == -1 && speciesDomainMin == -1)
+                                                {
+                                                    speciesDomainMax = Int32.Parse(columnValue);
+                                                    speciesDomainMin = Int32.Parse(columnValue);
+                                                }
+                                                else if (speciesDomainMax < Int32.Parse(columnValue))
+                                                {
+                                                    speciesDomainMax = Int32.Parse(columnValue);
+                                                }
+                                                else if (speciesDomainMin > Int32.Parse(columnValue))
+                                                {
+                                                    speciesDomainMin = Int32.Parse(columnValue);
+                                                }
+                                                if (colorBy.Equals("Species"))
+                                                {
+                                                    county = county + "\"name\":\"" + columnName + "\"," + "\"size\":\"" + row[sizeBy].ToString() + "\"," + "\"colorValue\":\"" + columnValue.ToString() + "\"," + "\"colorUnit\":\"" + "Count" + "\"," + "\"sizeUnit\":\"" + sizeBy + sizeUnit + "\"," + "\"category\":\"" + category + "\"," + "\"categoryPlural\":\"" + categoryPlural + "\"},{";
+                                                }
+                                                else
+                                                {
+                                                    county = county + "\"name\":\"" + columnName + "\"," + "\"size\":\"" + columnValue + "\"," + "\"category\":\"" + category + "\"," + "\"categoryPlural\":\"" + categoryPlural + "\"},{";
+                                                }
+                                                mosquitoTypeAdded = true;
+                                                itemHasData = true;
+                                            }
+                                            else
                                             {
                                                 if (weatherDomainMax == -1 && weatherDomainMin == -1)
                                                 {
@@ -404,14 +448,17 @@ namespace WNV
                                                 mosquitoTypeAdded = true;
                                                 itemHasData = true;
                                             }
+                                            }
                                         }
                                     }
-                                    else if (!(Int32.TryParse(sizeBy.Substring(sizeBy.Length - 1), out num)))
+                                    //When size represents a singular specie
+                                    else if (!(Int32.TryParse(sizeBy.Substring(sizeBy.Length - 1), out num)) && !ddlColorRepresents.SelectedValue.ToString().Equals("Species"))
                                     {
                                         if (columnName.Equals(sizeBy))
                                         {
                                             if (!columnValue.Equals("0") && !columnValue.Equals(""))
                                             {
+                                                colorBy = colorBy.TrimEnd('1');
                                                 if (weatherDomainMax == -1 && weatherDomainMin == -1)
                                                 {
                                                     weatherDomainMax = Double.Parse(row[colorBy].ToString());
@@ -520,7 +567,8 @@ namespace WNV
                                             }
                                         }
                                     }
-                                    else if (!(Int32.TryParse(sizeBy.Substring(sizeBy.Length - 1), out num)))
+                                    //When size represents a singular specie
+                                    else if (!(Int32.TryParse(sizeBy.Substring(sizeBy.Length - 1), out num)) && !ddlColorRepresents.SelectedValue.ToString().Equals("Species"))
                                     {
                                         if (columnName.Equals(sizeBy))
                                         {
@@ -626,15 +674,10 @@ namespace WNV
             //}
         }
         
+        //Needed?
         protected void ddlTimeType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var type = ddlTimeType.SelectedItem.Value;
-            if(type.Equals("Years")) {
-                System.Diagnostics.Debug.WriteLine(type);
-            } else
-            {
-                System.Diagnostics.Debug.WriteLine(type);
-            }
+            fillYearDDLs(ddlTimeType.SelectedItem.Value.ToString());
         }
 
         protected void ddlCategorizeBy_SelectedIndexChanged(object sender, EventArgs e)
