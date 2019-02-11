@@ -21,6 +21,7 @@ namespace WNV
     public partial class TreeMap2 : Page
     {
         private string cs = ConfigurationManager.ConnectionStrings["CString"].ConnectionString;
+        protected string timeType = "";
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -28,7 +29,7 @@ namespace WNV
             if (!IsPostBack)
             {
                 gradientDropdownValue.Value = "YlGn";
-                fillYearDDLs("years");
+                fillYearDDLs("Years");
                 fillLocationDDL("Counties");
             }
             //ScriptManager.RegisterStartupScript(this, GetType(), "alert", "generateTreeMap(\"" + ddlGradientDropdownValue.SelectedValue + "\",$(\"#valLabelSize\").val());setActiveGradient(\"" + ddlGradientDropdownValue.SelectedValue + "\");updateGradientDropdownToggleBackground(\""+ ddlGradientDropdownValue.SelectedValue + "\"); ", true);
@@ -40,10 +41,11 @@ namespace WNV
         {
             try
             {
-                if (!IsPostBack)
+                if (IsPostBack || !IsPostBack)
                 {
                     using (MySqlConnection conn = new MySqlConnection(cs))
                     {
+
                         var procedure = "USP_Select_TrapYear";
                         MySqlCommand cmd = new MySqlCommand(procedure, conn);
                         cmd.CommandType = CommandType.StoredProcedure;
@@ -52,16 +54,27 @@ namespace WNV
                         {
                             DataTable dt = new DataTable();
                             da.Fill(dt);
-                            ddlYearStart.DataSource = dt;
-                            ddlYearEnd.DataSource = dt;
-                            ddlYearStart.DataValueField = "TrapYear";
-                            ddlYearEnd.DataValueField = "TrapYear";
-                            ddlYearStart.DataTextField = "TrapYear";
-                            ddlYearEnd.DataTextField = "TrapYear";
-                            ddlYearStart.DataBind();
-                            ddlYearEnd.DataBind();
-                            ddlYearStart.SelectedIndex = 0;
-                            ddlYearEnd.SelectedIndex = ddlYearEnd.Items.Count - 1;
+                            if (type.Equals("Weeks"))
+                            {
+                                ddlYearForWeeks.DataSource = dt;
+                                ddlYearForWeeks.DataValueField = "TrapYear";
+                                ddlYearForWeeks.DataTextField = "TrapYear";
+                                ddlYearForWeeks.DataBind();
+                                ddlYearForWeeks.SelectedIndex = 0;
+                            }
+                            else
+                            {
+                                ddlYearStart.DataSource = dt;
+                                ddlYearEnd.DataSource = dt;
+                                ddlYearStart.DataValueField = "TrapYear";
+                                ddlYearEnd.DataValueField = "TrapYear";
+                                ddlYearStart.DataTextField = "TrapYear";
+                                ddlYearEnd.DataTextField = "TrapYear";
+                                ddlYearStart.DataBind();
+                                ddlYearEnd.DataBind();
+                                ddlYearStart.SelectedIndex = 0;
+                                ddlYearEnd.SelectedIndex = ddlYearEnd.Items.Count - 1;
+                            }
                         }
                     }
                 }
@@ -70,6 +83,62 @@ namespace WNV
             {
                 lblError.Text = "Could not retrieve Years: " + ex.ToString();
                 lblError.Visible = true;
+            }
+        }
+
+        protected void fillWeekDDLs()
+        {
+            {
+                try
+                {
+                    if (IsPostBack)
+                    {
+                        using (MySqlConnection conn = new MySqlConnection(cs))
+                        {
+
+                            var procedure = "USP_Get_Select_TrapWeekStart";
+                            MySqlCommand cmd = new MySqlCommand(procedure, conn);
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("TrapYear", ddlYearForWeeks.SelectedValue);
+
+                            var procedure2 = "USP_Get_Select_TrapWeekEnd";
+                            MySqlCommand cmd2 = new MySqlCommand(procedure2, conn);
+                            cmd2.CommandType = CommandType.StoredProcedure;
+                            cmd2.Parameters.AddWithValue("TrapYear", ddlYearForWeeks.SelectedValue);
+
+                            using (MySqlDataAdapter da = new MySqlDataAdapter(cmd))
+                            {
+                                DataTable dt = new DataTable();
+                                da.Fill(dt);
+
+                                ddlYearStart.DataSource = dt;
+                                ddlYearStart.DataValueField = "TrapWeekStart";
+                                ddlYearStart.DataTextField = "TrapWeekStart";
+                                ddlYearStart.DataBind();
+                                ddlYearStart.SelectedIndex = 0;
+                                
+                            }
+
+                            using (MySqlDataAdapter da = new MySqlDataAdapter(cmd2))
+                            {
+                                DataTable dt = new DataTable();
+                                da.Fill(dt);
+
+                                ddlYearEnd.DataSource = dt;
+                                ddlYearEnd.DataValueField = "TrapWeekEnd";
+                                ddlYearEnd.DataTextField = "TrapWeekEnd";
+                                ddlYearEnd.DataBind();
+                                ddlYearEnd.SelectedIndex = ddlYearEnd.Items.Count - 1;
+
+                            }
+                        }
+                    }
+                }
+                catch (MySqlException ex)
+                {
+                    lblError.Text = "Could not retrieve Weeks: " + ex.ToString();
+                    lblError.Visible = true;
+                }
             }
         }
 
@@ -149,15 +218,31 @@ namespace WNV
             if (ddlCategorizeBy.SelectedValue.Equals("TrapLocations"))
             {
                 parameters.Add("TrapArea", ddlFocusOn.SelectedValue.ToString());
-                parameters.Add("StartWeek", ddlYearStart.SelectedValue.ToString() + "-01-01");
-                parameters.Add("EndWeek", ddlYearEnd.SelectedValue.ToString() + "-12-31");
+                if (timeType.Equals("Weeks"))
+                {
+                    parameters.Add("StartWeek", ddlYearStart.SelectedValue.ToString());
+                    parameters.Add("EndWeek", ddlYearEnd.SelectedValue.ToString());
+                }
+                else
+                {
+                    parameters.Add("StartWeek", ddlYearStart.SelectedValue.ToString() + "-01-01");
+                    parameters.Add("EndWeek", ddlYearEnd.SelectedValue.ToString() + "-12-31");
+                }
                 generateTreeMapJson("USP_Get_Select_TreeMapCategorizedByTrap", parameters, "TreeMapData.json");
             }
             else if (ddlCategorizeBy.SelectedValue.Equals("Counties"))
             {
                 parameters.Add("TrapCounty", ddlFocusOn.SelectedValue.ToString());
-                parameters.Add("StartWeek", ddlYearStart.SelectedValue.ToString() + "-01-01");
-                parameters.Add("EndWeek", ddlYearEnd.SelectedValue.ToString() + "-12-31");
+                if (timeType.Equals("Weeks"))
+                {
+                    parameters.Add("StartWeek", ddlYearStart.SelectedValue.ToString());
+                    parameters.Add("EndWeek", ddlYearEnd.SelectedValue.ToString());
+                }
+                else
+                {
+                    parameters.Add("StartWeek", ddlYearStart.SelectedValue.ToString() + "-01-01");
+                    parameters.Add("EndWeek", ddlYearEnd.SelectedValue.ToString() + "-12-31");
+                }
                 generateTreeMapJson("USP_Get_Select_TreeMapCategorizedByCounty", parameters, "TreeMapData.json");
             }
             else if (ddlCategorizeBy.SelectedValue.Equals("WeeksOfSummer"))
@@ -674,16 +759,42 @@ namespace WNV
             //}
         }
         
-        //Needed?
         protected void ddlTimeType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            fillYearDDLs(ddlTimeType.SelectedItem.Value.ToString());
+            timeType = ddlTimeType.SelectedItem.Value.ToString();
+            if (timeType.Equals("Weeks"))
+            {
+                targetYear.Text = "Target Year";
+                ddlYearForWeeks.Visible = true;
+                ddlYearForWeeks.Enabled = true;
+                ddlCategorizeBy.Items.FindByValue("WeeksOfSummer").Enabled = false;
+                fillYearDDLs(ddlTimeType.SelectedItem.Value.ToString());
+                ddlYearStart.DataTextFormatString = "{0:MMMM d, yyyy}";
+                ddlYearEnd.DataTextFormatString = "{0:MMMM d, yyyy}";
+                fillWeekDDLs();
+
+            }
+            else
+            {
+                targetYear.Text = "";
+                ddlYearForWeeks.Visible = false;
+                ddlYearForWeeks.Enabled = false;
+                ddlCategorizeBy.Items.FindByValue("WeeksOfSummer").Enabled = true;
+                ddlYearStart.DataTextFormatString = "{0:D}";
+                ddlYearEnd.DataTextFormatString = "{0:D}";
+                fillYearDDLs(ddlTimeType.SelectedItem.Value.ToString());
+
+            }
         }
 
         protected void ddlCategorizeBy_SelectedIndexChanged(object sender, EventArgs e)
         {
-            String type = ddlCategorizeBy.SelectedItem.Value.ToString();
-            fillLocationDDL(type);
+            fillLocationDDL(ddlCategorizeBy.SelectedItem.Value.ToString());
+        }
+
+        protected void ddlYearForWeeks_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            fillWeekDDLs();
         }
     }
 }

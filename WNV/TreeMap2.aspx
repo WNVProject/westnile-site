@@ -131,15 +131,22 @@
                     <div class="row">
                         <div class="col-lg-5">
                             <div class="col-form-label align-right">
-                                Categorize By
+                                Group By
                             </div>
                         </div>
                         <div class="col-lg-7">
-                            <asp:DropDownList ID="ddlCategorizeBy" runat="server" AutoPostBack="true" CssClass="form-control aspnet-width-fix" Width="100%" OnSelectedIndexChanged="ddlCategorizeBy_SelectedIndexChanged">
-                                <asp:ListItem Text="Counties" Value="Counties" Selected="True"></asp:ListItem>
-                                <asp:ListItem Text="Trap Locations" Value="TrapLocations"></asp:ListItem>
-                                <asp:ListItem Text="Weeks Of Summer" Value="WeeksOfSummer"></asp:ListItem>
-                            </asp:DropDownList>
+                            <asp:UpdatePanel runat="server" ID="UpdatePanel8" UpdateMode="Conditional">
+                                <Triggers>
+                                    <asp:AsyncPostBackTrigger ControlID="ddlTimeType" />  
+                                </Triggers>
+                                <ContentTemplate>
+                                    <asp:DropDownList ID="ddlCategorizeBy" runat="server" AutoPostBack="true" CssClass="form-control aspnet-width-fix" Width="100%" OnSelectedIndexChanged="ddlCategorizeBy_SelectedIndexChanged">
+                                        <asp:ListItem Text="Counties" Value="Counties" Selected="True"></asp:ListItem>
+                                        <asp:ListItem Text="Trap Locations" Value="TrapLocations"></asp:ListItem>
+                                        <asp:ListItem Text="Weeks Of Summer" Value="WeeksOfSummer"></asp:ListItem>
+                                    </asp:DropDownList>
+                                </ContentTemplate>
+                            </asp:UpdatePanel>
                         </div>
                     </div>
                 </div>
@@ -157,6 +164,34 @@
                                 <asp:ListItem Text="Years" Value="Years" Selected="True"></asp:ListItem>
                                 <asp:ListItem Text="Weeks" Value="Weeks"></asp:ListItem>
                             </asp:DropDownList>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row aspnet-rfv-heightOffset-fix">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="col-form-label align-right">
+                                <asp:UpdatePanel runat="server" ID="UpdatePanel7" UpdateMode="Conditional">
+                                    <Triggers>
+                                        <asp:AsyncPostBackTrigger ControlID="ddlTimeType" />
+                                    </Triggers>
+                                    <ContentTemplate>
+                                        <asp:Label ID="targetYear" runat="server" Text=""></asp:Label>
+                                    </ContentTemplate>
+                                </asp:UpdatePanel>
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <asp:UpdatePanel runat="server" ID="UpdatePanel6" UpdateMode="Conditional">
+                                <Triggers>
+                                    <asp:AsyncPostBackTrigger ControlID="ddlTimeType" />
+                                </Triggers>
+                                <ContentTemplate>
+                                    <asp:DropDownList ID="ddlYearForWeeks" Visible="false" Enabled="false" AutoPostBack="true" runat="server" CssClass="form-control aspnet-width-fix" Width="100%" OnSelectedIndexChanged="ddlYearForWeeks_SelectedIndexChanged"></asp:DropDownList>
+                                </ContentTemplate>
+                            </asp:UpdatePanel>
                         </div>
                     </div>
                 </div>
@@ -198,9 +233,10 @@
                             <asp:UpdatePanel runat="server" ID="UpdatePanel4" UpdateMode="Conditional">
                                 <Triggers>
                                     <asp:AsyncPostBackTrigger ControlID="ddlTimeType" />
+                                    <asp:AsyncPostBackTrigger ControlID="ddlYearForWeeks" />
                                 </Triggers>
                                 <ContentTemplate>
-                                    <asp:DropDownList ID="ddlYearStart" runat="server" CssClass="form-control aspnet-width-fix" Width="100%"></asp:DropDownList>
+                                    <asp:DropDownList ID="ddlYearStart"  runat="server" CssClass="form-control aspnet-width-fix" Width="100%"></asp:DropDownList>
                                 </ContentTemplate>
                             </asp:UpdatePanel>
                         </div>
@@ -219,6 +255,7 @@
                             <asp:UpdatePanel runat="server" ID="UpdatePanel5" UpdateMode="Conditional">
                                 <Triggers>
                                     <asp:AsyncPostBackTrigger ControlID="ddlTimeType" />
+                                    <asp:AsyncPostBackTrigger ControlID="ddlYearForWeeks" />
                                 </Triggers>
                                 <ContentTemplate>
                                     <asp:DropDownList ID="ddlYearEnd" runat="server" CssClass="form-control aspnet-width-fix" Width="100%"></asp:DropDownList>
