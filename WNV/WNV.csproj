@@ -150,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="photos\TempImages\temp.txt" />
+    <Content Include="Scripts\interactiveGlobe.js" />
     <Content Include="About.aspx" />
     <Content Include="Contact.aspx" />
     <Content Include="Content\bootstrap.css" />

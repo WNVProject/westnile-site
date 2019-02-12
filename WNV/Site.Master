@@ -61,6 +61,7 @@
                 <li class="nav-item">
                 <a class="nav-link" href="InteractiveGlobe.aspx">Interactive Globe</a>
                 </li>
+               
                 <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Chartings
@@ -70,6 +71,9 @@
                   <a class="dropdown-item" href="#">Another action</a>
                   <a class="dropdown-item" href="#">Something else here</a>
                 </div>
+                </li>
+                 <li class="nav-item">
+                    <a class ="nav-link" href="About.aspx">About</a>
                 </li>
             </ul>
 
@@ -86,6 +90,7 @@
             </asp:ContentPlaceHolder>
             <hr />
             <footer>
+                <h5>Website Sponsors</h5>
                 <div id="Sponsors" style="position:inherit">
 			        <a href="https://www.und.edu/" target="_blank"><img id="und-engineering-logo" class="img-fluid" src="photos/sponsor-logos/logo-engineering-dark.png" width="250" height=""/></a>
 			        <a href="https://www.nasa.gov/" target="_blank"><img id="nasa-logo" class="img-fluid" src="photos/sponsor-logos/nasa-logo.jpg" width="150" height="80"/></a>
