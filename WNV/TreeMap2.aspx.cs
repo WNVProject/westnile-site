@@ -21,15 +21,16 @@ namespace WNV
     public partial class TreeMap2 : Page
     {
         private string cs = ConfigurationManager.ConnectionStrings["CString"].ConnectionString;
-        protected string timeType = "";
+        static string timeType = "";
 
         protected void Page_Load(object sender, EventArgs e)
         {
             string gdv = gradientDropdownValue.Value;
             if (!IsPostBack)
             {
+                timeType = "Years";
                 gradientDropdownValue.Value = "YlGn";
-                fillYearDDLs("Years");
+                fillYearDDLs(timeType);
                 fillLocationDDL("Counties");
             }
             //ScriptManager.RegisterStartupScript(this, GetType(), "alert", "generateTreeMap(\"" + ddlGradientDropdownValue.SelectedValue + "\",$(\"#valLabelSize\").val());setActiveGradient(\"" + ddlGradientDropdownValue.SelectedValue + "\");updateGradientDropdownToggleBackground(\""+ ddlGradientDropdownValue.SelectedValue + "\"); ", true);
@@ -200,7 +201,21 @@ namespace WNV
                 ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Please select \"Species Count\" in the \"Color Represents\" dropdown when doing a single location for optimal results.')", true);
                 return;
             }
+            System.Diagnostics.Debug.Print(timeType);
+            /*
+            string strt = "";
+            string end = "";
+            if (timeType.Equals("Weeks"))
+            {
+                int index = ddlYearEnd.SelectedValue.ToString().IndexOf(" ");
+                if (index >= 0)
+                    strt = ddlYearStart.SelectedValue.ToString().Remove(index);
 
+                index = ddlYearEnd.SelectedValue.ToString().IndexOf(" ");
+                if (index >= 0)
+                    end = ddlYearStart.SelectedValue.ToString().Remove(index);
+            }
+            */
             if ((ddlSizeRepresents.Text.Contains("Species") && ddlColorRepresents.Text.Contains("Species")) || (ddlSizeRepresents.Text.Contains("Tarsalis") && ddlColorRepresents.Text.Contains("Tarsalis")))
             {
                 //TODO - FIX PLS
