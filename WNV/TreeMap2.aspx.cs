@@ -234,8 +234,17 @@ namespace WNV
                 parameters.Add("TrapArea", ddlFocusOn.SelectedValue.ToString());
                 if (timeType.Equals("Weeks"))
                 {
-                    parameters.Add("StartWeek", ddlYearStart.SelectedValue.ToString());
-                    parameters.Add("EndWeek", ddlYearEnd.SelectedValue.ToString());
+                    DateTime startWeek = Convert.ToDateTime(ddlYearStart.SelectedValue);
+                    DateTime endWeek = Convert.ToDateTime(ddlYearEnd.SelectedValue);
+                    string startWeekYear = startWeek.Year.ToString();
+                    string startWeekMonth = startWeek.Month.ToString();
+                    string startWeekDay = startWeek.Day.ToString();
+                    string endWeekYear = endWeek.Year.ToString();
+                    string endWeekMonth = endWeek.Month.ToString();
+                    string endWeekDay = endWeek.Day.ToString();
+                    
+                    parameters.Add("StartWeek", startWeekYear + "-" + startWeekMonth + "-" + startWeekDay);
+                    parameters.Add("EndWeek", endWeekYear + "-" + endWeekMonth + "-" + endWeekDay);
                 }
                 else
                 {
@@ -249,8 +258,17 @@ namespace WNV
                 parameters.Add("TrapCounty", ddlFocusOn.SelectedValue.ToString());
                 if (timeType.Equals("Weeks"))
                 {
-                    parameters.Add("StartWeek", ddlYearStart.SelectedValue.ToString());
-                    parameters.Add("EndWeek", ddlYearEnd.SelectedValue.ToString());
+                    DateTime startWeek = Convert.ToDateTime(ddlYearStart.SelectedValue);
+                    DateTime endWeek = Convert.ToDateTime(ddlYearEnd.SelectedValue);
+                    string startWeekYear = startWeek.Year.ToString();
+                    string startWeekMonth = startWeek.Month.ToString();
+                    string startWeekDay = startWeek.Day.ToString();
+                    string endWeekYear = endWeek.Year.ToString();
+                    string endWeekMonth = endWeek.Month.ToString();
+                    string endWeekDay = endWeek.Day.ToString();
+
+                    parameters.Add("StartWeek", startWeekYear + "-" + startWeekMonth + "-" + startWeekDay);
+                    parameters.Add("EndWeek", endWeekYear + "-" + endWeekMonth + "-" + endWeekDay);
                 }
                 else
                 {
@@ -339,7 +357,7 @@ namespace WNV
                     {
                         foreach (DictionaryEntry param in parameters)
                         {
-                            cmd.Parameters.AddWithValue(param.Key.ToString(), param.Value.ToString());
+                            cmd.Parameters.AddWithValue(param.Key.ToString(), param.Value);
                         }
                     }
                     using (MySqlDataAdapter da = new MySqlDataAdapter(cmd))
@@ -355,9 +373,7 @@ namespace WNV
                         int speciesDomainMin = -1;
                         double weatherDomainMax = -1.0;
                         double weatherDomainMin = -1.0;
-
-
-                        
+                                                               
                         foreach (DataRow row in dt.Rows)
                         {
                             string trapArea = "";
