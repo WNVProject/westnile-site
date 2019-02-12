@@ -10,7 +10,7 @@
 namespace WNV {
     
     
-    public partial class TreeMap2 {
+    public partial class TreeMap {
         
         /// <summary>
         /// gradientDropdownValue control.

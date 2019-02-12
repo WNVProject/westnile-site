@@ -53,7 +53,7 @@
                 <a class="nav-link" href="Default.aspx">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                <a class="nav-link" href="MultiaxisChart.aspx">Multi Chart</a>
+                    <a class ="nav-link" href="About.aspx">About</a>
                 </li>
                 <li class="nav-item">
                 <a class="nav-link" href="MosquitoSpecies.aspx">Species</a>
@@ -67,13 +67,9 @@
                     Chartings
                 </a>
                 <div class="dropdown-menu text-left" aria-labelledby="navbarDropdownMenuLink">
-                  <a class="dropdown-item" href="TreeMap2.aspx">Tree Map</a>
-                  <a class="dropdown-item" href="#">Another action</a>
-                  <a class="dropdown-item" href="#">Something else here</a>
+                  <a class="dropdown-item" href="TreeMap.aspx">Tree Map</a>
+                  <a class="dropdown-item" href="MultiaxisChart.aspx">Multi Chart</a>
                 </div>
-                </li>
-                 <li class="nav-item">
-                    <a class ="nav-link" href="About.aspx">About</a>
                 </li>
             </ul>
 

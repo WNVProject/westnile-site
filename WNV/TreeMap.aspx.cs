@@ -18,7 +18,7 @@ using System.Text.RegularExpressions;
 
 namespace WNV
 {
-    public partial class TreeMap2 : Page
+    public partial class TreeMap : Page
     {
         private string cs = ConfigurationManager.ConnectionStrings["CString"].ConnectionString;
         static string timeType = "";
