@@ -1,0 +1,232 @@
+{
+"name":"AllMosquitoes",
+"children":
+	[
+		{
+		"name":"Cooperstown",
+		"children":
+			[
+				{
+				 "name": "Aedes",
+				 "ground":"100",
+				 "building":"200",
+				 "cash":"300",
+				 "size":"800"
+				},
+				{
+				 "name": "2",
+				 "ground":"10",
+				 "building":"20",
+				 "cash":"300",
+				 "size":"700"
+				},
+				{
+				 "name": "3",
+				 "ground":"10",
+				 "building":"20",
+				 "cash":"300",
+				 "size":"600"
+				},
+				{
+				 "name": "4",
+				 "ground":"10",
+				 "building":"20",
+				 "cash":"300",
+				 "size":"500"
+				},
+				{
+				 "name": "5",
+				 "ground":"10",
+				 "building":"20",
+				 "cash":"300",
+				 "size":"400"
+				},
+				{
+				 "name": "6",
+				 "ground":"10",
+				 "building":"20",
+				 "cash":"300",
+				 "size":"300"
+				},
+				{
+				 "name": "7",
+				 "ground":"10",
+				 "building":"20",
+				 "cash":"300",
+				 "size":"200"
+				},
+				{
+				 "name": "8",
+				 "ground":"10",
+				 "building":"20",
+				 "cash":"300",
+				 "size":"100"
+				}
+			]
+		},
+		{
+		"name":"B1",
+		"children":
+			[
+				{
+				 "name": "6",
+				 "ground":"200",
+				 "building":"10",
+				 "cash":"100",
+				 "size":"10"
+				},
+				{
+				 "name": "5",
+				 "ground":"50",
+				 "building":"30",
+				 "cash":"10",
+				 "size":"20"
+				},
+				{
+				 "name": "4",
+				 "ground":"50",
+				 "building":"30",
+				 "cash":"10",
+				 "size":"30"
+				},
+				{
+				 "name": "3",
+				 "ground":"50",
+				 "building":"30",
+				 "cash":"10",
+				 "size":"40"
+				},
+				{
+				 "name": "2",
+				 "ground":"50",
+				 "building":"30",
+				 "cash":"10",
+				 "size":"50"
+				},
+				{
+				 "name": "1",
+				 "ground":"50",
+				 "building":"30",
+				 "cash":"10",
+				 "size":"600"
+				}
+			]
+		},
+		{
+		"name":"C1",
+		"children":
+			[
+				{
+				 "name": "1",
+				 "ground":"200",
+				 "building":"10",
+				 "cash":"100",
+				 "size":"110"
+				},
+				{
+				 "name": "2",
+				 "ground":"50",
+				 "building":"30",
+				 "cash":"10",
+				 "size":"50"
+				}
+			]
+		},
+		{
+		"name":"D1",
+		"children":
+			[
+				{
+				 "name": "1",
+				 "ground":"200",
+				 "building":"10",
+				 "cash":"100",
+				 "size":"410"
+				},
+				{
+				 "name": "2",
+				 "ground":"50",
+				 "building":"30",
+				 "cash":"10",
+				 "size":"300"
+				},
+				{
+				 "name": "3",
+				 "ground":"50",
+				 "building":"30",
+				 "cash":"10",
+				 "size":"250"
+				},
+				{
+				 "name": "4",
+				 "ground":"50",
+				 "building":"30",
+				 "cash":"10",
+				 "size":"50"
+				}
+			]
+		},
+		{
+		"name":"E1",
+		"children":
+			[
+				{
+				 "name": "8",
+				 "ground":"200",
+				 "building":"10",
+				 "cash":"100",
+				 "size":"40"
+				},
+				{
+				 "name": "7",
+				 "ground":"50",
+				 "building":"30",
+				 "cash":"10",
+				 "size":"50"
+				},
+				{
+				 "name": "6",
+				 "ground":"50",
+				 "building":"30",
+				 "cash":"10",
+				 "size":"60"
+				},
+				{
+				 "name": "5",
+				 "ground":"50",
+				 "building":"30",
+				 "cash":"10",
+				 "size":"70"
+				},
+				{
+				 "name": "4",
+				 "ground":"50",
+				 "building":"30",
+				 "cash":"10",
+				 "size":"80"
+				},
+				{
+				 "name": "3",
+				 "ground":"50",
+				 "building":"30",
+				 "cash":"10",
+				 "size":"90"
+				},
+				{
+				 "name": "2",
+				 "ground":"50",
+				 "building":"30",
+				 "cash":"10",
+				 "size":"100"
+				},
+				{
+				 "name": "1",
+				 "ground":"50",
+				 "building":"30",
+				 "cash":"10",
+				 "size":"110"
+				}
+			]
+		}
+	]
+}

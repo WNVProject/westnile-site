@@ -195,7 +195,7 @@
                 <ContentTemplate>
                     <h4>County</h4>
                     <asp:DropDownList ID="ddlCounty" runat="server" CssClass="form-control" Width="100%"></asp:DropDownList>
-                    <asp:RequiredFieldValidator ID="rfvCounty" runat="server" Text="County is required." ForeColor="Red" Display="Static" ControlToValidate="ddlCounty" ValidationGroup="vgMultiaxisChart"></asp:RequiredFieldValidator>
+                    <asp:RequiredFieldValidator ID="rfvCounty" runat="server" Text="County is required." ForeColor="Red" Display="Static" ControlToValidate="ddlCounty" ValidationGroup="vgMultiaxisChart" EnableClientScript="true"></asp:RequiredFieldValidator>
                 </ContentTemplate>
             </asp:UpdatePanel>
         </div>
@@ -208,7 +208,7 @@
                 <ContentTemplate>
                     <h4>Year</h4>
                     <asp:DropDownList ID="ddlYear" runat="server" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlYear_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
-                    <asp:RequiredFieldValidator ID="rfvYear" runat="server" Text="Year is required." ForeColor="Red" Display="Static" ControlToValidate="ddlYear" ValidationGroup="vgMultiaxisChart"></asp:RequiredFieldValidator>
+                    <asp:RequiredFieldValidator ID="rfvYear" runat="server" Text="Year is required." ForeColor="Red" Display="Static" ControlToValidate="ddlYear" ValidationGroup="vgMultiaxisChart" EnableClientScript="true"></asp:RequiredFieldValidator>
                 </ContentTemplate>
             </asp:UpdatePanel>
         </div>
@@ -221,7 +221,7 @@
                 <ContentTemplate>
                     <h4>Start Date</h4>
                     <asp:DropDownList ID="ddlWeekStart" runat="server" CssClass="form-control" Width="100%" DataTextFormatString="{0:MMMM d, yyyy}"></asp:DropDownList>
-                    <asp:RequiredFieldValidator ID="rfvStartDate" runat="server" Text="Start Date is required." ForeColor="Red" Display="Static" ControlToValidate="ddlWeekStart" ValidationGroup="vgMultiaxisChart"></asp:RequiredFieldValidator>
+                    <asp:RequiredFieldValidator ID="rfvStartDate" runat="server" Text="Start Date is required." ForeColor="Red" Display="Static" ControlToValidate="ddlWeekStart" ValidationGroup="vgMultiaxisChart" EnableClientScript="true"></asp:RequiredFieldValidator>
                 </ContentTemplate>
             </asp:UpdatePanel>
         </div>
