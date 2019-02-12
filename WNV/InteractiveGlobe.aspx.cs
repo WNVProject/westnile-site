@@ -223,7 +223,7 @@ namespace WNV
                 jsonToRender.Append("[");
                 foreach (DataRow county in counties.Rows)
                 {
-                    currentCounty = county["CountyName"].ToString();
+                    currentCounty = county["TrapCounty"].ToString();
                     int weekOfInterest = Convert.ToInt32(ddlPearsonHeatWeekOfInterest.SelectedValue);
                     string mosquitoVar = ddlPearsonHeatMosquitoVar.Value;
                     string weatherVar = ddlPearsonHeatWeatherVar.Value;
