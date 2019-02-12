@@ -75,75 +75,73 @@ namespace WNV
 
         protected void fillLocationDDL(String type)
         {
+            try
             {
-                try
+                using (MySqlConnection conn = new MySqlConnection(cs))
                 {
-                    using (MySqlConnection conn = new MySqlConnection(cs))
-                    {
-                        var procedure = "USP_Select_" + type;
-                        MySqlCommand cmd = new MySqlCommand(procedure, conn);
-                        cmd.CommandType = CommandType.StoredProcedure;
+                    var procedure = "USP_Select_" + type;
+                    MySqlCommand cmd = new MySqlCommand(procedure, conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-                        using (MySqlDataAdapter da = new MySqlDataAdapter(cmd))
+                    using (MySqlDataAdapter da = new MySqlDataAdapter(cmd))
+                    {
+                        DataTable dt = new DataTable();
+                        da.Fill(dt);
+                        ddlFocusOn.DataSource = dt;
+                        if(type.Equals("Counties"))
                         {
-                            DataTable dt = new DataTable();
-                            da.Fill(dt);
-                            ddlFocusOn.DataSource = dt;
-                            if(type.Equals("Counties"))
-                            {
-                                ddlFocusOn.DataValueField = "TrapCounty";
-                                ddlFocusOn.DataTextField = "TrapCounty";
-                            }
-                            else if (type.Equals("TrapLocations"))
-                            {
-                                ddlFocusOn.DataValueField = "name";
-                                ddlFocusOn.DataTextField = "name";
-                            }
-                            else if (type.Equals("WeeksOfSummer"))
-                            {
-                                ddlFocusOn.DataValueField = "Week";
-                                ddlFocusOn.DataTextField = "Week";
-                            }
-                            ddlFocusOn.DataBind();
-                            ddlFocusOn.Items.Insert(0,new ListItem("All", "%"));
-                            ddlFocusOn.SelectedIndex = 0;
+                            ddlFocusOn.DataValueField = "TrapCounty";
+                            ddlFocusOn.DataTextField = "TrapCounty";
                         }
+                        else if (type.Equals("TrapLocations"))
+                        {
+                            ddlFocusOn.DataValueField = "name";
+                            ddlFocusOn.DataTextField = "name";
+                        }
+                        else if (type.Equals("WeeksOfSummer"))
+                        {
+                            ddlFocusOn.DataValueField = "Week";
+                            ddlFocusOn.DataTextField = "Week";
+                        }
+                        ddlFocusOn.DataBind();
+                        ddlFocusOn.Items.Insert(0,new ListItem("All", "%"));
+                        ddlFocusOn.SelectedIndex = 0;
                     }
                 }
-                catch (MySqlException ex)
-                {
-                    lblError.Text = "Could not retrieve Counties/Traps/Weeks of Summer: " + ex.ToString();
-                    lblError.Visible = true;
-                }
+            }
+            catch (MySqlException ex)
+            {
+                lblError.Text = "Could not retrieve Counties/Traps/Weeks of Summer: " + ex.ToString();
+                lblError.Visible = true;
             }
         }
 
         protected void renderBtn_Click(object sender, EventArgs e)
         {
-            if((ddlColorRepresents.SelectedValue.ToString().Contains("1") && !ddlFocusOn.SelectedValue.ToString().Equals("%") && !ddlSizeRepresents.SelectedValue.ToString().Equals("Species")))
-            {
-                ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Please select \"All\" in the \"Focus On\" dropdown when doing one specie for optimal results.')", true);
-                return;
-            }
+            //if((ddlColorRepresents.SelectedValue.ToString().Contains("1") && !ddlFocusOn.SelectedValue.ToString().Equals("%") && !ddlSizeRepresents.SelectedValue.ToString().Equals("Species")))
+            //{
+            //    ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Please select \"All\" in the \"Focus On\" dropdown when doing one specie for optimal results.')", true);
+            //    return;
+            //}
 
-            if ((ddlColorRepresents.SelectedValue.ToString().Contains("1") && !ddlFocusOn.SelectedValue.ToString().Equals("%") && ddlSizeRepresents.SelectedValue.ToString().Equals("Species")))
-            {
-                ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Please select \"Species Count\" in the \"Color Represents\" dropdown when doing a single location for optimal results.')", true);
-                return;
-            }
+            //if ((ddlColorRepresents.SelectedValue.ToString().Contains("1") && !ddlFocusOn.SelectedValue.ToString().Equals("%") && ddlSizeRepresents.SelectedValue.ToString().Equals("Species")))
+            //{
+            //    ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Please select \"Species Count\" in the \"Color Represents\" dropdown when doing a single location for optimal results.')", true);
+            //    return;
+            //}
 
-            if ((ddlSizeRepresents.Text.Contains("Species") && ddlColorRepresents.Text.Contains("Species")) || (ddlSizeRepresents.Text.Contains("Tarsalis") && ddlColorRepresents.Text.Contains("Tarsalis")))
-            {
-                //TODO - FIX PLS
-                //ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Please select only one weather variable in the \"Size Represents\" and \"Color Represents\" dropdowns.')", true);
-                //return;
-            }
-            else if ((!ddlSizeRepresents.Text.Contains("Species") && !ddlColorRepresents.Text.Contains("Species")) || (!ddlSizeRepresents.Text.Contains("Tarsalis") && !ddlColorRepresents.Text.Contains("Tarsalis")))
-            {
-                //TODO - FIX PLS
-                //ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Please select only one weather variable in the \"Size Represents\" and \"Color Represents\" dropdowns.')", true);
-                //return;
-            }
+            //if ((ddlSizeRepresents.Text.Contains("Species") && ddlColorRepresents.Text.Contains("Species")) || (ddlSizeRepresents.Text.Contains("Tarsalis") && ddlColorRepresents.Text.Contains("Tarsalis")))
+            //{
+            //    //TODO - FIX PLS
+            //    //ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Please select only one weather variable in the \"Size Represents\" and \"Color Represents\" dropdowns.')", true);
+            //    //return;
+            //}
+            //else if ((!ddlSizeRepresents.Text.Contains("Species") && !ddlColorRepresents.Text.Contains("Species")) || (!ddlSizeRepresents.Text.Contains("Tarsalis") && !ddlColorRepresents.Text.Contains("Tarsalis")))
+            //{
+            //    //TODO - FIX PLS
+            //    //ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Please select only one weather variable in the \"Size Represents\" and \"Color Represents\" dropdowns.')", true);
+            //    //return;
+            //}
 
             Hashtable parameters = new Hashtable();
             if (ddlCategorizeBy.SelectedValue.Equals("TrapLocations"))
@@ -280,30 +278,51 @@ namespace WNV
                                         {
                                             if (!columnValue.Equals("0") && !columnValue.Equals(""))
                                             {
-                                                colorBy = colorBy.TrimEnd('1');
-                                                if (weatherDomainMax == -1 && weatherDomainMin == -1)
+                                                if (colorBy.Equals("Species"))
                                                 {
-                                                    weatherDomainMax = Double.Parse(row[colorBy].ToString());
-                                                    weatherDomainMin = Double.Parse(row[colorBy].ToString());
-                                                }
-                                                else if (weatherDomainMax < Double.Parse(row[colorBy].ToString()))
-                                                {
-                                                    weatherDomainMax = Double.Parse(row[colorBy].ToString());
-                                                }
-                                                else if (weatherDomainMin > Double.Parse(row[colorBy].ToString()))
-                                                {
-                                                    weatherDomainMin = Double.Parse(row[colorBy].ToString());
-                                                }
-                                                if (!colorBy.Equals("Species"))
-                                                {
-                                                    trapArea = trapArea + "\"name\":\"" + columnName + "\"," + "\"size\":\"" + columnValue + "\"," + "\"colorValue\":\"" + row[colorBy].ToString() + "\"," + "\"colorUnit\":\"" + colorBy + colorUnit + "\"," + "\"sizeUnit\":\"" + "Count" + "\"," + "\"category\":\"" + category + "\"," + "\"categoryPlural\":\"" + categoryPlural + "\"},{";
+                                                    if (speciesDomainMax == -1 && speciesDomainMin == -1)
+                                                    {
+                                                        speciesDomainMax = Int32.Parse(columnValue);
+                                                        speciesDomainMin = Int32.Parse(columnValue);
+                                                    }
+                                                    else if (speciesDomainMax < Int32.Parse(columnValue))
+                                                    {
+                                                        speciesDomainMax = Int32.Parse(columnValue);
+                                                    }
+                                                    else if (speciesDomainMin > Int32.Parse(columnValue))
+                                                    {
+                                                        speciesDomainMin = Int32.Parse(columnValue);
+                                                    }
+                                                    trapArea = trapArea + "\"name\":\"" + columnName + "\"," + "\"size\":\"" + row[columnName].ToString() + "\"," + "\"colorValue\":\"" + columnValue.ToString() + "\"," + "\"colorUnit\":\"" + "Count" + "\"," + "\"sizeUnit\":\"" + sizeBy + sizeUnit + "\"," + "\"category\":\"" + category + "\"," + "\"categoryPlural\":\"" + categoryPlural + "\"},{";
+                                                    mosquitoTypeAdded = true;
+                                                    itemHasData = true;
                                                 }
                                                 else
                                                 {
-                                                    trapArea = trapArea + "\"name\":\"" + columnName + "\"," + "\"size\":\"" + columnValue + "\"," + "\"category\":\"" + category + "\"," + "\"categoryPlural\":\"" + categoryPlural + "\"},{";
+                                                    if (weatherDomainMax == -1 && weatherDomainMin == -1)
+                                                    {
+                                                        weatherDomainMax = Double.Parse(row[colorBy].ToString());
+                                                        weatherDomainMin = Double.Parse(row[colorBy].ToString());
+                                                    }
+                                                    else if (weatherDomainMax < Double.Parse(row[colorBy].ToString()))
+                                                    {
+                                                        weatherDomainMax = Double.Parse(row[colorBy].ToString());
+                                                    }
+                                                    else if (weatherDomainMin > Double.Parse(row[colorBy].ToString()))
+                                                    {
+                                                        weatherDomainMin = Double.Parse(row[colorBy].ToString());
+                                                    }
+                                                    if (!colorBy.Equals("Species"))
+                                                    {
+                                                        trapArea = trapArea + "\"name\":\"" + columnName + "\"," + "\"size\":\"" + columnValue + "\"," + "\"colorValue\":\"" + row[colorBy].ToString() + "\"," + "\"colorUnit\":\"" + colorBy + colorUnit + "\"," + "\"sizeUnit\":\"" + "Count" + "\"," + "\"category\":\"" + category + "\"," + "\"categoryPlural\":\"" + categoryPlural + "\"},{";
+                                                    }
+                                                    else
+                                                    {
+                                                        trapArea = trapArea + "\"name\":\"" + columnName + "\"," + "\"size\":\"" + columnValue + "\"," + "\"category\":\"" + category + "\"," + "\"categoryPlural\":\"" + categoryPlural + "\"},{";
+                                                    }
+                                                    mosquitoTypeAdded = true;
+                                                    itemHasData = true;
                                                 }
-                                                mosquitoTypeAdded = true;
-                                                itemHasData = true;
                                             }
                                         }
                                     }
@@ -314,6 +333,7 @@ namespace WNV
                                         {
                                             if (!columnValue.Equals("0") && !columnValue.Equals(""))
                                             {
+                                                colorBy = colorBy.TrimEnd('1');
                                                 if (weatherDomainMax == -1 && weatherDomainMin == -1)
                                                 {
                                                     weatherDomainMax = Double.Parse(row[colorBy].ToString());
@@ -394,60 +414,53 @@ namespace WNV
                                         if (columnName.Equals("Aedes") || columnName.Equals("Aedes Vexans") || columnName.Equals("Anopheles") || columnName.Equals("Culex") || columnName.Equals("Culex Salinarius") || columnName.Equals("Culex Tarsalis") || columnName.Equals("Culiseta") || columnName.Equals("Other"))
                                         //if (columnName.Equals("Culex Tarsalis"))
                                         {
-                                        if (!columnValue.Equals("0") && !columnValue.Equals(""))
-                                        {
-                                            if (colorBy.Equals("Species"))
+                                            if (!columnValue.Equals("0") && !columnValue.Equals(""))
                                             {
-                                                if (speciesDomainMax == -1 && speciesDomainMin == -1)
-                                                {
-                                                    speciesDomainMax = Int32.Parse(columnValue);
-                                                    speciesDomainMin = Int32.Parse(columnValue);
-                                                }
-                                                else if (speciesDomainMax < Int32.Parse(columnValue))
-                                                {
-                                                    speciesDomainMax = Int32.Parse(columnValue);
-                                                }
-                                                else if (speciesDomainMin > Int32.Parse(columnValue))
-                                                {
-                                                    speciesDomainMin = Int32.Parse(columnValue);
-                                                }
                                                 if (colorBy.Equals("Species"))
                                                 {
-                                                    county = county + "\"name\":\"" + columnName + "\"," + "\"size\":\"" + row[sizeBy].ToString() + "\"," + "\"colorValue\":\"" + columnValue.ToString() + "\"," + "\"colorUnit\":\"" + "Count" + "\"," + "\"sizeUnit\":\"" + sizeBy + sizeUnit + "\"," + "\"category\":\"" + category + "\"," + "\"categoryPlural\":\"" + categoryPlural + "\"},{";
+                                                    if (speciesDomainMax == -1 && speciesDomainMin == -1)
+                                                    {
+                                                        speciesDomainMax = Int32.Parse(columnValue);
+                                                        speciesDomainMin = Int32.Parse(columnValue);
+                                                    }
+                                                    else if (speciesDomainMax < Int32.Parse(columnValue))
+                                                    {
+                                                        speciesDomainMax = Int32.Parse(columnValue);
+                                                    }
+                                                    else if (speciesDomainMin > Int32.Parse(columnValue))
+                                                    {
+                                                        speciesDomainMin = Int32.Parse(columnValue);
+                                                    }
+                                                    county = county + "\"name\":\"" + columnName + "\"," + "\"size\":\"" + row[columnName].ToString() + "\"," + "\"colorValue\":\"" + columnValue.ToString() + "\"," + "\"colorUnit\":\"" + "Count" + "\"," + "\"sizeUnit\":\"" + sizeBy + sizeUnit + "\"," + "\"category\":\"" + category + "\"," + "\"categoryPlural\":\"" + categoryPlural + "\"},{";
+                                                    mosquitoTypeAdded = true;
+                                                    itemHasData = true;
                                                 }
                                                 else
                                                 {
-                                                    county = county + "\"name\":\"" + columnName + "\"," + "\"size\":\"" + columnValue + "\"," + "\"category\":\"" + category + "\"," + "\"categoryPlural\":\"" + categoryPlural + "\"},{";
+                                                    if (weatherDomainMax == -1 && weatherDomainMin == -1)
+                                                    {
+                                                        weatherDomainMax = Double.Parse(row[colorBy].ToString());
+                                                        weatherDomainMin = Double.Parse(row[colorBy].ToString());
+                                                    }
+                                                    else if (weatherDomainMax < Double.Parse(row[colorBy].ToString()))
+                                                    {
+                                                        weatherDomainMax = Double.Parse(row[colorBy].ToString());
+                                                    }
+                                                    else if (weatherDomainMin > Double.Parse(row[colorBy].ToString()))
+                                                    {
+                                                        weatherDomainMin = Double.Parse(row[colorBy].ToString());
+                                                    }
+                                                    if (!colorBy.Equals("Species"))
+                                                    {
+                                                        county = county + "\"name\":\"" + columnName + "\"," + "\"size\":\"" + columnValue + "\"," + "\"colorValue\":\"" + row[colorBy].ToString() + "\"," + "\"colorUnit\":\"" + colorBy + colorUnit + "\"," + "\"sizeUnit\":\"" + "Count" + "\"," + "\"category\":\"" + category + "\"," + "\"categoryPlural\":\"" + categoryPlural + "\"},{";
+                                                    }
+                                                    else
+                                                    {
+                                                        county = county + "\"name\":\"" + columnName + "\"," + "\"size\":\"" + columnValue + "\"," + "\"category\":\"" + category + "\"," + "\"categoryPlural\":\"" + categoryPlural + "\"},{";
+                                                    }
+                                                    mosquitoTypeAdded = true;
+                                                    itemHasData = true;
                                                 }
-                                                mosquitoTypeAdded = true;
-                                                itemHasData = true;
-                                            }
-                                            else
-                                            {
-                                                if (weatherDomainMax == -1 && weatherDomainMin == -1)
-                                                {
-                                                    weatherDomainMax = Double.Parse(row[colorBy].ToString());
-                                                    weatherDomainMin = Double.Parse(row[colorBy].ToString());
-                                                }
-                                                else if (weatherDomainMax < Double.Parse(row[colorBy].ToString()))
-                                                {
-                                                    weatherDomainMax = Double.Parse(row[colorBy].ToString());
-                                                }
-                                                else if (weatherDomainMin > Double.Parse(row[colorBy].ToString()))
-                                                {
-                                                    weatherDomainMin = Double.Parse(row[colorBy].ToString());
-                                                }
-                                                if (!colorBy.Equals("Species"))
-                                                {
-                                                    county = county + "\"name\":\"" + columnName + "\"," + "\"size\":\"" + columnValue + "\"," + "\"colorValue\":\"" + row[colorBy].ToString() + "\"," + "\"colorUnit\":\"" + colorBy + colorUnit + "\"," + "\"sizeUnit\":\"" + "Count" + "\"," + "\"category\":\"" + category + "\"," + "\"categoryPlural\":\"" + categoryPlural + "\"},{";
-                                                }
-                                                else
-                                                {
-                                                    county = county + "\"name\":\"" + columnName + "\"," + "\"size\":\"" + columnValue + "\"," + "\"category\":\"" + category + "\"," + "\"categoryPlural\":\"" + categoryPlural + "\"},{";
-                                                }
-                                                mosquitoTypeAdded = true;
-                                                itemHasData = true;
-                                            }
                                             }
                                         }
                                     }
@@ -541,29 +554,51 @@ namespace WNV
                                         {
                                             if (!columnValue.Equals("0") && !columnValue.Equals(""))
                                             {
-                                                if (weatherDomainMax == -1 && weatherDomainMin == -1)
+                                                if (colorBy.Equals("Species"))
                                                 {
-                                                    weatherDomainMax = Double.Parse(row[colorBy].ToString());
-                                                    weatherDomainMin = Double.Parse(row[colorBy].ToString());
-                                                }
-                                                else if (weatherDomainMax < Double.Parse(row[colorBy].ToString()))
-                                                {
-                                                    weatherDomainMax = Double.Parse(row[colorBy].ToString());
-                                                }
-                                                else if (weatherDomainMin > Double.Parse(row[colorBy].ToString()))
-                                                {
-                                                    weatherDomainMin = Double.Parse(row[colorBy].ToString());
-                                                }
-                                                if (!colorBy.Equals("Species"))
-                                                {
-                                                    week = week + "\"name\":\"" + columnName + "\"," + "\"size\":\"" + columnValue + "\"," + "\"colorValue\":\"" + row[colorBy].ToString() + "\"," + "\"colorUnit\":\"" + colorBy + colorUnit + "\"," + "\"sizeUnit\":\"" + "Count" + "\"," + "\"category\":\"" + category + "\"," + "\"categoryPlural\":\"" + categoryPlural + "\"},{";
+                                                    if (speciesDomainMax == -1 && speciesDomainMin == -1)
+                                                    {
+                                                        speciesDomainMax = Int32.Parse(columnValue);
+                                                        speciesDomainMin = Int32.Parse(columnValue);
+                                                    }
+                                                    else if (speciesDomainMax < Int32.Parse(columnValue))
+                                                    {
+                                                        speciesDomainMax = Int32.Parse(columnValue);
+                                                    }
+                                                    else if (speciesDomainMin > Int32.Parse(columnValue))
+                                                    {
+                                                        speciesDomainMin = Int32.Parse(columnValue);
+                                                    }
+                                                    week = week + "\"name\":\"" + columnName + "\"," + "\"size\":\"" + row[columnName].ToString() + "\"," + "\"colorValue\":\"" + columnValue.ToString() + "\"," + "\"colorUnit\":\"" + "Count" + "\"," + "\"sizeUnit\":\"" + sizeBy + sizeUnit + "\"," + "\"category\":\"" + category + "\"," + "\"categoryPlural\":\"" + categoryPlural + "\"},{";
+                                                    mosquitoTypeAdded = true;
+                                                    itemHasData = true;
                                                 }
                                                 else
                                                 {
-                                                    week = week + "\"name\":\"" + columnName + "\"," + "\"size\":\"" + columnValue + "\"," + "\"category\":\"" + category + "\"," + "\"categoryPlural\":\"" + categoryPlural + "\"},{";
+                                                    if (weatherDomainMax == -1 && weatherDomainMin == -1)
+                                                    {
+                                                        weatherDomainMax = Double.Parse(row[colorBy].ToString());
+                                                        weatherDomainMin = Double.Parse(row[colorBy].ToString());
+                                                    }
+                                                    else if (weatherDomainMax < Double.Parse(row[colorBy].ToString()))
+                                                    {
+                                                        weatherDomainMax = Double.Parse(row[colorBy].ToString());
+                                                    }
+                                                    else if (weatherDomainMin > Double.Parse(row[colorBy].ToString()))
+                                                    {
+                                                        weatherDomainMin = Double.Parse(row[colorBy].ToString());
+                                                    }
+                                                    if (!colorBy.Equals("Species"))
+                                                    {
+                                                        week = week + "\"name\":\"" + columnName + "\"," + "\"size\":\"" + columnValue + "\"," + "\"colorValue\":\"" + row[colorBy].ToString() + "\"," + "\"colorUnit\":\"" + colorBy + colorUnit + "\"," + "\"sizeUnit\":\"" + "Count" + "\"," + "\"category\":\"" + category + "\"," + "\"categoryPlural\":\"" + categoryPlural + "\"},{";
+                                                    }
+                                                    else
+                                                    {
+                                                        week = week + "\"name\":\"" + columnName + "\"," + "\"size\":\"" + columnValue + "\"," + "\"category\":\"" + category + "\"," + "\"categoryPlural\":\"" + categoryPlural + "\"},{";
+                                                    }
+                                                    mosquitoTypeAdded = true;
+                                                    itemHasData = true;
                                                 }
-                                                mosquitoTypeAdded = true;
-                                                itemHasData = true;
                                             }
                                         }
                                     }
@@ -574,6 +609,7 @@ namespace WNV
                                         {
                                             if (!columnValue.Equals("0") && !columnValue.Equals(""))
                                             {
+                                                colorBy = colorBy.TrimEnd('1');
                                                 if (weatherDomainMax == -1 && weatherDomainMin == -1)
                                                 {
                                                     weatherDomainMax = Double.Parse(row[colorBy].ToString());
