@@ -53,7 +53,7 @@
             This website has two primary objectives that it was designed to accomplish. The first objective is to display historical data of past years
             data. The second objective is to be able to use the data to predicate future population counts and determine if there are trends that can 
             pinpoint when the next outbreak of West Nile Virus will occur. The website in its current state is displaying mosquito trap and weather 
-            data from 2005-2018. In order to display the data in meaningful ways we integrated an open-source JavaScript library called 
+            data from 2005-2016. In order to display the data in meaningful ways we integrated an open-source JavaScript library called 
             <a href="https://cesiumjs.org/about/" target="_blank">CesiumJS</a> that allowed us to display the trap counts by county on an <a href="InteractiveGlobe.aspx" target="_blank">
             interactive 3D globe</a>. The globe uses <a href="https://en.wikipedia.org/wiki/Pearson_correlation_coefficient" target="_blank">Pearson Correlation Coefficent</a> 
             to determine if there is strong or weak relationship against certain weather variables in a short term period and a long term period. We also built a

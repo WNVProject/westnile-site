@@ -39,7 +39,7 @@
         </asp:ScriptManager>
         
 
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
           <a class="navbar-brand" href="#">
               <img src="http://www1.und.edu/_resources/globalgui/logos/und/flame-2-go-96x50.png" height="30" class="d-inline-block align-top" alt="">
           </a>
@@ -102,7 +102,12 @@
             var page = location.pathname.substring(1, location.pathname.length)
             $('li.active').removeClass('active');
             $('a[href="' + page + '.aspx"]').closest('li').addClass('active');
+
+            if (page == "InteractiveGlobe") {
+                $('nav').removeClass('fixed-top');
+            }
         });
+
     </script>
 </body>
 </html>
