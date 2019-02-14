@@ -158,7 +158,6 @@
     <Content Include="photos\trap-images\NJ-light-trap.jpg" />
     <Content Include="Scripts\interactiveGlobe.js" />
     <Content Include="About.aspx" />
-    <Content Include="Contact.aspx" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Site.css" />
@@ -6270,7 +6269,6 @@
     <Content Include="Site.Master" />
     <Content Include="TreeMap.aspx" />
     <Content Include="ViewSwitcher.ascx" />
-    <Content Include="Viruses.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -6287,13 +6285,6 @@
       <DependentUpon>About.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Contact.aspx.cs">
-      <DependentUpon>Contact.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Contact.aspx.designer.cs">
-      <DependentUpon>Contact.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -6352,13 +6343,6 @@
     </Compile>
     <Compile Include="ViewSwitcher.ascx.designer.cs">
       <DependentUpon>ViewSwitcher.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Viruses.aspx.cs">
-      <DependentUpon>Viruses.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Viruses.aspx.designer.cs">
-      <DependentUpon>Viruses.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
