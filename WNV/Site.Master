@@ -56,9 +56,6 @@
                     <a class ="nav-link" href="About.aspx">About</a>
                 </li>
                 <li class="nav-item">
-                <a class="nav-link" href="MosquitoSpecies.aspx">Species</a>
-                </li>
-                <li class="nav-item">
                 <a class="nav-link" href="InteractiveGlobe.aspx">Interactive Globe</a>
                 </li>
                

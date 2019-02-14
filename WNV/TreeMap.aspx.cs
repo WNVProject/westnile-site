@@ -25,13 +25,32 @@ namespace WNV
 
         protected void Page_Load(object sender, EventArgs e)
         {
+
             string gdv = gradientDropdownValue.Value;
             if (!IsPostBack)
             {
+                chkShowLabels.Checked = true;
+                chkShowTrackingTooltip.Checked = true;
+                ScriptManager.RegisterStartupScript(this, GetType(), "toggleStationaryTooltip", "toggleStationaryTooltip();", true);
                 timeType = "Years";
                 gradientDropdownValue.Value = "YlGn";
                 fillYearDDLs(timeType);
                 fillLocationDDL("Counties");
+            }
+            else
+            {
+                if (!chkShowLabels.Checked)
+                {
+                    ScriptManager.RegisterStartupScript(this, GetType(), "toggleLabels", "toggleLabels();", true);
+                }
+                if (!chkShowTrackingTooltip.Checked)
+                {
+                    ScriptManager.RegisterStartupScript(this, GetType(), "toggleTrackingTooltip", "toggleTrackingTooltip();", true);
+                }
+                if (!chkShowStationaryTooltip.Checked)
+                {
+                    ScriptManager.RegisterStartupScript(this, GetType(), "toggleStationaryTooltip", "toggleStationaryTooltip();", true);
+                }
             }
             //ScriptManager.RegisterStartupScript(this, GetType(), "alert", "generateTreeMap(\"" + ddlGradientDropdownValue.SelectedValue + "\",$(\"#valLabelSize\").val());setActiveGradient(\"" + ddlGradientDropdownValue.SelectedValue + "\");updateGradientDropdownToggleBackground(\""+ ddlGradientDropdownValue.SelectedValue + "\"); ", true);
         }
@@ -853,16 +872,52 @@ namespace WNV
                 fillYearDDLs(ddlTimeType.SelectedItem.Value.ToString());
 
             }
+            if (!chkShowLabels.Checked)
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "toggleLabels", "toggleLabels();", true);
+            }
+            if (!chkShowTrackingTooltip.Checked)
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "toggleTrackingTooltip", "toggleTrackingTooltip();", true);
+            }
+            if (!chkShowStationaryTooltip.Checked)
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "toggleStationaryTooltip", "toggleStationaryTooltip();", true);
+            }
         }
 
         protected void ddlCategorizeBy_SelectedIndexChanged(object sender, EventArgs e)
         {
             fillLocationDDL(ddlCategorizeBy.SelectedItem.Value.ToString());
+            //if (!chkShowLabels.Checked)
+            //{
+            //    ScriptManager.RegisterStartupScript(this, GetType(), "toggleLabels", "toggleLabels();", true);
+            //}
+            //if (!chkShowTrackingTooltip.Checked)
+            //{
+            //    ScriptManager.RegisterStartupScript(this, GetType(), "toggleTrackingTooltip", "toggleTrackingTooltip();", true);
+            //}
+            //if (!chkShowStationaryTooltip.Checked)
+            //{
+            //    ScriptManager.RegisterStartupScript(this, GetType(), "toggleStationaryTooltip", "toggleStationaryTooltip();", true);
+            //}
         }
 
         protected void ddlYearForWeeks_SelectedIndexChanged(object sender, EventArgs e)
         {
             fillWeekDDLs();
+            //if (!chkShowLabels.Checked)
+            //{
+            //    ScriptManager.RegisterStartupScript(this, GetType(), "toggleLabels", "toggleLabels();", true);
+            //}
+            //if (!chkShowTrackingTooltip.Checked)
+            //{
+            //    ScriptManager.RegisterStartupScript(this, GetType(), "toggleTrackingTooltip", "toggleTrackingTooltip();", true);
+            //}
+            //if (!chkShowStationaryTooltip.Checked)
+            //{
+            //    ScriptManager.RegisterStartupScript(this, GetType(), "toggleStationaryTooltip", "toggleStationaryTooltip();", true);
+            //}
         }
     }
 }

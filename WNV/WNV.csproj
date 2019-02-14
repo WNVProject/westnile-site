@@ -149,7 +149,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="photos\agencies-orgs-logos\amca-logo.png" />
+    <Content Include="photos\agencies-orgs-logos\epa-logo.jpg" />
+    <Content Include="photos\agencies-orgs-logos\m-cdc-logo.png" />
+    <Content Include="photos\agencies-orgs-logos\NCMCALogo.png" />
+    <Content Include="photos\agencies-orgs-logos\npic-logo-horiz-hi.png" />
     <Content Include="photos\TempImages\temp.txt" />
+    <Content Include="photos\trap-images\NJ-light-trap.jpg" />
     <Content Include="Scripts\interactiveGlobe.js" />
     <Content Include="About.aspx" />
     <Content Include="Contact.aspx" />
