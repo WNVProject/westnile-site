@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Tree Map" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="TreeMap2.aspx.cs" Inherits="WNV.TreeMap2" %>
+﻿<%@ Page Title="WNV | TreeMap" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="TreeMap.aspx.cs" Inherits="WNV.TreeMap" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -81,7 +81,7 @@
     <div class="text-center mt-3">
         <h3>Interactive Tree Map - North Dakota West Nile Virus Forecasting</h3>
     </div>
-    <div class="jumbotron mb-1" style="padding:0px;background-color:white;">
+    <div class="jumbotron mb-1" style="padding:0px;background-color:white;height:750px;width:1140px">
         <div id="treemap">
         </div>
         <div class="mouse tooltip">
@@ -380,22 +380,22 @@
             <div class="row aspnet-rfv-heightOffset-fix">
                 <div class="col-lg-6">
                     <div class="form-check-inline">
-                        <input id="chkShowLabels" type="checkbox" checked="checked" class="form-check-input" onchange="toggleLabels();" />
-                        <label class="form-check-label" for="chkShowLabels">Show Labels</label>
+                        <input id="chkShowLabels" runat="server" type="checkbox" class="form-check-input" onchange="toggleLabels();" />
+                        <label class="form-check-label" for="<%= chkShowLabels.ClientID %>">Show Labels</label>
                     </div>
                 </div>
             </div>
             <div class="row aspnet-rfv-heightOffset-fix">
                 <div class="col-lg-6">
                     <div class="form-check-inline">
-                        <input id="chkShowTrackingTooltip" type="checkbox" checked="checked" class="form-check-input" onchange="toggleTrackingTooltip();" />
-                        <label class="form-check-label" for="chkShowTrackingTooltip">Tracking Tooltip</label>
+                        <input id="chkShowTrackingTooltip" runat="server" type="checkbox" class="form-check-input" onchange="toggleTrackingTooltip();" />
+                        <label class="form-check-label" for="<%= chkShowTrackingTooltip.ClientID %>">Tracking Tooltip</label>
                     </div>
                 </div>
                 <div class="col-lg-6">
                     <div class="form-check-inline">
-                        <input id="chkShowStationaryTooltip" type="checkbox" checked="checked" class="form-check-input" onchange="toggleStationaryTooltip();" />
-                        <label class="form-check-label" for="chkShowStationaryTooltip">Stationary Tooltip</label>
+                        <input id="chkShowStationaryTooltip" runat="server" type="checkbox" class="form-check-input" onchange="toggleStationaryTooltip();" />
+                        <label class="form-check-label" for="<%= chkShowStationaryTooltip.ClientID %>">Stationary Tooltip</label>
                     </div>
                 </div>
             </div>
@@ -587,7 +587,7 @@
                             }
                         })
                         .style("display", function () {
-                            if ($("#chkShowLabels").is(":checked")) {
+                            if ($("#<%= chkShowLabels.ClientID %>").is(":checked")) {
                                 return "inline-block";
                             } else {
                                 return "none";

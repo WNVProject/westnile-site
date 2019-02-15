@@ -18,20 +18,39 @@ using System.Text.RegularExpressions;
 
 namespace WNV
 {
-    public partial class TreeMap2 : Page
+    public partial class TreeMap : Page
     {
         private string cs = ConfigurationManager.ConnectionStrings["CString"].ConnectionString;
         static string timeType = "";
 
         protected void Page_Load(object sender, EventArgs e)
         {
+
             string gdv = gradientDropdownValue.Value;
             if (!IsPostBack)
             {
+                chkShowLabels.Checked = true;
+                chkShowTrackingTooltip.Checked = true;
+                ScriptManager.RegisterStartupScript(this, GetType(), "toggleStationaryTooltip", "toggleStationaryTooltip();", true);
                 timeType = "Years";
                 gradientDropdownValue.Value = "YlGn";
                 fillYearDDLs(timeType);
                 fillLocationDDL("Counties");
+            }
+            else
+            {
+                if (!chkShowLabels.Checked)
+                {
+                    ScriptManager.RegisterStartupScript(this, GetType(), "toggleLabels", "toggleLabels();", true);
+                }
+                if (!chkShowTrackingTooltip.Checked)
+                {
+                    ScriptManager.RegisterStartupScript(this, GetType(), "toggleTrackingTooltip", "toggleTrackingTooltip();", true);
+                }
+                if (!chkShowStationaryTooltip.Checked)
+                {
+                    ScriptManager.RegisterStartupScript(this, GetType(), "toggleStationaryTooltip", "toggleStationaryTooltip();", true);
+                }
             }
             //ScriptManager.RegisterStartupScript(this, GetType(), "alert", "generateTreeMap(\"" + ddlGradientDropdownValue.SelectedValue + "\",$(\"#valLabelSize\").val());setActiveGradient(\"" + ddlGradientDropdownValue.SelectedValue + "\");updateGradientDropdownToggleBackground(\""+ ddlGradientDropdownValue.SelectedValue + "\"); ", true);
         }
@@ -234,8 +253,17 @@ namespace WNV
                 parameters.Add("TrapArea", ddlFocusOn.SelectedValue.ToString());
                 if (timeType.Equals("Weeks"))
                 {
-                    parameters.Add("StartWeek", ddlYearStart.SelectedValue.ToString());
-                    parameters.Add("EndWeek", ddlYearEnd.SelectedValue.ToString());
+                    DateTime startWeek = Convert.ToDateTime(ddlYearStart.SelectedValue);
+                    DateTime endWeek = Convert.ToDateTime(ddlYearEnd.SelectedValue);
+                    string startWeekYear = startWeek.Year.ToString();
+                    string startWeekMonth = startWeek.Month.ToString();
+                    string startWeekDay = startWeek.Day.ToString();
+                    string endWeekYear = endWeek.Year.ToString();
+                    string endWeekMonth = endWeek.Month.ToString();
+                    string endWeekDay = endWeek.Day.ToString();
+                    
+                    parameters.Add("StartWeek", startWeekYear + "-" + startWeekMonth + "-" + startWeekDay);
+                    parameters.Add("EndWeek", endWeekYear + "-" + endWeekMonth + "-" + endWeekDay);
                 }
                 else
                 {
@@ -249,8 +277,17 @@ namespace WNV
                 parameters.Add("TrapCounty", ddlFocusOn.SelectedValue.ToString());
                 if (timeType.Equals("Weeks"))
                 {
-                    parameters.Add("StartWeek", ddlYearStart.SelectedValue.ToString());
-                    parameters.Add("EndWeek", ddlYearEnd.SelectedValue.ToString());
+                    DateTime startWeek = Convert.ToDateTime(ddlYearStart.SelectedValue);
+                    DateTime endWeek = Convert.ToDateTime(ddlYearEnd.SelectedValue);
+                    string startWeekYear = startWeek.Year.ToString();
+                    string startWeekMonth = startWeek.Month.ToString();
+                    string startWeekDay = startWeek.Day.ToString();
+                    string endWeekYear = endWeek.Year.ToString();
+                    string endWeekMonth = endWeek.Month.ToString();
+                    string endWeekDay = endWeek.Day.ToString();
+
+                    parameters.Add("StartWeek", startWeekYear + "-" + startWeekMonth + "-" + startWeekDay);
+                    parameters.Add("EndWeek", endWeekYear + "-" + endWeekMonth + "-" + endWeekDay);
                 }
                 else
                 {
@@ -339,7 +376,7 @@ namespace WNV
                     {
                         foreach (DictionaryEntry param in parameters)
                         {
-                            cmd.Parameters.AddWithValue(param.Key.ToString(), param.Value.ToString());
+                            cmd.Parameters.AddWithValue(param.Key.ToString(), param.Value);
                         }
                     }
                     using (MySqlDataAdapter da = new MySqlDataAdapter(cmd))
@@ -355,9 +392,7 @@ namespace WNV
                         int speciesDomainMin = -1;
                         double weatherDomainMax = -1.0;
                         double weatherDomainMin = -1.0;
-
-
-                        
+                                                               
                         foreach (DataRow row in dt.Rows)
                         {
                             string trapArea = "";
@@ -837,16 +872,52 @@ namespace WNV
                 fillYearDDLs(ddlTimeType.SelectedItem.Value.ToString());
 
             }
+            if (!chkShowLabels.Checked)
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "toggleLabels", "toggleLabels();", true);
+            }
+            if (!chkShowTrackingTooltip.Checked)
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "toggleTrackingTooltip", "toggleTrackingTooltip();", true);
+            }
+            if (!chkShowStationaryTooltip.Checked)
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "toggleStationaryTooltip", "toggleStationaryTooltip();", true);
+            }
         }
 
         protected void ddlCategorizeBy_SelectedIndexChanged(object sender, EventArgs e)
         {
             fillLocationDDL(ddlCategorizeBy.SelectedItem.Value.ToString());
+            //if (!chkShowLabels.Checked)
+            //{
+            //    ScriptManager.RegisterStartupScript(this, GetType(), "toggleLabels", "toggleLabels();", true);
+            //}
+            //if (!chkShowTrackingTooltip.Checked)
+            //{
+            //    ScriptManager.RegisterStartupScript(this, GetType(), "toggleTrackingTooltip", "toggleTrackingTooltip();", true);
+            //}
+            //if (!chkShowStationaryTooltip.Checked)
+            //{
+            //    ScriptManager.RegisterStartupScript(this, GetType(), "toggleStationaryTooltip", "toggleStationaryTooltip();", true);
+            //}
         }
 
         protected void ddlYearForWeeks_SelectedIndexChanged(object sender, EventArgs e)
         {
             fillWeekDDLs();
+            //if (!chkShowLabels.Checked)
+            //{
+            //    ScriptManager.RegisterStartupScript(this, GetType(), "toggleLabels", "toggleLabels();", true);
+            //}
+            //if (!chkShowTrackingTooltip.Checked)
+            //{
+            //    ScriptManager.RegisterStartupScript(this, GetType(), "toggleTrackingTooltip", "toggleTrackingTooltip();", true);
+            //}
+            //if (!chkShowStationaryTooltip.Checked)
+            //{
+            //    ScriptManager.RegisterStartupScript(this, GetType(), "toggleStationaryTooltip", "toggleStationaryTooltip();", true);
+            //}
         }
     }
 }
