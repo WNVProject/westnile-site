@@ -366,8 +366,9 @@ namespace WNV
                 category = "Week";
                 categoryPlural = "All Weeks";
             }
-            //try
-            //{
+
+            try
+            {
                 using (MySqlConnection conn = new MySqlConnection(cs))
                 {
                     MySqlCommand cmd = new MySqlCommand(procedure, conn);
@@ -401,7 +402,7 @@ namespace WNV
                             int num;
                             if (categorizeBy.Equals("TrapLocations"))
                             {
-                                trapArea = "\"name\":\"" + row["Trap Area"] + "\",\"children\":[{";
+                                trapArea = "\"name\":\"" + row["Trap Area"] + "\",\"county\":\"" + row["County"] + "\",\"children\":[{";
                                 bool mosquitoTypeAdded = false;
                                 foreach (DataColumn col in dt.Columns)
                                 {
@@ -823,27 +824,23 @@ namespace WNV
                         {
                             treeMapJson.Append("],\"max\":\"" + weatherDomainMax + "\"," + "\"min\":\"" + weatherDomainMin + "\"," + "\"colorUnit\":\"" + colorUnit + "\"}");
                         }
-                            
-                        using (StreamWriter sr = new StreamWriter(Server.MapPath("/Scripts/TreeMapJSON/" + fileName)))
+
+                        if (itemHasData)
                         {
-                            if (itemHasData)
-                            {
-                                sr.Write(treeMapJson);
-                            }
-                            else
-                            {
-                                sr.Write("");
-                                ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('No data exists for these parameters.');", true);
-                            }
-                            sr.Dispose();
+                            hfTreeMapJSON.Value = treeMapJson.ToString();
+                        }
+                        else
+                        {
+                            hfTreeMapJSON.Value = "";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('No data exists for these parameters.');", true);
                         }
                     }
                 }
-            //}
-            //catch (Exception ex)
-            //{
-            //    ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('" + ex.Message + "');", true);
-            //}
+            }
+            catch (Exception ex)
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('" + ex.Message + "');", true);
+            }
         }
         
         protected void ddlTimeType_SelectedIndexChanged(object sender, EventArgs e)

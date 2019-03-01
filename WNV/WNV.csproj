@@ -156,6 +156,9 @@
     <Content Include="photos\agencies-orgs-logos\npic-logo-horiz-hi.png" />
     <Content Include="photos\TempImages\temp.txt" />
     <Content Include="photos\trap-images\NJ-light-trap.jpg" />
+    <Content Include="photos\weather-station-images\station-diagram.jpg" />
+    <Content Include="photos\weather-station-images\station.jpg" />
+    <Content Include="Scripts\colorbrewer.js" />
     <Content Include="Scripts\interactiveGlobe.js" />
     <Content Include="About.aspx" />
     <Content Include="Content\bootstrap.css" />
@@ -6347,6 +6350,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="photos\tooltips\states\ND\county-highlights\" />
     <Folder Include="Scripts\Cesium\Apps\Sandcastle\gallery\development\" />
     <Folder Include="Scripts\Cesium\ThirdParty\codemirror-4.6\bin\" />
   </ItemGroup>
