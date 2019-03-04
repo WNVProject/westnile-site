@@ -6261,6 +6261,7 @@
     <Content Include="Scripts\WebForms\WebParts.js" />
     <Content Include="Scripts\WebForms\WebUIValidation.js" />
     <Content Include="Site.Master" />
+    <Content Include="SynchronizedCharts.aspx" />
     <Content Include="TreeMap2.aspx" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Viruses.aspx" />
@@ -6331,6 +6332,13 @@
     </Compile>
     <Compile Include="Site.Mobile.Master.designer.cs">
       <DependentUpon>Site.Mobile.Master</DependentUpon>
+    </Compile>
+    <Compile Include="SynchronizedCharts.aspx.cs">
+      <DependentUpon>SynchronizedCharts.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SynchronizedCharts.aspx.designer.cs">
+      <DependentUpon>SynchronizedCharts.aspx</DependentUpon>
     </Compile>
     <Compile Include="TreeMap2.aspx.cs">
       <DependentUpon>TreeMap2.aspx</DependentUpon>
