@@ -12,6 +12,10 @@ using MySql;
 using MySql.Data;
 using MySql.Data.MySqlClient;
 using System.Web.UI.DataVisualization.Charting;
+using Newtonsoft.Json;
+using System.IO;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace WNV
 {
@@ -119,13 +123,44 @@ namespace WNV
 
         protected void renderBtn_Click(object sender, EventArgs e)
         {
+            Hashtable parameters = new Hashtable();
+            Hashtable parameters2 = new Hashtable();
+            parameters.Add("MosquitoSpecies", ddlMosquitoSpecies.SelectedValue.ToString());
+            parameters.Add("TrapYear", ddlYear.SelectedValue.ToString());
+            //parameters2.Add("WeatherVariable", ddlWeather.SelectedValue.ToString());
+            //Add the WNV Cases when they are done
+            generateJSON("USP_Get_TotalMosquitoCountByYear",parameters, "SyncCharts.json");
             //TODO: 
-                //get data from dropdowns and do the following queries:
-                    //total mosquitoes for trap county selected
-                    //the weather variable that is selected
-                    //cases
+                //the weather variable that is selected
+                //cases from the selected county and type 
         }
 
+        protected void generateJSON(string procedure, Hashtable parameters, string fileName)
+        {
+            using (MySqlConnection conn = new MySqlConnection(cs))
+            {
+                MySqlCommand cmd = new MySqlCommand(procedure, conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                if(parameters.Count > 0)
+                {
+                    foreach(DictionaryEntry param in parameters)
+                    {
+                        cmd.Parameters.AddWithValue(param.Key.ToString(), param.Value.ToString());
+                    }
+                }
+                using (MySqlDataAdapter da = new MySqlDataAdapter(cmd))
+                {
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+
+                    StringBuilder syncChartsJson = new StringBuilder();
+                    syncChartsJson.Append("{\"chart\":\"type\": line }, \"colors\": ['#008FFB'], \"series\": [{ \"data\": [");
+                    //add the data from the database for a selected species
+
+                    //from here we just need to 
+                }
+            }
+        }
     }
 
 
