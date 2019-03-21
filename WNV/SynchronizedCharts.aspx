@@ -1,13 +1,16 @@
 ﻿<%@ Page Title="Synchronized Charts" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="SynchronizedCharts.aspx.cs" Inherits="WNV.SynchronizedCharts1" %>
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
-
-     <div class="text-center mt-3">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <div class="text-center mt-3">
         <h3>Synchronized Charts - North Dakota West Nile Virus Forecasting</h3>
     </div>
+    <asp:HiddenField ID="hfTrapCountJSON" runat="server" ClientIDMode="Static" />
+    <asp:HiddenField ID="hfWeatherJSON" runat="server" ClientIDMode="Static" />
+    <asp:HiddenField ID="hfCasesJSON" runat="server" ClientIDMode="Static" />
     <div class="jumbotron mb-1" style="padding:0px;background-color:white;height:750px;width:1140px">
-        <div id="chart1"></div>
-        <div id="chart2"></div>
-        <div id="chart3"></div>
+        <div id="chrtTrapCount"></div>
+        <div id="chrtWeather"></div>
+        <div id="chrtCases"></div>
     </div>
     <div class="row">
         <div class="col-lg-3">
@@ -172,7 +175,157 @@
             <asp:Label ID="lblError" runat="server" ForeColor="Red"></asp:Label>
         </div>
    </div>
+    <script>
+        Apex = {
+            "chart": {
+                "height": '230px',
+                "background": '#FDFDFD',
+    animations: {
+        enabled: true,
+        easing: 'easeinout',
+        speed: 800,
+        animateGradually: {
+            enabled: true,
+            delay: 150
+        },
+        dynamicAnimation: {
+            enabled: true,
+            speed: 350
+        }
+    }
+            },
+            "toolbar": {
+                "tools": {
+                    "selection": false
+                }
+            },
+            "dataLabels": {
+                "enabled": false
+            },
+            "stroke": {
+                "curve": 'smooth'
+            },
+            "markers": {
+                "size": 6,
+                "hover": {
+                    "size": 10
+                }
+            },
+            "tooltip": {
+                "followCursor": false,
+                "theme": 'dark',
+                "x": {
+                    "show": false
+                },
+                "marker": {
+                    "show": false
+                },
+                "y": {
+                    "title": {
+                        "formatter": function () {
+                            return ''
+                        }
+                    }
+                }
+            },
+            "grid": {
+                "clipMarkers": false
+            },
+            "yaxis": {
+                "tickAmount": 2
+            },
+            "xaxis": {
+                "type": 'datetime'
+            }
+        };
 
+        // Use these for now until JSON generation algorithm is working
+        var chrtTrapCountOptions = {
+            chart: {
+                id: 'fb',
+                group: 'social',
+                type: 'line',
+            },
+            colors: ['#00FF00'],
+            series: [{
+                data: generateDayWiseTimeSeries(new Date('11 Feb 2017').getTime(), 20, {
+                    min: 10,
+                    max: 60
+                })
+            }],
+            yaxis: {
+                labels: {
+                    minWidth: 40
+                }
+            }
+        };
+        var chrtWeatherOptions = {
+            chart: {
+                id: 'fb',
+                group: 'social',
+                type: 'line',
+            },
+            colors: ['#0000FF'],
+            series: [{
+                data: generateDayWiseTimeSeries(new Date('11 Feb 2017').getTime(), 20, {
+                    min: 10,
+                    max: 60
+                })
+            }],
+            yaxis: {
+                labels: {
+                    minWidth: 40
+                }
+            }
+        };
+        var chrtCasesOptions = {
+            chart: {
+                id: 'fb',
+                group: 'social',
+                type: 'line',
+            },
+            colors: ['#FF0000'],
+            series: [{
+                data: generateDayWiseTimeSeries(new Date('11 Feb 2017').getTime(), 20, {
+                    min: 10,
+                    max: 60
+                })
+            }],
+            yaxis: {
+                labels: {
+                    minWidth: 40
+                }
+            }
+        };
+
+        // Use these once JSON generation algorithm is in place
+        //var chrtTrapCountOptions = JSON.parse('<%= hfTrapCountJSON.Value %>');
+        //var chrtWeatherOptions = JSON.parse('<%= hfWeatherJSON.Value %>');
+        //var chrtCasesOptions = JSON.parse('<%= hfCasesJSON.Value %>');
+        
+        var chrtTrapCount = new ApexCharts(document.querySelector("#chrtTrapCount"), chrtTrapCountOptions);
+        var chrtWeather= new ApexCharts(document.querySelector("#chrtWeather"), chrtWeatherOptions);
+        var chrtCases = new ApexCharts(document.querySelector("#chrtCases"), chrtCasesOptions);
+
+        chrtTrapCount.render();
+        chrtWeather.render();
+        chrtCases.render();
+
+        // Temporary for data rendition before JSON generation
+        function generateDayWiseTimeSeries(baseval, count, yrange) {
+            var i = 0;
+            var series = [];
+            while (i < count) {
+                var x = baseval;
+                var y = Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
+
+                series.push([x, y]);
+                baseval += 86400000;
+                i++;
+            }
+            return series;
+        };
+    </script>
 
 
 
