@@ -166,14 +166,37 @@ namespace WNV
                     String trapCountJSON = "";
                     trapCountJSON += "{\"chart\":{\"id\":\"chrtTrapCountOptions\",\"group\":\"syncChartsGroup\",\"type\":\"line\"}," +
                                      "\"legend\":{\"show\":true,\"showForSingleSeries\":true,\"position\":\"top\"}," +
-                                     "\"colors\":[\"#3c9141\"],\"series\":[{\"name\":\"" + ddlMosquitoSpecies.SelectedValue + "\",\"data\":[";
+                                     "\"colors\":[\"#A4D8A6\", \"#8CC58E\", \"#75B277\", \"#5D9F60\", \"#468C48\", \"#2E7931\", \"#17661A\", \"#005403\"],\"series\":[";
 
-                    foreach (DataRow row in dt.Rows)
+                    if (ddlMosquitoSpecies.SelectedValue.Equals("All"))
                     {
-                        trapCountJSON += "[\"" + row["Week"].ToString().Replace("12:00:00 AM", "") + "\"," + row[ddlMosquitoSpecies.SelectedValue.ToString()] + "],";
+                        foreach (DataColumn column in dt.Columns)
+                        {
+                            if (!(column.ColumnName.Equals("County") || column.ColumnName.Equals("TrapYear") || column.ColumnName.Equals("Week")))
+                            {
+                                trapCountJSON += "{\"name\":\"" + column.ColumnName + "\",\"data\":[";
+                                foreach (DataRow row in dt.Rows)
+                                {
+                                    trapCountJSON += "[\"" + row["Week"].ToString().Replace(" 12:00:00 AM", "") + "\",\"" + row[column.ColumnName] + "\"],";
+                                }
+                                trapCountJSON = trapCountJSON.Remove(trapCountJSON.Length - 1);
+                                trapCountJSON += "]},";
+                            }
+                        }
+                        trapCountJSON = trapCountJSON.Remove(trapCountJSON.Length - 1);
+                        trapCountJSON += "],\"yaxis\":{\"lables\":{\"minWidth\":40}}}";
                     }
-                    trapCountJSON = trapCountJSON.Remove(trapCountJSON.Length - 1);
-                    trapCountJSON += "]}],\"yaxis\":{\"lables\":{\"minWidth\":40}}}";
+                    else
+                    {
+                        trapCountJSON += "{\"name\":\"" + ddlMosquitoSpecies.SelectedValue + "\",\"data\":[";
+
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            trapCountJSON += "[\"" + row["Week"].ToString().Replace("12:00:00 AM", "") + "\"," + row[ddlMosquitoSpecies.SelectedValue.ToString()] + "],";
+                        }
+                        trapCountJSON = trapCountJSON.Remove(trapCountJSON.Length - 1);
+                        trapCountJSON += "]}],\"yaxis\":{\"lables\":{\"minWidth\":40}}}";
+                    }
 
                     hfTrapCountJSON.Value = trapCountJSON;
                 }
@@ -201,10 +224,10 @@ namespace WNV
                     weatherJSON += "{\"chart\":{\"id\":\"chrtWeatherOptions\",\"group\":\"syncChartsGroup\",\"type\":\"line\"}," +
                                    "\"legend\":{\"show\":true,\"showForSingleSeries\":true,\"position\":\"top\"}," +
                                    "\"colors\":[\"#3d5192\"],\"series\":[{\"name\":\"" + ddlWeather.SelectedValue + "\",\"data\":[";
-
+                    
                     foreach (DataRow row in dt.Rows)
                     {
-                        weatherJSON += "[\"" + row["Week"].ToString().Replace("12:00:00 AM", "") + "\"," + row[ddlWeather.SelectedValue.ToString()] + "],";
+                        weatherJSON += "[\"" + row["Week"].ToString().Replace(" 12:00:00 AM", "") + "\"," + row[ddlWeather.SelectedValue.ToString()] + "],";
                     }
                     weatherJSON = weatherJSON.Remove(weatherJSON.Length - 1);
                     weatherJSON += "]}],\"yaxis\":{\"lables\":{\"minWidth\":40}}}";
@@ -235,14 +258,37 @@ namespace WNV
                     String casesJSON = "";
                     casesJSON += "{\"chart\":{\"id\":\"chrtCasesOptions\",\"group\":\"syncChartsGroup\",\"type\":\"line\"}," +
                                  "\"legend\":{\"show\":true,\"showForSingleSeries\":true,\"position\":\"top\"}," +
-                                 "\"colors\":[\"#913c3c\"],\"series\":[{\"name\":\"" + ddlWNVCases.SelectedValue + "\",\"data\":[";
+                                 "\"colors\":[\"#FF7575\", \"#DD4E4E\", \"#BC2727\", \"#9B0000\"],\"series\":[";
 
-                    foreach (DataRow row in dt.Rows)
+                    if (ddlWNVCases.SelectedValue.Equals("All"))
                     {
-                        casesJSON += "[\"" + row["Week"].ToString().Replace("12:00:00 AM", "") + "\"," + row[ddlWNVCases.SelectedValue.ToString()] + "],";
+                        foreach (DataColumn column in dt.Columns)
+                        {
+                            if (!(column.ColumnName.Equals("County") || column.ColumnName.Equals("Week")))
+                            {
+                                casesJSON += "{\"name\":\"" + column.ColumnName + "\",\"data\":[";
+                                foreach (DataRow row in dt.Rows)
+                                {
+                                    casesJSON += "[\"" + row["Week"].ToString().Replace(" 12:00:00 AM", "") + "\",\"" + row[column.ColumnName] + "\"],";
+                                }
+                                casesJSON = casesJSON.Remove(casesJSON.Length - 1);
+                                casesJSON += "]},";
+                            }
+                        }
+                        casesJSON = casesJSON.Remove(casesJSON.Length - 1);
+                        casesJSON += "],\"yaxis\":{\"lables\":{\"minWidth\":40}}}";
                     }
-                    casesJSON = casesJSON.Remove(casesJSON.Length - 1);
-                    casesJSON += "]}],\"yaxis\":{\"lables\":{\"minWidth\":40}}}";
+                    else
+                    {
+                        casesJSON += "{\"name\":\"" + ddlWNVCases.SelectedValue + "\",\"data\":[";
+
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            casesJSON += "[\"" + row["Week"].ToString().Replace(" 12:00:00 AM", "") + "\"," + row[ddlWNVCases.SelectedValue.ToString()] + "],";
+                        }
+                        casesJSON = casesJSON.Remove(casesJSON.Length - 1);
+                        casesJSON += "]}],\"yaxis\":{\"lables\":{\"minWidth\":40}}}";
+                    }
 
 
                     hfCasesJSON.Value = casesJSON;

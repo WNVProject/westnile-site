@@ -1,8 +1,17 @@
 ﻿<%@ Page Title="Synchronized Charts" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="SynchronizedCharts.aspx.cs" Inherits="WNV.SynchronizedCharts1" %>
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <style>
+        .syncChart {
+            height: 230px;
+            background-color: #FDFDFD;
+        }
+        .syncChartNoDataYet {
+            padding-top: 5em;
+        }
+    </style>
     <div class="text-center mt-3">
-        <h3>Synchronized Charts - North Dakota West Nile Virus Forecasting</h3>
+        <h3>Synchronized Charts - North Dakota West Nile Virus</h3>
     </div>
     <asp:HiddenField ID="hfTrapCountJSON" runat="server" ClientIDMode="Static" />
     <asp:HiddenField ID="hfWeatherJSON" runat="server" ClientIDMode="Static" />
@@ -13,19 +22,25 @@
                 <h6>Mosquito Count</h6>
             </div>
         </div>
-        <div id="chrtTrapCount"></div>
+        <div id="chrtTrapCount" class="syncChart text-center align-middle">
+            <h5 class="syncChartNoDataYet">Nothing to see yet...</h5>
+        </div>
         <div class="row">
             <div class="col-lg-12">
-                <h6>WNV Cases</h6>
+                <h6>Cumulative WNV Cases</h6>
             </div>
         </div>
-        <div id="chrtCases"></div>
+        <div id="chrtCases" class="syncChart text-center align-middle">
+            <h5 class="syncChartNoDataYet">Nothing to see yet...</h5>
+        </div>
         <div class="row">
             <div class="col-lg-12">
                 <h6>Weather</h6>
             </div>
         </div>
-        <div id="chrtWeather"></div>
+        <div id="chrtWeather" class="syncChart text-center align-middle">
+            <h5 class="syncChartNoDataYet">Nothing to see yet...</h5>
+        </div>
     </div>
     <div class="row">
         <div class="col-lg-3">
@@ -44,7 +59,7 @@
                                 </Triggers>
                                 <ContentTemplate>
                                     <asp:DropDownList ID="ddlMosquitoSpecies" runat="server" AutoPostBack="true" CssClass="form-control aspnet-width-fix" Width="100%" OnSelectedIndexChanged="ddlMosquitoSpecies_SelectedIndexChanged">
-                                        <asp:ListItem Text="All Species" Value="Species" Selected="True"></asp:ListItem>
+                                        <asp:ListItem Text="All Species" Value="All" Selected="True"></asp:ListItem>
                                         <asp:ListItem Text="All Males" Value="Males"></asp:ListItem>
                                         <asp:ListItem Text="All Females" Value="Females"></asp:ListItem>
                                         <asp:ListItem Text="Aedes" Value="Aedes" ></asp:ListItem>
@@ -169,7 +184,7 @@
                                 </Triggers>
                                 <ContentTemplate>
                                     <asp:DropDownList ID="ddlWNVCases" runat="server" AutoPostBack="true" CssClass="form-control aspnet-width-fix" Width="100%" OnSelectedIndexChanged="ddlWNVCases_SelectedIndexChanged">
-                                        <asp:ListItem Text="All Cases" Value="All Cases" Selected="True"></asp:ListItem>
+                                        <asp:ListItem Text="All Cases" Value="All" Selected="True"></asp:ListItem>
                                         <asp:ListItem Text="Humans" Value="Human Cases"></asp:ListItem>
                                         <asp:ListItem Text="Avian" Value="Bird Cases"></asp:ListItem>
                                         <asp:ListItem Text="Equine" Value="Horse Cases" ></asp:ListItem>
@@ -227,23 +242,14 @@
                 "size": 6,
                 "hover": {
                     "size": 10
-                }
+                },
+                strokeColor: "#FDFDFD",
             },
             "tooltip": {
                 "followCursor": false,
                 "theme": 'dark',
                 "x": {
-                    "show": false
-                },
-                "marker": {
-                    "show": false
-                },
-                "y": {
-                    "title": {
-                        "formatter": function (d) {
-                            return ''
-                        }
-                    }
+                    "show": true
                 }
             },
             "grid": {
@@ -257,7 +263,7 @@
                 "type": 'datetime'
             },
             dataLabels: {
-                enabled: true,
+                enabled: false,
                 formatter: function (val, opts) {
                     return val
                 },
@@ -356,11 +362,18 @@
             }
         };
 
-        // Use these once JSON generation algorithm is in place
-        console.log('<%= hfCasesJSON.Value %>');
+        document.querySelector("#chrtTrapCount").innerHTML = "";
+        document.querySelector("#chrtWeather").innerHTML = "";
+        document.querySelector("#chrtCases").innerHTML = "";
+
+        console.log('<%= hfTrapCountJSON.Value %>');
+        console.log('here1');
         var chrtTrapCount = new ApexCharts(document.querySelector("#chrtTrapCount"), JSON.parse('<%= hfTrapCountJSON.Value %>'));
+        console.log('here2');
         var chrtWeather = new ApexCharts(document.querySelector("#chrtWeather"), JSON.parse('<%= hfWeatherJSON.Value %>'));
+        console.log('here3');
         var chrtCases = new ApexCharts(document.querySelector("#chrtCases"), JSON.parse('<%= hfCasesJSON.Value %>'));
+        console.log('here4');
         
         //var chrtTrapCount = new ApexCharts(document.querySelector("#chrtTrapCount"), chrtTrapCountOptions);
         //var chrtWeather= new ApexCharts(document.querySelector("#chrtWeather"), chrtWeatherOptions);
