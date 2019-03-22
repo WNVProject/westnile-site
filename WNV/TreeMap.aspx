@@ -438,7 +438,10 @@
         <div class="col-lg-4">
             <asp:Button ID="renderBtn" runat="server" Text="Generate Tree Map" CssClass="btn btn-success btn-lg btn-block aspnet-width-fix" ValidationGroup="vgTreeMap" OnClick="renderBtn_Click" />
         </div>
-        <div class="col-lg-8">
+        <div class="col-lg-4">
+            <asp:Button ID="csvBtn" runat="server" Text="Download as CSV" CssClass="btn btn-success btn-lg btn-block aspnet-width-fix" ValidationGroup="vgTreeMap" Enabled="false" OnClick="csvBtn_Click"/>
+        </div>
+        <div class="col-lg-4">
             <asp:Label ID="lblError" runat="server" ForeColor="Red"></asp:Label>
         </div>
     </div>
