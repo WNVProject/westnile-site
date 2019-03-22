@@ -19,7 +19,7 @@ using System.Text.RegularExpressions;
 
 namespace WNV
 {
-    public partial class SynchronizedCharts1 : System.Web.UI.Page
+    public partial class SynchronizedCharts : System.Web.UI.Page
     {
         private string cs = ConfigurationManager.ConnectionStrings["CString"].ConnectionString;
 

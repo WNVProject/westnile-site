@@ -10,7 +10,7 @@
 namespace WNV {
     
     
-    public partial class SynchronizedCharts1 {
+    public partial class SynchronizedCharts {
         
         /// <summary>
         /// hfTrapCountJSON control.

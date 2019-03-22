@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Synchronized Charts" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="SynchronizedCharts.aspx.cs" Inherits="WNV.SynchronizedCharts1" %>
+﻿<%@ Page Title="Synchronized Charts" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="True" CodeBehind="SynchronizedCharts.aspx.cs" Inherits="WNV.SynchronizedCharts" %>
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <style>
