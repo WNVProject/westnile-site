@@ -26,11 +26,14 @@ namespace WNV
         protected void Page_Load(object sender, EventArgs e)
         {
             ddlYearFill();
-            ddlTrapCountyFill();
+            ddlCountyFill();
             //ddlCasesFill();
+            if (!IsPostBack)
+            {
+            }
         }
 
-        protected void ddlTrapCountyFill()
+        protected void ddlCountyFill()
         {
             try
             {
@@ -46,11 +49,11 @@ namespace WNV
                         {
                             DataTable dt = new DataTable();
                             da.Fill(dt);
-                            ddlTrapCounty.DataSource = dt;
-                            ddlTrapCounty.DataValueField = "TrapCounty";
-                            ddlTrapCounty.DataTextField = "TrapCounty";
-                            ddlTrapCounty.DataBind();
-                            ddlTrapCounty.SelectedIndex = 0;
+                            ddlCounty.DataSource = dt;
+                            ddlCounty.DataValueField = "TrapCounty";
+                            ddlCounty.DataTextField = "TrapCounty";
+                            ddlCounty.DataBind();
+                            ddlCounty.SelectedIndex = 0;
                         }
 
                     }
@@ -99,9 +102,9 @@ namespace WNV
             }
         }
 
-        protected void ddlTrapCounty_SelectedIndexChanged(object sender, EventArgs e)
+        protected void ddlCounty_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ddlTrapCountyFill();
+            ddlCountyFill();
         }
         protected void ddlMosquitoSpecies_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -126,17 +129,17 @@ namespace WNV
             Hashtable trapCountParams = new Hashtable();
             Hashtable weatherParams = new Hashtable();
             Hashtable casesParams = new Hashtable();
-            trapCountParams.Add("TrapYear", ddlMosquitoSpecies.SelectedValue.ToString());
-            trapCountParams.Add("TrapCounty", ddlYear.SelectedValue.ToString());
-            weatherParams.Add("WeatherYear", ddlMosquitoSpecies.SelectedValue.ToString());
-            weatherParams.Add("WeatherCounty", ddlYear.SelectedValue.ToString());
-            casesParams.Add("CaseYear", ddlMosquitoSpecies.SelectedValue.ToString());
-            casesParams.Add("CaseCounty", ddlYear.SelectedValue.ToString());
+            trapCountParams.Add("TrapYear", ddlYear.SelectedValue.ToString() + "-01-01");
+            trapCountParams.Add("TrapCounty", ddlCounty.SelectedValue);
+            weatherParams.Add("WeatherYear", ddlYear.SelectedValue.ToString() + "-01-01");
+            weatherParams.Add("WeatherCounty", ddlCounty.SelectedValue);
+            casesParams.Add("CaseYear", ddlYear.SelectedValue.ToString() + "-01-01");
+            casesParams.Add("CaseCounty", ddlCounty.SelectedValue);
             //parameters2.Add("WeatherVariable", ddlWeather.SelectedValue.ToString());
             //Add the WNV Cases when they are done
-            generateTrapCountJSON("USP_Get_TotalMosquitoCountByYear", trapCountParams);
-            generateWeatherJSON("USP_Get_WeatherByYear", weatherParams);
-            generateCasesJSON("USP_Get_TotalMosquitoCountByYear", casesParams);
+            generateTrapCountJSON("USP_Get_Select_TotalMosquitoCountByYear", trapCountParams);
+            generateWeatherJSON("USP_Get_Select_WeatherByYear", weatherParams);
+            generateCasesJSON("USP_Get_Select_WNVCaseCountByYear", casesParams);
             //TODO: 
             //the weather variable that is selected
             //cases from the selected county and type 
@@ -160,11 +163,19 @@ namespace WNV
                     DataTable dt = new DataTable();
                     da.Fill(dt);
 
-                    StringBuilder trapCountJSON = new StringBuilder();
-                    trapCountJSON.Append("{\"chart\":\"type\": line }, \"colors\": ['#0000FF'], \"series\": [{ \"data\": [");
-                    //add the data from the database for a selected species
+                    String trapCountJSON = "";
+                    trapCountJSON += "{\"chart\":{\"id\":\"chrtTrapCountOptions\",\"group\":\"syncChartsGroup\",\"type\":\"line\"}," +
+                                     "\"legend\":{\"show\":true,\"showForSingleSeries\":true,\"position\":\"top\"}," +
+                                     "\"colors\":[\"#3c9141\"],\"series\":[{\"name\":\"" + ddlMosquitoSpecies.SelectedValue + "\",\"data\":[";
 
-                    //from here we just need to 
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        trapCountJSON += "[\"" + row["Week"].ToString().Replace("12:00:00 AM", "") + "\"," + row[ddlMosquitoSpecies.SelectedValue.ToString()] + "],";
+                    }
+                    trapCountJSON = trapCountJSON.Remove(trapCountJSON.Length - 1);
+                    trapCountJSON += "]}],\"yaxis\":{\"lables\":{\"minWidth\":40}}}";
+
+                    hfTrapCountJSON.Value = trapCountJSON;
                 }
             }
         }
@@ -186,11 +197,20 @@ namespace WNV
                     DataTable dt = new DataTable();
                     da.Fill(dt);
 
-                    StringBuilder weatherJSON = new StringBuilder();
-                    weatherJSON.Append("{\"chart\":\"type\": line }, \"colors\": ['#00FF00'], \"series\": [{ \"data\": [");
-                    //add the data from the database for a selected species
+                    String weatherJSON = "";
+                    weatherJSON += "{\"chart\":{\"id\":\"chrtWeatherOptions\",\"group\":\"syncChartsGroup\",\"type\":\"line\"}," +
+                                   "\"legend\":{\"show\":true,\"showForSingleSeries\":true,\"position\":\"top\"}," +
+                                   "\"colors\":[\"#3d5192\"],\"series\":[{\"name\":\"" + ddlWeather.SelectedValue + "\",\"data\":[";
 
-                    //from here we just need to 
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        weatherJSON += "[\"" + row["Week"].ToString().Replace("12:00:00 AM", "") + "\"," + row[ddlWeather.SelectedValue.ToString()] + "],";
+                    }
+                    weatherJSON = weatherJSON.Remove(weatherJSON.Length - 1);
+                    weatherJSON += "]}],\"yaxis\":{\"lables\":{\"minWidth\":40}}}";
+
+
+                    hfWeatherJSON.Value = weatherJSON;
                 }
             }
         }
@@ -212,11 +232,20 @@ namespace WNV
                     DataTable dt = new DataTable();
                     da.Fill(dt);
 
-                    StringBuilder casesJSON = new StringBuilder();
-                    casesJSON.Append("{\"chart\":\"type\": line }, \"colors\": ['#FF0000'], \"series\": [{ \"data\": [");
-                    //add the data from the database for a selected species
+                    String casesJSON = "";
+                    casesJSON += "{\"chart\":{\"id\":\"chrtCasesOptions\",\"group\":\"syncChartsGroup\",\"type\":\"line\"}," +
+                                 "\"legend\":{\"show\":true,\"showForSingleSeries\":true,\"position\":\"top\"}," +
+                                 "\"colors\":[\"#913c3c\"],\"series\":[{\"name\":\"" + ddlWNVCases.SelectedValue + "\",\"data\":[";
 
-                    //from here we just need to 
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        casesJSON += "[\"" + row["Week"].ToString().Replace("12:00:00 AM", "") + "\"," + row[ddlWNVCases.SelectedValue.ToString()] + "],";
+                    }
+                    casesJSON = casesJSON.Remove(casesJSON.Length - 1);
+                    casesJSON += "]}],\"yaxis\":{\"lables\":{\"minWidth\":40}}}";
+
+
+                    hfCasesJSON.Value = casesJSON;
                 }
             }
         }
