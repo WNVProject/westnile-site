@@ -1,4 +1,4 @@
-﻿<%@ Page Title="WNVF | Multivariate Trends by County" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="MultiaxisChart.aspx.cs" Inherits="WNV._MultiaxisChart" %>
+﻿<%@ Page Title="WNV | Multivariate Trends by County" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="MultiaxisChart.aspx.cs" Inherits="WNV._MultiaxisChart" %>
 
 <%@ Register Assembly="System.Web.DataVisualization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Namespace="System.Web.UI.DataVisualization.Charting" TagPrefix="asp" %>
 
@@ -247,7 +247,10 @@
         <div class="col-lg-3">
             <asp:CheckBox ID="chkStatewide" runat="server" Text="&nbsp;Statewide Data" CssClass="checkbox" AutoPostBack="true" OnCheckedChanged="chkStatewide_CheckChanged" />
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-3">
+            <asp:Button ID="csvBtn" runat="server" Text="Download as CSV" CssClass="btn btn-success btn-lg btn-block" ValidationGroup="vgMultiaxisChart" OnClick="csvBtn_Click"/>
+        </div>
+        <div class="col-lg-3">
             <asp:Label ID="lblError" runat="server" ForeColor="Red"></asp:Label>
         </div>
     </div>

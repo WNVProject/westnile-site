@@ -1,8 +1,64 @@
 ﻿/* Move down content because we have a fixed navbar that is 50px tall */
 body {
+    padding-top: 50px;
     padding-bottom: 20px;
 }
 
+/*Welcome message style for landing page*/
+#Welcome-Header, #Welcome-Paragraph{
+    text-align: center;
+
+}
+#Welcome-Header {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 64px;
+
+}
+
+.pearson-item1 {
+    grid-area: header;
+}
+
+.pearson-item2 {
+    grid-area: menu;
+}
+
+.pearson-item3 {
+    grid-area: main;
+}
+
+.pearson-item4 {
+    grid-area: right;
+}
+
+.pearson-item5 {
+    grid-area: footer;
+}
+
+.pearson-class {
+    display: grid;
+    grid-template-areas:
+        'header header header header header header'
+        'menu main main main right right'
+        'menu footer footer footer footer footer';
+    grid-gap: 1px;
+    background-color: white;
+    padding: 0px;
+
+}
+.About-list{
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+.pearson-class > div {
+    background-color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+    padding: 20px 0;
+    font-size: 30px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {

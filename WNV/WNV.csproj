@@ -149,9 +149,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="photos\agencies-orgs-logos\amca-logo.png" />
+    <Content Include="photos\agencies-orgs-logos\epa-logo.jpg" />
+    <Content Include="photos\agencies-orgs-logos\m-cdc-logo.png" />
+    <Content Include="photos\agencies-orgs-logos\NCMCALogo.png" />
+    <Content Include="photos\agencies-orgs-logos\npic-logo-horiz-hi.png" />
     <Content Include="photos\TempImages\temp.txt" />
+    <Content Include="photos\trap-images\NJ-light-trap.jpg" />
+    <Content Include="photos\weather-station-images\station-diagram.jpg" />
+    <Content Include="photos\weather-station-images\station.jpg" />
+    <Content Include="Scripts\colorbrewer.js" />
+    <Content Include="Scripts\interactiveGlobe.js" />
     <Content Include="About.aspx" />
-    <Content Include="Contact.aspx" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Site.css" />
@@ -6261,10 +6270,8 @@
     <Content Include="Scripts\WebForms\WebParts.js" />
     <Content Include="Scripts\WebForms\WebUIValidation.js" />
     <Content Include="Site.Master" />
-    <Content Include="SynchronizedCharts.aspx" />
-    <Content Include="TreeMap2.aspx" />
+    <Content Include="TreeMap.aspx" />
     <Content Include="ViewSwitcher.ascx" />
-    <Content Include="Viruses.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -6281,13 +6288,6 @@
       <DependentUpon>About.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Contact.aspx.cs">
-      <DependentUpon>Contact.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Contact.aspx.designer.cs">
-      <DependentUpon>Contact.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -6340,12 +6340,12 @@
     <Compile Include="SynchronizedCharts.aspx.designer.cs">
       <DependentUpon>SynchronizedCharts.aspx</DependentUpon>
     </Compile>
-    <Compile Include="TreeMap2.aspx.cs">
-      <DependentUpon>TreeMap2.aspx</DependentUpon>
+    <Compile Include="TreeMap.aspx.cs">
+      <DependentUpon>TreeMap.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="TreeMap2.aspx.designer.cs">
-      <DependentUpon>TreeMap2.aspx</DependentUpon>
+    <Compile Include="TreeMap.aspx.designer.cs">
+      <DependentUpon>TreeMap.aspx</DependentUpon>
     </Compile>
     <Compile Include="ViewSwitcher.ascx.cs">
       <DependentUpon>ViewSwitcher.ascx</DependentUpon>
@@ -6354,16 +6354,10 @@
     <Compile Include="ViewSwitcher.ascx.designer.cs">
       <DependentUpon>ViewSwitcher.ascx</DependentUpon>
     </Compile>
-    <Compile Include="Viruses.aspx.cs">
-      <DependentUpon>Viruses.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Viruses.aspx.designer.cs">
-      <DependentUpon>Viruses.aspx</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="photos\tooltips\states\ND\county-highlights\" />
     <Folder Include="Scripts\Cesium\Apps\Sandcastle\gallery\development\" />
     <Folder Include="Scripts\Cesium\ThirdParty\codemirror-4.6\bin\" />
   </ItemGroup>

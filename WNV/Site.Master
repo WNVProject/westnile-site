@@ -39,7 +39,7 @@
         </asp:ScriptManager>
         
 
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
           <a class="navbar-brand" href="#">
               <img src="http://www1.und.edu/_resources/globalgui/logos/und/flame-2-go-96x50.png" height="30" class="d-inline-block align-top" alt="">
           </a>
@@ -53,22 +53,19 @@
                 <a class="nav-link" href="Default.aspx">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                <a class="nav-link" href="MultiaxisChart.aspx">Multi Chart</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="MosquitoSpecies.aspx">Species</a>
+                    <a class ="nav-link" href="About.aspx">About</a>
                 </li>
                 <li class="nav-item">
                 <a class="nav-link" href="InteractiveGlobe.aspx">Interactive Globe</a>
                 </li>
+               
                 <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Chartings
                 </a>
                 <div class="dropdown-menu text-left" aria-labelledby="navbarDropdownMenuLink">
-                  <a class="dropdown-item" href="TreeMap2.aspx">Tree Map</a>
-                  <a class="dropdown-item" href="#"></a>
-                  <a class="dropdown-item" href="SynchronizedCharts.aspx">Synchronized Charts</a>
+                  <a class="dropdown-item" href="TreeMap.aspx">Tree Map</a>
+                  <a class="dropdown-item" href="MultiaxisChart.aspx">Multi Chart</a>
                 </div>
                 </li>
             </ul>
@@ -86,6 +83,7 @@
             </asp:ContentPlaceHolder>
             <hr />
             <footer>
+                <h5>Website Sponsors</h5>
                 <div id="Sponsors" style="position:inherit">
 			        <a href="https://www.und.edu/" target="_blank"><img id="und-engineering-logo" class="img-fluid" src="photos/sponsor-logos/logo-engineering-dark.png" width="250" height=""/></a>
 			        <a href="https://www.nasa.gov/" target="_blank"><img id="nasa-logo" class="img-fluid" src="photos/sponsor-logos/nasa-logo.jpg" width="150" height="80"/></a>
@@ -104,7 +102,12 @@
             var page = location.pathname.substring(1, location.pathname.length)
             $('li.active').removeClass('active');
             $('a[href="' + page + '.aspx"]').closest('li').addClass('active');
+
+            if (page == "InteractiveGlobe") {
+                $('nav').removeClass('fixed-top');
+            }
         });
+
     </script>
 </body>
 </html>

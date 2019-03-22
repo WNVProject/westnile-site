@@ -12,12 +12,22 @@ using MySql;
 using MySql.Data;
 using MySql.Data.MySqlClient;
 using System.Web.UI.DataVisualization.Charting;
+using System.Text;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace WNV
 {
     public partial class _MultiaxisChart : Page
     {
         private string cs = ConfigurationManager.ConnectionStrings["CString"].ConnectionString;
+        static string csvMosqCols = string.Empty;
+        static string csvWeathCols = string.Empty;
+        static string csvMosqRows = string.Empty;
+        static string csvWeathRows = string.Empty;
+
+        static Dictionary<string, List<string>> mosqDict = new Dictionary<string, List<string>>();
+        static Dictionary<string, List<string>> weathDict = new Dictionary<string, List<string>>();
 
         private Hashtable chktblCounts = new Hashtable();
         private Hashtable chktblWeather = new Hashtable();
@@ -198,8 +208,14 @@ namespace WNV
 
         protected void btnRender_Click(object sender, EventArgs e)
         {
+            csvMosqCols = "";
+            csvWeathCols = "";
+            weathDict.Clear();
+            mosqDict.Clear();
+
             if (Page.IsValid)
             {
+                csvBtn.Enabled = true;
                 fillCheckboxLists();
                 Boolean needCountData = false;
                 Boolean needWeatherData = false;
@@ -269,7 +285,7 @@ namespace WNV
                     ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Please select only 1 Mean Weather Variable Type (unit).');", true);
                     return;
                 }
-
+                Boolean skipMosquitoCountData = false;
                 if (needCountData)
                 {
                     try
@@ -291,13 +307,11 @@ namespace WNV
                             }
                             cmd.Parameters.AddWithValue("StartWeek", Convert.ToDateTime(ddlWeekStart.SelectedValue));
                             cmd.Parameters.AddWithValue("EndWeek", Convert.ToDateTime(ddlWeekEnd.SelectedValue));
-
                             using (MySqlDataAdapter da = new MySqlDataAdapter(cmd))
                             {
                                 DataTable dt = new DataTable();
                                 da.Fill(dt);
-
-                                Boolean skipMosquitoCountData = false;
+                                
                                 if (dt.Rows.Count == 0)
                                 {
                                     String msgErrorArea = "";
@@ -331,20 +345,45 @@ namespace WNV
 
                                 if (!skipMosquitoCountData)
                                 {
-                                    chartTitle += "Mean Mosquitoes per Trap";
-                                    if (chkMeanTotalMosquitoes.Checked)
+                                    csvMosqCols += "TrapWeek,";
+                                    foreach (DataColumn column in dt.Columns)
                                     {
-                                        chrtMultivariate.Series.Add("MeanTotalMosquitoes");
-                                        chrtMultivariate.Series["MeanTotalMosquitoes"].Color = System.Drawing.Color.LightGray;
-                                        chrtMultivariate.Series["MeanTotalMosquitoes"].Legend = "CountsLegend";
-                                        chrtMultivariate.Series["MeanTotalMosquitoes"].ChartArea = "MeanCountsWithWeather";
-                                        chrtMultivariate.Series["MeanTotalMosquitoes"].IsVisibleInLegend = true;
-                                        chrtMultivariate.Series["MeanTotalMosquitoes"].LegendText = "Total Mosquitoes";
-                                        foreach (DataRow row in dt.Rows)
-                                        {
-                                            chrtMultivariate.Series["MeanTotalMosquitoes"].Points.AddXY(row["TrapWeekStart"], row["MeanTotalMosquitoes"]);
-                                        }
+                                        if (chkMeanAedes.Checked && column.ColumnName.Equals("MeanAedes"))
+                                            csvMosqCols += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+
+                                        if (chkMeanAedesVexans.Checked && column.ColumnName.Equals("MeanAedesVexans"))
+                                            csvMosqCols += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+
+                                        if (chkMeanAnopheles.Checked && column.ColumnName.Equals("MeanAnopheles"))
+                                            csvMosqCols += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+
+                                        if (chkMeanCulex.Checked && column.ColumnName.Equals("MeanCulex"))
+                                            csvMosqCols += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+
+                                        if (chkMeanCulexSalinarius.Checked && column.ColumnName.Equals("MeanCulexSalinarius"))
+                                            csvMosqCols += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+
+                                        if (chkMeanCulexTarsalis.Checked && column.ColumnName.Equals("MeanCulexTarsalis"))
+                                            csvMosqCols += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+
+                                        if (chkMeanCuliseta.Checked && column.ColumnName.Equals("MeanCuliseta"))
+                                            csvMosqCols += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+
+                                        if (chkMeanOther.Checked && column.ColumnName.Equals("MeanOther"))
+                                            csvMosqCols += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+
+                                        if (chkMeanTotalMales.Checked && column.ColumnName.Equals("MeanTotalMale"))
+                                            csvMosqCols += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+
+                                        if (chkMeanTotalFemales.Checked && column.ColumnName.Equals("MeanTotalFemale"))
+                                            csvMosqCols += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+
+                                        if (chkMeanTotalMosquitoes.Checked && column.ColumnName.Equals("MeanTotalMosquitoes"))
+                                            csvMosqCols += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
                                     }
+
+
+                                    chartTitle += "Mean Mosquitoes per Trap";
                                     if (chkMeanAedes.Checked)
                                     {
                                         chrtMultivariate.Series.Add("MeanAedes");
@@ -458,6 +497,21 @@ namespace WNV
                                             chrtMultivariate.Series["MeanOther"].Points.AddXY(row["TrapWeekStart"], row["MeanOther"]);
                                         }
                                     }
+                                    if (chkMeanTotalMales.Checked)
+                                    {
+                                        chrtMultivariate.Series.Add("MeanTotalMale");
+                                        chrtMultivariate.Series["MeanTotalMale"].Legend = "CountsLegend";
+                                        chrtMultivariate.Series["MeanTotalMale"].ChartArea = "MeanCountsWithWeather";
+                                        chrtMultivariate.Series["MeanTotalMale"].ChartType = chkSplineCount.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
+                                        chrtMultivariate.Series["MeanTotalMale"].BorderWidth = 3;
+                                        chrtMultivariate.Series["MeanTotalMale"].BorderDashStyle = ChartDashStyle.Dash;
+                                        chrtMultivariate.Series["MeanTotalMale"].IsVisibleInLegend = true;
+                                        chrtMultivariate.Series["MeanTotalMale"].LegendText = "Total Male";
+                                        foreach (DataRow row in dt.Rows)
+                                        {
+                                            chrtMultivariate.Series["MeanTotalMale"].Points.AddXY(row["TrapWeekStart"], row["MeanTotalMale"]);
+                                        }
+                                    }
                                     if (chkMeanTotalFemales.Checked)
                                     {
                                         chrtMultivariate.Series.Add("MeanTotalFemale");
@@ -473,20 +527,47 @@ namespace WNV
                                             chrtMultivariate.Series["MeanTotalFemale"].Points.AddXY(row["TrapWeekStart"], row["MeanTotalFemale"]);
                                         }
                                     }
-                                    if (chkMeanTotalMales.Checked)
+                                    if (chkMeanTotalMosquitoes.Checked)
                                     {
-                                        chrtMultivariate.Series.Add("MeanTotalMale");
-                                        chrtMultivariate.Series["MeanTotalMale"].Legend = "CountsLegend";
-                                        chrtMultivariate.Series["MeanTotalMale"].ChartArea = "MeanCountsWithWeather";
-                                        chrtMultivariate.Series["MeanTotalMale"].ChartType = chkSplineCount.Checked ? SeriesChartType.Spline : SeriesChartType.Line;
-                                        chrtMultivariate.Series["MeanTotalMale"].BorderWidth = 3;
-                                        chrtMultivariate.Series["MeanTotalMale"].BorderDashStyle = ChartDashStyle.Dash;
-                                        chrtMultivariate.Series["MeanTotalMale"].IsVisibleInLegend = true;
-                                        chrtMultivariate.Series["MeanTotalMale"].LegendText = "Total Male";
+                                        chrtMultivariate.Series.Add("MeanTotalMosquitoes");
+                                        chrtMultivariate.Series["MeanTotalMosquitoes"].Color = System.Drawing.Color.LightGray;
+                                        chrtMultivariate.Series["MeanTotalMosquitoes"].Legend = "CountsLegend";
+                                        chrtMultivariate.Series["MeanTotalMosquitoes"].ChartArea = "MeanCountsWithWeather";
+                                        chrtMultivariate.Series["MeanTotalMosquitoes"].IsVisibleInLegend = true;
+                                        chrtMultivariate.Series["MeanTotalMosquitoes"].LegendText = "Total Mosquitoes";
                                         foreach (DataRow row in dt.Rows)
                                         {
-                                            chrtMultivariate.Series["MeanTotalMale"].Points.AddXY(row["TrapWeekStart"], row["MeanTotalMale"]);
+                                            chrtMultivariate.Series["MeanTotalMosquitoes"].Points.AddXY(row["TrapWeekStart"], row["MeanTotalMosquitoes"]);
                                         }
+                                    }
+                                    foreach (DataRow row in dt.Rows)
+                                    {
+                                        DateTime week = Convert.ToDateTime(row["TrapWeekStart"].ToString());
+                                        string weekFix = week.ToString("yyyy-MM-dd");
+
+                                        mosqDict.Add(weekFix, new List<string>());
+                                        if (chkMeanAedes.Checked)
+                                            mosqDict[weekFix.ToString()].Add(row["MeanAedes"].ToString());
+                                        if (chkMeanAedesVexans.Checked)
+                                            mosqDict[weekFix.ToString()].Add(row["MeanAedesVexans"].ToString());
+                                        if (chkMeanAnopheles.Checked)
+                                            mosqDict[weekFix.ToString()].Add(row["MeanAnopheles"].ToString());
+                                        if (chkMeanCulex.Checked)
+                                            mosqDict[weekFix.ToString()].Add(row["MeanCulex"].ToString());
+                                        if (chkMeanCulexSalinarius.Checked)
+                                            mosqDict[weekFix.ToString()].Add(row["MeanCulexSalinarius"].ToString());
+                                        if (chkMeanCulexTarsalis.Checked)
+                                            mosqDict[weekFix.ToString()].Add(row["MeanCulexTarsalis"].ToString());
+                                        if (chkMeanCuliseta.Checked)
+                                            mosqDict[weekFix.ToString()].Add(row["MeanCuliseta"].ToString());
+                                        if (chkMeanOther.Checked)
+                                            mosqDict[weekFix.ToString()].Add(row["MeanOther"].ToString());
+                                        if (chkMeanTotalMales.Checked)
+                                            mosqDict[weekFix.ToString()].Add(row["MeanTotalMale"].ToString());
+                                        if (chkMeanTotalFemales.Checked)
+                                            mosqDict[weekFix.ToString()].Add(row["MeanTotalFemale"].ToString());
+                                        if (chkMeanTotalMosquitoes.Checked)
+                                            mosqDict[weekFix.ToString()].Add(row["MeanTotalMosquitoes"].ToString());
                                     }
                                 }
                             }
@@ -553,6 +634,42 @@ namespace WNV
                                 chrtMultivariate.ChartAreas["MeanCountsWithWeather"].AxisY2.MajorTickMark.LineDashStyle = ChartDashStyle.Dot;
                                 chrtMultivariate.ChartAreas["MeanCountsWithWeather"].AxisY2.MajorTickMark.LineWidth = 2;
                                 chrtMultivariate.ChartAreas["MeanCountsWithWeather"].AxisY2.MajorTickMark.LineColor = System.Drawing.Color.LightSlateGray;
+                                
+                                foreach (DataColumn column in dt.Columns)
+                                {
+                                    if (chkMeanMaxTemp.Checked && column.ColumnName.Equals("MeanMaxTemp"))
+                                        csvWeathCols += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+
+                                    if (chkMeanMinTemp.Checked && column.ColumnName.Equals("MeanMinTemp"))
+                                        csvWeathCols += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+
+                                    if (chkMeanTemp.Checked && column.ColumnName.Equals("MeanTemp"))
+                                        csvWeathCols += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+
+                                    if (chkMeanBareSoilTemp.Checked && column.ColumnName.Equals("MeanBareSoilTemp"))
+                                        csvWeathCols += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+
+                                    if (chkMeanTurfSoilTemp.Checked && column.ColumnName.Equals("MeanTurfSoilTemp"))
+                                        csvWeathCols += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+
+                                    if (chkMeanWindSpeed.Checked && column.ColumnName.Equals("MeanWindSpeed"))
+                                        csvWeathCols += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+
+                                    if (chkMeanMaxWindSpeed.Checked && column.ColumnName.Equals("MeanMaxWindSpeed"))
+                                        csvWeathCols += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+
+                                    if (chkMeanTotalSolarRad.Checked && column.ColumnName.Equals("MeanTotalSolarRad"))
+                                        csvWeathCols += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+
+                                    if (chkMeanTotalRainfall.Checked && column.ColumnName.Equals("MeanTotalRainfall"))
+                                        csvWeathCols += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+
+                                    if (chkMeanDewPoint.Checked && column.ColumnName.Equals("MeanDewPoint"))
+                                        csvWeathCols += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+
+                                    if (chkMeanWindChill.Checked && column.ColumnName.Equals("MeanWindChill"))
+                                        csvWeathCols += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                                }
 
                                 if (needTemperatureUnitData)
                                 {
@@ -744,6 +861,46 @@ namespace WNV
                                         }
                                     }
                                 }
+
+                                foreach (DataRow row in dt.Rows)
+                                {
+                                    DateTime week = Convert.ToDateTime(row["WeekStart"].ToString());
+                                    string weekFix = week.ToString("yyyy-MM-dd");
+
+                                    weathDict.Add(weekFix, new List<string>());
+                                    if (chkMeanMaxTemp.Checked)
+                                        weathDict[weekFix.ToString()].Add(row["MeanMaxTemp"].ToString());
+
+                                    if (chkMeanMinTemp.Checked)
+                                        weathDict[weekFix.ToString()].Add(row["MeanMinTemp"].ToString());
+
+                                    if (chkMeanTemp.Checked)
+                                        weathDict[weekFix.ToString()].Add(row["MeanTemp"].ToString());
+
+                                    if (chkMeanBareSoilTemp.Checked)
+                                        weathDict[weekFix.ToString()].Add(row["MeanBareSoilTemp"].ToString());
+
+                                    if (chkMeanTurfSoilTemp.Checked)
+                                        weathDict[weekFix.ToString()].Add(row["MeanTurfSoilTemp"].ToString());
+
+                                    if (chkMeanWindSpeed.Checked)
+                                        weathDict[weekFix.ToString()].Add(row["MeanWindSpeed"].ToString());
+
+                                    if (chkMeanMaxWindSpeed.Checked)
+                                        weathDict[weekFix.ToString()].Add(row["MeanMaxWindSpeed"].ToString());
+
+                                    if (chkMeanTotalSolarRad.Checked)
+                                        weathDict[weekFix.ToString()].Add(row["MeanTotalSolarRad"].ToString());
+
+                                    if (chkMeanTotalRainfall.Checked)
+                                        weathDict[weekFix.ToString()].Add(row["MeanTotalRainfall"].ToString());
+
+                                    if (chkMeanDewPoint.Checked)
+                                        weathDict[weekFix.ToString()].Add(row["MeanDewPoint"].ToString());
+
+                                    if (chkMeanWindChill.Checked)
+                                        weathDict[weekFix.ToString()].Add(row["MeanWindChill"].ToString());
+                                }
                             }
                         }
 
@@ -813,6 +970,57 @@ namespace WNV
             {
                 rfvYear.Validate();
             }
+        }
+
+        protected void csvBtn_Click(object sender, EventArgs e)
+        {
+            string csv = csvMosqCols + csvWeathCols;
+            csv += "\r\n";
+
+            //Merges the two dictionaries
+            foreach(var kvp2 in weathDict)
+            {
+                if(mosqDict.ContainsKey(kvp2.Key))
+                {
+                    mosqDict[kvp2.Key].AddRange(kvp2.Value);
+                    continue;
+                }
+            }
+
+
+            foreach (KeyValuePair<string, List<string>> mosq in mosqDict)
+            {
+                csv += mosq.Key + ",";
+                foreach (string v in mosq.Value)
+                {
+                    csv += v + ",";
+                }
+                
+                csv += "\r\n";
+            }
+            System.Diagnostics.Debug.WriteLine(csv);
+
+            Response.Clear();
+            Response.Buffer = true;
+
+            string year = ddlYear.SelectedValue.ToString();
+            string county = Regex.Replace(ddlCounty.SelectedValue.ToString(), @"\s+", "");
+
+            if (chkStatewide.Checked)
+            {
+                string fileName = year + "MultiChartData-WholeState";
+                Response.AddHeader("content-disposition", "attachment;filename=" + fileName + ".csv");
+            }
+            else
+            {
+                string fileName = year + "MultiChartData-" + county;
+                Response.AddHeader("content-disposition", "attachment;filename=" + fileName + ".csv");
+            }
+            Response.Charset = "";
+            Response.ContentType = "application/text";
+            Response.Output.Write(csv);
+            Response.Flush();
+            Response.End();
         }
     }
 }
