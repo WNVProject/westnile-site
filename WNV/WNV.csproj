@@ -6333,6 +6333,13 @@
     <Compile Include="Site.Mobile.Master.designer.cs">
       <DependentUpon>Site.Mobile.Master</DependentUpon>
     </Compile>
+    <Compile Include="SynchronizedCharts.aspx.cs">
+      <DependentUpon>SynchronizedCharts.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SynchronizedCharts.aspx.designer.cs">
+      <DependentUpon>SynchronizedCharts.aspx</DependentUpon>
+    </Compile>
     <Compile Include="TreeMap.aspx.cs">
       <DependentUpon>TreeMap.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
