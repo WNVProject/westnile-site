@@ -13,7 +13,7 @@
     <asp:HiddenField ID="chartHeight" runat="server" Value="" />
     <asp:Button ID="btnRedraw" runat="server" Visible="false" />
     <div class="text-center mt-3">
-        <h3>Multivariate Trends - North Dakota West Nile Virus Forecasting</h3>
+        <h3>Multivariate Trends - North Dakota West Nile Virus</h3>
     </div>
     <div class="jumbotron" style="padding:10px;">
         <div class="text-center">

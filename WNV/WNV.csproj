@@ -6271,7 +6271,7 @@
     <Content Include="Scripts\WebForms\WebUIValidation.js" />
     <Content Include="Site.Master" />
     <Content Include="SynchronizedCharts.aspx" />
-    <Content Include="TreeMap.aspx" />
+    <Content Include="Treemap.aspx" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -6341,12 +6341,12 @@
     <Compile Include="SynchronizedCharts.aspx.designer.cs">
       <DependentUpon>SynchronizedCharts.aspx</DependentUpon>
     </Compile>
-    <Compile Include="TreeMap.aspx.cs">
-      <DependentUpon>TreeMap.aspx</DependentUpon>
+    <Compile Include="Treemap.aspx.cs">
+      <DependentUpon>Treemap.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="TreeMap.aspx.designer.cs">
-      <DependentUpon>TreeMap.aspx</DependentUpon>
+    <Compile Include="Treemap.aspx.designer.cs">
+      <DependentUpon>Treemap.aspx</DependentUpon>
     </Compile>
     <Compile Include="ViewSwitcher.ascx.cs">
       <DependentUpon>ViewSwitcher.ascx</DependentUpon>

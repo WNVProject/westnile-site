@@ -1,4 +1,4 @@
-﻿<%@ Page Title="WNV | TreeMap" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="TreeMap.aspx.cs" Inherits="WNV.TreeMap" %>
+﻿<%@ Page Title="WNV | Treemap" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Treemap.aspx.cs" Inherits="WNV.Treemap" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -110,7 +110,7 @@
 
     </style>
     <div class="text-center mt-3">
-        <h3>Interactive Tree Map - North Dakota West Nile Virus Forecasting</h3>
+        <h3>Interactive Treemap - North Dakota West Nile Virus</h3>
     </div>
     <div class="jumbotron mb-1" style="padding:0px;background-color:white;height:750px;width:1140px">
         <div id="treemap">

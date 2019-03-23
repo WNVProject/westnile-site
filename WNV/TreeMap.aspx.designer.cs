@@ -10,7 +10,7 @@
 namespace WNV {
     
     
-    public partial class TreeMap {
+    public partial class Treemap {
         
         /// <summary>
         /// hfTreeMapJSON control.

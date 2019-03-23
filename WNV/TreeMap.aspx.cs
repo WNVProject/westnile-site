@@ -18,7 +18,7 @@ using System.Text.RegularExpressions;
 
 namespace WNV
 {
-    public partial class TreeMap : Page
+    public partial class Treemap : Page
     {
         private string cs = ConfigurationManager.ConnectionStrings["CString"].ConnectionString;
         static string csv = string.Empty;
@@ -1303,14 +1303,97 @@ namespace WNV
 
         protected void csvBtn_Click(object sender, EventArgs e)
         {
+            string fileName = "";
+            string sizeBy = ddlSizeRepresents.SelectedValue.TrimEnd('1'); ;
+            string colorBy = ddlColorRepresents.SelectedValue.TrimEnd('1');
+            string categorizeBy = ddlCategorizeBy.SelectedValue;
+            
+            //Date
+            if(ddlTimeType.SelectedValue.Equals("Weeks"))
+            {
+                DateTime weekStart = Convert.ToDateTime(ddlYearStart.Text);
+                DateTime weekEnd = Convert.ToDateTime(ddlYearEnd.Text);
+                string weekStartFix = weekStart.ToString("yyyy-MM-dd");
+                string weekEndFix = weekEnd.ToString("yyyy-MM-dd");
+
+                if (weekStart.Equals(weekEndFix))
+                {
+                    fileName += weekStartFix + "TreemapData-For";
+                }
+                else
+                {
+                    fileName += weekStartFix + "Thru" + weekEndFix + "TreemapData-For";
+                }
+            }
+            else
+            {
+                if(ddlYearStart.Text.Equals(ddlYearEnd.Text))
+                {
+                    fileName += ddlYearStart.Text;
+                }
+                else
+                {
+                    fileName += ddlYearStart.Text + "Thru" + ddlYearEnd.Text + "TreemapData-For";
+                }
+            }
+
+            //Focus on
+            if (ddlFocusOn.SelectedValue.Equals("%"))
+            {
+                if(categorizeBy.Equals("WeeksOfSummer"))
+                {
+                    fileName += "WholeState(ByWeeks)";
+                }
+                else if(categorizeBy.Equals("Counties"))
+                {
+                    fileName += "WholeState(ByCounty)";
+                }
+                else
+                {
+                    fileName += "WholeState(ByTrap)";
+                }
+            }
+            else
+            {
+                if(categorizeBy.Equals("WeeksOfSummer"))
+                {
+                    fileName += "Week" + ddlFocusOn.Text;
+                }
+                else
+                {
+                    fileName += Regex.Replace(ddlFocusOn.Text, @"\s+", "");
+                }
+            }
+            
+            //Size
+            if(sizeBy.Equals("Species"))
+            {
+                fileName += "-SizeByAllMosquitoes";
+            }
+            else
+            {
+                fileName += "-SizeBy" + Regex.Replace(sizeBy, @"\s+", "");
+            }
+
+            //Color
+            if(colorBy.Equals("Species"))
+            {
+                fileName += "-ColorByAllMosquitoes";
+            }
+            else
+            {
+                fileName += "-ColorBy" + Regex.Replace(colorBy, @"\s+", "");
+            }
+
             Response.Clear();
             Response.Buffer = true;
-            Response.AddHeader("content-disposition", "attachment;filename=TreemapData.csv");
+            Response.AddHeader("content-disposition", "attachment;filename=" + fileName + ".csv");
             Response.Charset = "";
             Response.ContentType = "application/text";
             Response.Output.Write(csv);
             Response.Flush();
             Response.End();
+
         }
     }
 }

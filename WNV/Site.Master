@@ -64,8 +64,9 @@
                     Chartings
                 </a>
                 <div class="dropdown-menu text-left" aria-labelledby="navbarDropdownMenuLink">
-                  <a class="dropdown-item" href="TreeMap.aspx">Tree Map</a>
+                  <a class="dropdown-item" href="Treemap.aspx">Treemap</a>
                   <a class="dropdown-item" href="MultiaxisChart.aspx">Multi Chart</a>
+                  <a class="dropdown-item" href="SynchronizedCharts.aspx">Sync'd Charts</a>
                 </div>
                 </li>
             </ul>
