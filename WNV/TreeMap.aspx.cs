@@ -1329,7 +1329,7 @@ namespace WNV
             {
                 if(ddlYearStart.Text.Equals(ddlYearEnd.Text))
                 {
-                    fileName += ddlYearStart.Text;
+                    fileName += ddlYearStart.Text + "TreemapData-For";
                 }
                 else
                 {
