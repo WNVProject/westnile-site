@@ -1,4 +1,4 @@
-﻿<%@ Page Title="WNV | TreeMap" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="TreeMap.aspx.cs" Inherits="WNV.TreeMap" %>
+﻿<%@ Page Title="WNV | Treemap" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Treemap.aspx.cs" Inherits="WNV.Treemap" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -18,7 +18,16 @@
             transition:filter ease 0.25s;
         }
 
-        rect:hover {
+        g.child rect:hover {
+            transition:filter ease 0.25s;
+            filter: brightness(125%);
+            cursor:pointer;
+            stroke:#00FF66;
+            stroke-width:2;
+            z-index:1000;
+        }
+        
+        g.header rect:hover {
             transition:filter ease 0.25s;
             filter: brightness(125%);
             cursor:pointer;
@@ -57,7 +66,7 @@
         div.tooltip {
             background: white;
             position: absolute;
-            min-width: 26em;
+            min-width: 38em;
             text-align:center;
             border-radius:5px;
             font-size: 18px;
@@ -66,20 +75,42 @@
         }
 
         .tooltip.stationary {
-            height: 12.5rem;
+            /*height: 12.5rem;*/
             margin-top:-.25rem;
             border-radius:0 0  .25rem .25rem;
             box-shadow: 0 1px 0 1px #ced4da;
             z-index:1002;
         }
 
-        .category rect {
-            fill:gray;
+        .labelbody {
+            cursor:pointer;
+            padding:0 !important;
+            line-height: initial !important;
+            background-color: transparent;
+        }
+
+        .label {
+            text-align: left;
+            pointer-events:none;
+            font-size:small;
+            font-weight:600;
+            vertical-align:middle;
+            padding-left: 0.4rem;
+            padding-right: 0.4rem;
+            line-height: 20px !important;
+            height: 23px;
+            white-space: pre;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            background-color: transparent;
+        }
+        .foreignObject {
+            pointer-events:none;
         }
 
     </style>
     <div class="text-center mt-3">
-        <h3>Interactive Tree Map - North Dakota West Nile Virus Forecasting</h3>
+        <h3>Interactive Treemap - North Dakota West Nile Virus</h3>
     </div>
     <div class="jumbotron mb-1" style="padding:0px;background-color:white;height:750px;width:1140px">
         <div id="treemap">
@@ -123,8 +154,9 @@
             </div>
         </div>
     </div>
+    <asp:HiddenField ID="hfTreeMapJSON" runat="server" EnableViewState="false" ClientIDMode="Static"/>
     <asp:HiddenField ID="gradientDropdownValue" runat="server" EnableViewState="false" ClientIDMode="Static"/>
-    <div class="row">  
+    <div class="row">
         <div class ="col-lg-3">
             <div class="row aspnet-rfv-heightOffset-fix">
                 <div class="col-lg-12">
@@ -406,7 +438,10 @@
         <div class="col-lg-4">
             <asp:Button ID="renderBtn" runat="server" Text="Generate Tree Map" CssClass="btn btn-success btn-lg btn-block aspnet-width-fix" ValidationGroup="vgTreeMap" OnClick="renderBtn_Click" />
         </div>
-        <div class="col-lg-8">
+        <div class="col-lg-4">
+            <asp:Button ID="csvBtn" runat="server" Text="Download as CSV" CssClass="btn btn-success btn-lg btn-block aspnet-width-fix" ValidationGroup="vgTreeMap" Enabled="false" OnClick="csvBtn_Click"/>
+        </div>
+        <div class="col-lg-4">
             <asp:Label ID="lblError" runat="server" ForeColor="Red"></asp:Label>
         </div>
     </div>
@@ -424,43 +459,138 @@
             node,
             svg;
 
+        var headerHeight = 24; //header height in px
+        var transitionDuration = 7500;
+        var slowTransitionDuration = 750;
+
         function generateTreeMap(gradient, labelSize) {
             zoomed = false;
             treemap = d3.layout.treemap()
                 .round(false)
+                .sticky(true)
                 .size([treeMapWidth, treeMapHeight])
-                .value(function (d) { return d.size; });
+                .value(function (d) { return d.size; })
+                .padding([headerHeight, 0, 0, 0]);
                 //.mode("slice-dice");
         
             $("#gradientDropdown").children().addClass("noPointerEvents");
 
             var color = d3.scale.quantize()
                 .range(colorbrewer[gradient][1]);
+            var headerColor = d3.scale.quantize()
+                .range(colorbrewer["Greys"][1]);
             var tooltip = d3.selectAll(".tooltip:not(.css)");
             var HTMLmouseTip = d3.select("div.mouse.tooltip");
             
             $.when($("#treemap").fadeOut("fast", function () {
                 document.getElementById("treemap").innerHTML = "";
             })).done(function () {
-                svg = d3.select("#treemap").append("div")
-                    .attr("class", "treemapArea")
-                    .style("width", treeMapWidth)
-                    .style("height", treeMapHeight)
+                svg = d3.select("#treemap")
                   .append("svg:svg")
                     .attr("width", treeMapWidth)
                     .attr("height", treeMapHeight)
                     .attr("style", "background-color:"+$("#ddlBackgroundColor").val())
                   .append("svg:g")
                     .attr("transform", "translate(.5,.5)");
-        
+            
                 d3.json("/Scripts/TreeMapJSON/TreeMapData.json", function (data) {
-                    //console.log(data);
-                    node = root = data;
+                    data = JSON.parse($("#hfTreeMapJSON").val());
 
-                    var categories = treemap.nodes(root).filter(function(d) {
+                    node = root = data;
+                    var nodes = treemap.nodes(root);
+
+                    var children = nodes.filter(function (d) {
+                        return !d.children;
+                    });
+                    var parents = nodes.filter(function(d) {
                         return d.children;
                     });
-                    //console.log(categories);
+                    
+                    var categoryItemMax = data.value;
+                    var categoryItemMin = -1;
+                    for (var i = 0; i < data.children.length; i++) {
+                        var currentItemValue = data.children[i].value;
+                        if (categoryItemMin == -1) {
+                            categoryItemMin = currentItemValue;
+                        } else if (categoryItemMin > currentItemValue) {
+                            categoryItemMin = currentItemValue;
+                        }
+                    }
+                    headerColor.domain([categoryItemMin, categoryItemMax]);
+
+                    var parentCells = svg.selectAll("g.cell.parent")
+                        .data(parents, function (d) {
+                            return d.name;
+                        });
+                    var parentEnterTransition = parentCells.enter()
+                        .append("g")
+                        .attr("class", "header")
+                        .attr("transform", function (d) {
+                            return "translate(" + d.x + "," + d.y + ")";
+                        })
+                        .attr("width", function (d) {
+                            return d.dx;
+                        })
+                        .attr("height", function (d) {
+                            return d.dy;
+                        })
+                        .on("click", function(d) {
+                            zoom(d);
+                        });
+
+                    parentEnterTransition.append("rect")
+                        .attr("width", function (d) {
+                            return Math.max(0.01, d.dx) - 1;
+                        })
+                        .attr("height", (headerHeight - 1) + "px")
+                        .style("fill", function (d) {
+                            return headerColor(d.value);
+                        })
+                        .attr("stroke", "black")
+                        .attr("stroke-width", "1")
+                        .attr("stroke-opacity", "0");
+                    parentEnterTransition.append('foreignObject')
+                        .attr("class", "foreignObject")
+                        .append("xhtml:body")
+                        .attr("style", "height:" + (headerHeight - 1) + "px;width:calc(100% - 1px);")
+                        .attr("class", "labelbody")
+                        .append("div")
+                        .attr("class", "label")
+                        .attr("style", function (d) {
+                            var headerBackgroundColor = hexToRgb(headerColor(d.value));
+                            var brightness = (0.2126 * headerBackgroundColor.r) + (0.7152 * headerBackgroundColor.g) + (0.0722 * headerBackgroundColor.b);
+                            if (brightness >= 127.5) {
+                                return "color:#000;";
+                            } else {
+                                return "color:#FFF;";
+                                //return "#F00";
+                            }
+                        });
+                    // update transition
+                    var parentUpdateTransition = parentCells.transition().duration(transitionDuration);
+                    parentUpdateTransition.select(".cell")
+                        .attr("transform", function (d) {
+                            return "translate(" + d.dx + "," + d.y + ")";
+                        });
+                    parentUpdateTransition.select("rect")
+                        .attr("width", function (d) {
+                            return Math.max(0.01, d.dx) - 1;
+                        })
+                        .attr("height",  (headerHeight - 1) + "px");
+                    parentUpdateTransition.select(".foreignObject")
+                        .attr("width", function(d) {
+                            return Math.max(0.01, d.dx) - 1;
+                        })
+                        .attr("height", (headerHeight - 1) + "px")
+                        .select(".labelbody .label")
+                        .text(function(d) {
+                            return d.name + " - " + Math.round((d.value / categoryItemMax * 100) * 100) / 100 + "%";
+                        });
+                    // remove transition
+                    parentCells.exit()
+                        .remove();
+
+                    //console.log(parents);
 
                     //var parents = svg.selectAll("g").data(categories).enter()
                     //    .append("svg:g")
@@ -471,27 +601,28 @@
                     //    })
                     //    .attr("height", "0.5rem");
                     
-                      var nodes = treemap.nodes(root)
-                          .filter(function(d) {return !d.children; });
                       
-                      var cell = svg.selectAll("g")
-                          .data(nodes)
+                      var childCells = svg.selectAll("g.child")
+                          .data(children)
                         .enter()
                           .append("svg:g")
-                          .attr("class", "cell")
+                          .attr("class", "child")
                           .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
                           .on("click", function(d) { return zoom(node == d.parent ? root : d.parent); });
                     //console.log(cell);
+                    //console.log(data);
+
                     color.domain([data.min, data.max]);
                     var middle = ((data.max - data.min) / 2) + Number(data.min);
-                    document.getElementById("minValueLabel").innerHTML = data.min
-                    document.getElementById("middleValueLabel").innerHTML = String(Math.round(Number(middle) * 1000) / 1000)
+                    document.getElementById("minValueLabel").innerHTML = data.min + data.colorUnit;
+                    document.getElementById("middleValueLabel").innerHTML = String(Math.round(Number(middle) * 1000) / 1000) + data.colorUnit;
                     document.getElementById("maxValueLabel").innerHTML = data.max + data.colorUnit;
 
-                    cell.append("svg:rect")
+                    childCells.append("svg:rect")
                         .attr("width", function (d) {if(d.parent.dx) d.xRatioToParent = d.dx / d.parent.dx; return d.dx - 1; })
                         .attr("height", function (d) {if(d.parent.dy) d.yRatioToParent = d.dy / d.parent.dy; return d.dy - 1; })
                         .style("fill", function (d) {
+                            console.log(d);
                             if (d.name != "Culex Tarsalis") {
                                 return color(d.colorValue);
                             } else {
@@ -499,7 +630,7 @@
                                 //return "#F00";
                             }
                         })
-                          .on("mouseover", function (d) {
+                        .on("mouseover", function (d) {
                               tooltip.style("opacity", "1");
                               tooltip.style("border", function () {
                                   if (d.name != "Culex Tarsalis") {
@@ -510,61 +641,91 @@
                                   }
                               });
                               tooltip.style("color", this.getAttribute("fill"));
-                              tooltip.html(
-                                  "<div class='row'>" +
-                                  "<div class='col-lg-12 align-center'>" +
-                                  "<h4>" + d.parent.name + "</h4>" +
-                                  "</div>" +
-                                  "</div>" +
-                                  "<div class='row'>" +
-                                  "<div class='col-lg-12 align-center'>" +
-                                  "<h5>" + d.name + "</h5>" +
-                                  "</div>" +
-                                  "</div>" +
-                                  "<div class='row'>" +
-                                  "<div class='col-lg-6 align-right'>" +
-                                  d.sizeUnit + ": " +
-                                  "</div>" +
-                                  "<div class='col-lg-6 align-left'>" +
-                                  d.size +
-                                  "</div>" +
-                                  "</div>" +
-                                  "<div class='row'>" +
-                                  "<div class='col-lg-6 align-right'>" +
-                                  d.colorUnit + ": " +
-                                  "</div>" +
-                                  "<div class='col-lg-6 align-left'>" +
-                                  d.colorValue +
-                                  "</div>" +
-                                  "</div>" +
-                                  "<div class='row'>" +
-                                  "<div class='col-lg-6 align-right'>" +
-                                  "% of this "+ d.category + ": " +
-                                  "</div>" +
-                                  "<div class='col-lg-6 align-left'>" +
-                                  Math.round((d.size/d.parent.value * 100) * 100)/100 + "%" +
-                                  "</div>" +
-                                  "</div>" +
-                                  "<div class='row'>" +
-                                  "<div class='col-lg-6 align-right'>" +
-                                  "% of "+ d.categoryPlural + ": " +
-                                  "</div>" +
-                                  "<div class='col-lg-6 align-left'>" +
-                                  Math.round((d.size/d.parent.parent.value * 100) * 100)/100 + "%" +
-                                  "</div>" +
-                                  "</div>");
+                              tooltip.html(function () {
+                                  var imagePath = "";
+                                  var categoryString = "";
+                                  if (d.category == "County") {
+                                      imagePath = "/photos/tooltips/states/ND/county-highlights/" + d.parent.name;
+                                      categoryString = d.category;
+                                  } else if (d.category == "Trap") {
+                                      imagePath = "/photos/tooltips/states/ND/trap-highlights/" + d.parent.county;
+                                      console.log(imagePath);
+                                      categoryString = d.category;
+                                  } else if (d.category == "Week") {
+                                      imagePath = "/photos/tooltips/states/ND/Statewide";
+                                  }
+                                  var tooltipHTML = "" +
+                                      "<div class='row'>" +
+                                      "<div class='col-lg-6 align-left'>" +
+                                      "<img src='" + imagePath + ".jpg' style='max-height:12.5rem;'>" +
+                                      "</div>" +
+                                      "<div class='col-lg-6 align-left'>" +
+                                      "<div class='row'>" +
+                                      "<div class='col-lg-12 align-center'>" +
+                                      "<h4>" + d.parent.name + " " + categoryString + "</h4>" +
+                                      "</div>" +
+                                      "</div>" +
+                                      "<div class='row'>" +
+                                      "<div class='col-lg-12 align-center'>" +
+                                      "<h5>" + d.name + "</h5>" +
+                                      "</div>" +
+                                      "</div>" +
+                                      "<div class='row'>" +
+                                      "<div class='col-lg-6 align-right'>" +
+                                      d.sizeUnit + ": " +
+                                      "</div>" +
+                                      "<div class='col-lg-6 align-left'>" +
+                                      d.size +
+                                      "</div>" +
+                                      "</div>" +
+                                      "<div class='row'>" +
+                                      "<div class='col-lg-6 align-right'>" +
+                                      d.colorUnit + ": " +
+                                      "</div>" +
+                                      "<div class='col-lg-6 align-left'>" +
+                                      d.colorValue +
+                                      "</div>" +
+                                      "</div>" +
+                                      "<div class='row'>" +
+                                      "<div class='col-lg-6 align-right'>" +
+                                      "% of this " + d.category + ": " +
+                                      "</div>" +
+                                      "<div class='col-lg-6 align-left'>" +
+                                      Math.round((d.size / d.parent.value * 100) * 100) / 100 + "%" +
+                                      "</div>" +
+                                      "</div>" +
+                                      "<div class='row'>" +
+                                      "<div class='col-lg-6 align-right'>" +
+                                      "% of " + d.categoryPlural + ": " +
+                                      "</div>" +
+                                      "<div class='col-lg-6 align-left'>" +
+                                      Math.round((d.size / d.parent.parent.value * 100) * 100) / 100 + "%" +
+                                      "</div>" +
+                                      "</div>" +
+                                      "</div>" +
+                                      "</div>";
+                                  return tooltipHTML;
+                              });
                           })
-                          .on("mousemove", function () {
-                
+                        .on("mousemove", function () {
+
                                 HTMLmouseTip
-                                    .style("left", Math.max(0, d3.event.pageX + 30) + "px")
-                                    .style("top", (d3.event.pageY - 30) + "px");
+                                    .style("left", function () {
+                                        var tooltipWidth = HTMLmouseTip[0][0].clientWidth + 50;
+                                        var windowRightEdge = $(window).width();
+                                        if (d3.event.pageX < windowRightEdge - tooltipWidth) {
+                                            return Math.max(0, d3.event.pageX + 30) + "px";
+                                        } else {
+                                            return windowRightEdge - tooltipWidth + 30 + "px";
+                                        }
+                                    })
+                                    .style("top", (d3.event.pageY + 30) + "px");
                           })
                           .on("mouseout", function () {
                                 return tooltip.style("opacity", "0");
                           })
             
-                    cell.append("svg:text")
+                    childCells.append("svg:text")
                         .attr("x", function (d) { return d.dx / 2; })
                         .attr("y", function (d) { return d.dy / 2; })
                         .attr("dy", ".35em")
@@ -686,29 +847,78 @@
         }
 
         function zoom(d) {
+            this.treemap
+                .padding([headerHeight / (treeMapHeight / d.dy), 0, 0 , 0])
+                .sticky(false)
+                .mode("squarify");
+            this.treemap.nodes(root);
+
             if (zoomed) {
                 zoomed = false;
             } else {
                 zoomed = true;
             }
-
+            
           var kx = treeMapWidth / d.dx, ky = treeMapHeight / d.dy;
           x.domain([d.x, d.x + d.dx]);
           y.domain([d.y, d.y + d.dy]);
 
-          
-          var t = svg.selectAll("g.cell").transition()
-              .duration(d3.event.altKey ? 7500 : 750)
-              .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
+            //console.log(treemap.padding());
+            //if (treemap.padding() == 1) {
+            //    treemap.padding([headerHeight/(treeMapHeight/d.dy), 0, 0, 0])
+            //} else {
+            //    treemap.padding(1);
+            //}
 
-          t.select("rect")
-              .attr("width", function (d) { return kx * d.dx - 1; })
-              .attr("height", function (d) { return ky * d.dy - 1; })
 
-          t.select("text")
-              .attr("x", function(d) { return kx * d.dx / 2; })
-              .attr("y", function(d) { return ky * d.dy / 2; })
-              .style("opacity", function(d) { return kx * d.dx > d.labelWidth && ky * d.dy > d.labelHeight ? 1 : 0; });
+
+            var childTransition = svg.selectAll("g.child").transition()
+                .duration(d3.event.altKey ? transitionDuration : slowTransitionDuration)
+                .attr("transform", function (d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
+
+            childTransition.select(".foreignObject")
+                .attr("width", function (d) {
+                    return Math.max(0.01, kx * d.dx) - 1;
+                })
+                .attr("height", function (d) {
+                    return d.children ? (headerHeight - 1) : Math.max(0.01, ky * d.dy) - 1;
+                });
+                //.select(".labelbody .label")
+                //.text(function (d) {
+                //    console.log(d.value);
+                //    return d.name + " - " + Math.round((d.value / 100 * 100) * 100) / 100 + "%";
+                //});
+            
+            childTransition.select("rect")
+                .attr("width", function (d) { d.xRatioToParent = d.dx / d.parent.dx; return kx * d.dx - 1; })
+                .attr("height", function (d) { d.yRatioToParent = d.dy / d.parent.dy; return ky * d.dy - 1; });
+
+           childTransition.select("text")
+               .attr("x", function(d) { return kx * d.dx / 2; })
+               .attr("y", function(d) { return ky * d.dy / 2; })
+               .style("opacity", function (d) { return kx * d.dx > d.labelWidth && ky * d.dy > d.labelHeight ? 1 : 0; });
+
+            var headerTransition = svg.selectAll("g.header").transition()
+                .duration(d3.event.altKey ? transitionDuration : slowTransitionDuration)
+                .attr("transform", function (d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
+
+            headerTransition.select("rect")
+                .attr("width", function (d) { return kx * d.dx - 1; })
+                .attr("height", function (d) { return (headerHeight - 1) + "px" });
+
+            headerTransition.select(".foreignObject")
+                .attr("width", function (d) {
+                    return Math.max(0.01, kx * d.dx) -1;
+                })
+                .attr("height", function (d) {
+                    return d.children ? (headerHeight - 1) + "px" : Math.max(0.01, ky * d.dy) - 1;
+                });
+                //.select(".labelbody .label")
+                //.text(function (d) {
+                //    console.log(d.value);
+                //    return d.name + " - " + Math.round((d.value / 100 * 100) * 100) / 100 + "%";
+                //});
+
 
           node = d;
           d3.event.stopPropagation();
@@ -739,7 +949,7 @@
             var ctrl = document.getElementById(ctrlID);
             ctrl.style.fontSize = pixelSize + 'px';
             $("text").css("font-size",pixelSize + 'px');
-            svg.selectAll("g.cell").selectAll("text").style("opacity", function (d) {
+            svg.selectAll("g.child").selectAll("text").style("opacity", function (d) {
                 if (zoomed) {
                     d.labelWidth = this.getComputedTextLength();
                     d.labelHeight = this.getBBox().height;
@@ -780,7 +990,7 @@
             $("div.mouse.tooltip.stationary").toggle();
         }
         function changeBackgroundColor() {
-            $(".treemapArea svg:first-child").attr("style", "background-color:" + $("#ddlBackgroundColor").val());
+            $("#treemap svg:first-child").attr("style", "background-color:" + $("#ddlBackgroundColor").val());
         }
         generateTreeMap('<%= gradientDropdownValue.Value %>', $("#valLabelSize").val());
         updateGradientDropdownToggleBackground('<%= gradientDropdownValue.Value %>');

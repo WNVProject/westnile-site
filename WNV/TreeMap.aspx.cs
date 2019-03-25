@@ -18,11 +18,13 @@ using System.Text.RegularExpressions;
 
 namespace WNV
 {
-    public partial class TreeMap : Page
+    public partial class Treemap : Page
     {
         private string cs = ConfigurationManager.ConnectionStrings["CString"].ConnectionString;
+        static string csv = string.Empty;
         static string timeType = "";
-
+        static string sqlType = "";
+        
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -246,11 +248,13 @@ namespace WNV
                 //return;
             }
 
+            csvBtn.Enabled = true;
 
             Hashtable parameters = new Hashtable();
             if (ddlCategorizeBy.SelectedValue.Equals("TrapLocations"))
             {
                 parameters.Add("TrapArea", ddlFocusOn.SelectedValue.ToString());
+                sqlType = "TrapLocations";
                 if (timeType.Equals("Weeks"))
                 {
                     DateTime startWeek = Convert.ToDateTime(ddlYearStart.SelectedValue);
@@ -275,6 +279,7 @@ namespace WNV
             else if (ddlCategorizeBy.SelectedValue.Equals("Counties"))
             {
                 parameters.Add("TrapCounty", ddlFocusOn.SelectedValue.ToString());
+                sqlType = "Counties";
                 if (timeType.Equals("Weeks"))
                 {
                     DateTime startWeek = Convert.ToDateTime(ddlYearStart.SelectedValue);
@@ -298,6 +303,7 @@ namespace WNV
             }
             else if (ddlCategorizeBy.SelectedValue.Equals("WeeksOfSummer"))
             {
+                sqlType = "WeeksOfSummer";
                 parameters.Add("TrapArea", "%");
                 parameters.Add("WeekOfSummer", ddlFocusOn.SelectedValue.ToString());
                 parameters.Add("StartWeek", ddlYearStart.SelectedValue.ToString() + "-01-01");
@@ -309,6 +315,7 @@ namespace WNV
         
         protected void generateTreeMapJson(String procedure, Hashtable parameters, String fileName)
         {
+            csv = "";
             String sizeBy = ddlSizeRepresents.SelectedValue.TrimEnd('1'); ;
             String colorBy = ddlColorRepresents.SelectedValue.TrimEnd('1');
             String categorizeBy = ddlCategorizeBy.SelectedValue;
@@ -316,6 +323,7 @@ namespace WNV
             String sizeUnit = "";
             String category = "";
             String categoryPlural = "";
+            String focusOn = ddlFocusOn.SelectedValue.ToString();
 
             if (colorBy.Equals("Mean Temp") || colorBy.Equals("Max Temp") || colorBy.Equals("Min Temp") || colorBy.Equals("Bare Soil Temp") || colorBy.Equals("Turf Soil Temp") || colorBy.Equals("Dew Point") || colorBy.Equals("Wind Chill"))
             {
@@ -366,8 +374,9 @@ namespace WNV
                 category = "Week";
                 categoryPlural = "All Weeks";
             }
-            //try
-            //{
+
+            try
+            {
                 using (MySqlConnection conn = new MySqlConnection(cs))
                 {
                     MySqlCommand cmd = new MySqlCommand(procedure, conn);
@@ -383,7 +392,14 @@ namespace WNV
                     {
                         DataTable dt = new DataTable();
                         da.Fill(dt);
-
+                        foreach(DataColumn column in dt.Columns)
+                        {
+                            csvColumns(column, sizeBy, colorBy);                       
+                        }
+                        csv += "\r\n";
+                        System.Diagnostics.Debug.WriteLine(csv);
+                       
+                        
                         StringBuilder treeMapJson = new StringBuilder();
                         treeMapJson.Append("{\"name\":\""+ categoryPlural + "\",\"children\":[{");
 
@@ -401,10 +417,12 @@ namespace WNV
                             int num;
                             if (categorizeBy.Equals("TrapLocations"))
                             {
-                                trapArea = "\"name\":\"" + row["Trap Area"] + "\",\"children\":[{";
+                                trapArea = "\"name\":\"" + row["Trap Area"] + "\",\"county\":\"" + row["County"] + "\",\"children\":[{";
                                 bool mosquitoTypeAdded = false;
                                 foreach (DataColumn col in dt.Columns)
                                 {
+                                    csvRows(row, col, sizeBy, colorBy);
+                                    
                                     string columnName = col.ColumnName;
                                     string columnValue = row[col.ColumnName].ToString();
                                     if (sizeBy.Equals("Species"))
@@ -543,6 +561,8 @@ namespace WNV
                                 bool mosquitoTypeAdded = false;
                                 foreach (DataColumn col in dt.Columns)
                                 {
+                                    csvRows(row, col, sizeBy, colorBy);
+
                                     string columnName = col.ColumnName;
                                     string columnValue = row[col.ColumnName].ToString();
                                     if (sizeBy.Equals("Species"))
@@ -681,6 +701,8 @@ namespace WNV
                                 bool mosquitoTypeAdded = false;
                                 foreach (DataColumn col in dt.Columns)
                                 {
+                                    csvRows(row, col, sizeBy, colorBy);
+
                                     string columnName = col.ColumnName;
                                     string columnValue = row[col.ColumnName].ToString();
                                     if (sizeBy.Equals("Species"))
@@ -813,6 +835,7 @@ namespace WNV
                                     treeMapJson.Append("]},{");
                                 }
                             }
+                            csv += "\r\n";
                         }
                         treeMapJson.Remove(treeMapJson.Length - 2, 2);
                         if (colorBy.Equals("Species"))
@@ -823,29 +846,411 @@ namespace WNV
                         {
                             treeMapJson.Append("],\"max\":\"" + weatherDomainMax + "\"," + "\"min\":\"" + weatherDomainMin + "\"," + "\"colorUnit\":\"" + colorUnit + "\"}");
                         }
-                            
-                        using (StreamWriter sr = new StreamWriter(Server.MapPath("/Scripts/TreeMapJSON/" + fileName)))
+
+                        if (itemHasData)
                         {
-                            if (itemHasData)
-                            {
-                                sr.Write(treeMapJson);
-                            }
-                            else
-                            {
-                                sr.Write("");
-                                ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('No data exists for these parameters.');", true);
-                            }
-                            sr.Dispose();
+                            hfTreeMapJSON.Value = treeMapJson.ToString();
+                        }
+                        else
+                        {
+                            hfTreeMapJSON.Value = "";
+                            ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('No data exists for these parameters.');", true);
                         }
                     }
                 }
-            //}
-            //catch (Exception ex)
-            //{
-            //    ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('" + ex.Message + "');", true);
-            //}
+            }
+            catch (Exception ex)
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('" + ex.Message + "');", true);
+            }
         }
-        
+
+        private void csvColumns(DataColumn column, string sizeBy, string colorBy)
+        {
+            if (sqlType.Equals("TrapLocations"))
+            {
+                if (column.ColumnName.Equals("Trap Area"))
+                    csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                if (column.ColumnName.Equals("County"))
+                    csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+
+                if (sizeBy.Equals("Species"))
+                {
+                    if (column.ColumnName.Equals("Aedes"))
+                        csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                    if (column.ColumnName.Equals("Aedes Vexans"))
+                        csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                    if (column.ColumnName.Equals("Anopheles"))
+                        csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                    if (column.ColumnName.Equals("Culex"))
+                        csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                    if (column.ColumnName.Equals("Culex Salinarius"))
+                        csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                    if (column.ColumnName.Equals("Culex Tarsalis"))
+                        csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                    if (column.ColumnName.Equals("Culiseta"))
+                        csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                    if (column.ColumnName.Equals("Other"))
+                        csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                }
+                else
+                {
+                    if (column.ColumnName.Equals(sizeBy))
+                        csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                }
+
+                if (colorBy.Equals("Species") && sizeBy.Equals("Species"))
+                {
+                    //Do nothing, since species already enetered before
+                }
+                else
+                {
+                    if (colorBy.Equals("Species"))
+                    {
+                        if (column.ColumnName.Equals("Aedes"))
+                            csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                        if (column.ColumnName.Equals("Aedes Vexans"))
+                            csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                        if (column.ColumnName.Equals("Anopheles"))
+                            csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                        if (column.ColumnName.Equals("Culex"))
+                            csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                        if (column.ColumnName.Equals("Culex Salinarius"))
+                            csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                        if (column.ColumnName.Equals("Culex Tarsalis"))
+                            csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                        if (column.ColumnName.Equals("Culiseta"))
+                            csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                        if (column.ColumnName.Equals("Other"))
+                            csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                    }
+                    else
+                    {
+                        if (column.ColumnName.Equals(colorBy))
+                            csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                    }
+                }
+
+            }
+            else if (sqlType.Equals("Counties"))
+            {
+                if (column.ColumnName.Equals("County"))
+                    csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+
+                if (sizeBy.Equals("Species"))
+                {
+                    if (column.ColumnName.Equals("Aedes"))
+                        csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                    if (column.ColumnName.Equals("Aedes Vexans"))
+                        csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                    if (column.ColumnName.Equals("Anopheles"))
+                        csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                    if (column.ColumnName.Equals("Culex"))
+                        csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                    if (column.ColumnName.Equals("Culex Salinarius"))
+                        csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                    if (column.ColumnName.Equals("Culex Tarsalis"))
+                        csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                    if (column.ColumnName.Equals("Culiseta"))
+                        csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                    if (column.ColumnName.Equals("Other"))
+                        csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                }
+                else
+                {
+                    if (column.ColumnName.Equals(sizeBy))
+                        csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                }
+
+                if (colorBy.Equals("Species") && sizeBy.Equals("Species"))
+                {
+                    //Do nothing, since species already enetered before
+                }
+                else
+                {
+                    if (colorBy.Equals("Species"))
+                    {
+                        if (column.ColumnName.Equals("Aedes"))
+                            csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                        if (column.ColumnName.Equals("Aedes Vexans"))
+                            csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                        if (column.ColumnName.Equals("Anopheles"))
+                            csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                        if (column.ColumnName.Equals("Culex"))
+                            csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                        if (column.ColumnName.Equals("Culex Salinarius"))
+                            csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                        if (column.ColumnName.Equals("Culex Tarsalis"))
+                            csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                        if (column.ColumnName.Equals("Culiseta"))
+                            csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                        if (column.ColumnName.Equals("Other"))
+                            csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                    }
+                    else
+                    {
+                        if (column.ColumnName.Equals(colorBy))
+                            csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                    }
+                }
+
+            }
+            else if (sqlType.Equals("WeeksOfSummer"))
+            {
+                if (column.ColumnName.Equals("Trap Week Of Summer"))
+                    csv += "WeekOfSummer" + ',';
+
+                if (sizeBy.Equals("Species"))
+                {
+                    if (column.ColumnName.Equals("Aedes"))
+                        csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                    if (column.ColumnName.Equals("Aedes Vexans"))
+                        csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                    if (column.ColumnName.Equals("Anopheles"))
+                        csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                    if (column.ColumnName.Equals("Culex"))
+                        csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                    if (column.ColumnName.Equals("Culex Salinarius"))
+                        csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                    if (column.ColumnName.Equals("Culex Tarsalis"))
+                        csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                    if (column.ColumnName.Equals("Culiseta"))
+                        csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                    if (column.ColumnName.Equals("Other"))
+                        csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                }
+                else
+                {
+                    if (column.ColumnName.Equals(sizeBy))
+                        csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                }
+
+                if (colorBy.Equals("Species") && sizeBy.Equals("Species"))
+                {
+                    //Do nothing, since species already enetered before
+                }
+                else
+                {
+                    if (colorBy.Equals("Species"))
+                    {
+                        if (column.ColumnName.Equals("Aedes"))
+                            csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                        if (column.ColumnName.Equals("Aedes Vexans"))
+                            csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                        if (column.ColumnName.Equals("Anopheles"))
+                            csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                        if (column.ColumnName.Equals("Culex"))
+                            csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                        if (column.ColumnName.Equals("Culex Salinarius"))
+                            csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                        if (column.ColumnName.Equals("Culex Tarsalis"))
+                            csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                        if (column.ColumnName.Equals("Culiseta"))
+                            csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                        if (column.ColumnName.Equals("Other"))
+                            csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                    }
+                    else
+                    {
+                        if (column.ColumnName.Equals(colorBy))
+                            csv += Regex.Replace(column.ColumnName, @"\s+", "") + ',';
+                    }
+                }
+
+            }
+        }
+
+        private void csvRows(DataRow row, DataColumn col, string sizeBy, string colorBy)
+        {
+            if (sqlType.Equals("TrapLocations"))
+            {
+                if (col.ColumnName.Equals("Trap Area"))
+                    csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                if (col.ColumnName.Equals("County"))
+                    csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+
+                if (sizeBy.Equals("Species"))
+                {
+                    if (col.ColumnName.Equals("Aedes"))
+                        csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                    if (col.ColumnName.Equals("Aedes Vexans"))
+                        csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                    if (col.ColumnName.Equals("Anopheles"))
+                        csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                    if (col.ColumnName.Equals("Culex"))
+                        csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                    if (col.ColumnName.Equals("Culex Salinarius"))
+                        csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                    if (col.ColumnName.Equals("Culex Tarsalis"))
+                        csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                    if (col.ColumnName.Equals("Culiseta"))
+                        csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                    if (col.ColumnName.Equals("Other"))
+                        csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                }
+                else
+                {
+                    if (col.ColumnName.Equals(sizeBy))
+                        csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                }
+
+                if (colorBy.Equals("Species") && sizeBy.Equals("Species"))
+                {
+                    //Do nothing, since species already enetered before
+                }
+                else
+                {
+                    if (colorBy.Equals("Species"))
+                    {
+                        if (col.ColumnName.Equals("Aedes"))
+                            csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                        if (col.ColumnName.Equals("Aedes Vexans"))
+                            csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                        if (col.ColumnName.Equals("Anopheles"))
+                            csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                        if (col.ColumnName.Equals("Culex"))
+                            csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                        if (col.ColumnName.Equals("Culex Salinarius"))
+                            csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                        if (col.ColumnName.Equals("Culex Tarsalis"))
+                            csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                        if (col.ColumnName.Equals("Culiseta"))
+                            csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                        if (col.ColumnName.Equals("Other"))
+                            csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                    }
+                    else
+                    {
+                        if (col.ColumnName.Equals(colorBy))
+                            csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                    }
+                }
+            }
+            else if(sqlType.Equals("Counties")) {
+                if (col.ColumnName.Equals("County"))
+                    csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+
+                if (sizeBy.Equals("Species"))
+                {
+                    if (col.ColumnName.Equals("Aedes"))
+                        csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                    if (col.ColumnName.Equals("Aedes Vexans"))
+                        csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                    if (col.ColumnName.Equals("Anopheles"))
+                        csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                    if (col.ColumnName.Equals("Culex"))
+                        csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                    if (col.ColumnName.Equals("Culex Salinarius"))
+                        csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                    if (col.ColumnName.Equals("Culex Tarsalis"))
+                        csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                    if (col.ColumnName.Equals("Culiseta"))
+                        csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                    if (col.ColumnName.Equals("Other"))
+                        csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                }
+                else
+                {
+                    if (col.ColumnName.Equals(sizeBy))
+                        csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                }
+
+                if (colorBy.Equals("Species") && sizeBy.Equals("Species"))
+                {
+                    //Do nothing, since species already enetered before
+                }
+                else
+                {
+                    if (colorBy.Equals("Species"))
+                    {
+                        if (col.ColumnName.Equals("Aedes"))
+                            csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                        if (col.ColumnName.Equals("Aedes Vexans"))
+                            csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                        if (col.ColumnName.Equals("Anopheles"))
+                            csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                        if (col.ColumnName.Equals("Culex"))
+                            csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                        if (col.ColumnName.Equals("Culex Salinarius"))
+                            csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                        if (col.ColumnName.Equals("Culex Tarsalis"))
+                            csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                        if (col.ColumnName.Equals("Culiseta"))
+                            csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                        if (col.ColumnName.Equals("Other"))
+                            csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                    }
+                    else
+                    {
+                        if (col.ColumnName.Equals(colorBy))
+                            csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                    }
+                }
+            }
+            else if (sqlType.Equals("WeeksOfSummer"))
+            {
+                if (col.ColumnName.Equals("Trap Week Of Summer"))
+                    csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+
+                if (sizeBy.Equals("Species"))
+                {
+                    if (col.ColumnName.Equals("Aedes"))
+                        csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                    if (col.ColumnName.Equals("Aedes Vexans"))
+                        csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                    if (col.ColumnName.Equals("Anopheles"))
+                        csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                    if (col.ColumnName.Equals("Culex"))
+                        csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                    if (col.ColumnName.Equals("Culex Salinarius"))
+                        csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                    if (col.ColumnName.Equals("Culex Tarsalis"))
+                        csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                    if (col.ColumnName.Equals("Culiseta"))
+                        csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                    if (col.ColumnName.Equals("Other"))
+                        csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                }
+                else
+                {
+                    if (col.ColumnName.Equals(sizeBy))
+                        csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                }
+
+                if (colorBy.Equals("Species") && sizeBy.Equals("Species"))
+                {
+                    //Do nothing, since species already enetered before
+                }
+                else
+                {
+                    if (colorBy.Equals("Species"))
+                    {
+                        if (col.ColumnName.Equals("Aedes"))
+                            csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                        if (col.ColumnName.Equals("Aedes Vexans"))
+                            csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                        if (col.ColumnName.Equals("Anopheles"))
+                            csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                        if (col.ColumnName.Equals("Culex"))
+                            csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                        if (col.ColumnName.Equals("Culex Salinarius"))
+                            csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                        if (col.ColumnName.Equals("Culex Tarsalis"))
+                            csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                        if (col.ColumnName.Equals("Culiseta"))
+                            csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                        if (col.ColumnName.Equals("Other"))
+                            csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                    }
+                    else
+                    {
+                        if (col.ColumnName.Equals(colorBy))
+                            csv += row[col.ColumnName].ToString().Replace(",", ";") + ',';
+                    }
+                }
+            }
+        }
+
         protected void ddlTimeType_SelectedIndexChanged(object sender, EventArgs e)
         {
             timeType = ddlTimeType.SelectedItem.Value.ToString();
@@ -889,35 +1294,106 @@ namespace WNV
         protected void ddlCategorizeBy_SelectedIndexChanged(object sender, EventArgs e)
         {
             fillLocationDDL(ddlCategorizeBy.SelectedItem.Value.ToString());
-            //if (!chkShowLabels.Checked)
-            //{
-            //    ScriptManager.RegisterStartupScript(this, GetType(), "toggleLabels", "toggleLabels();", true);
-            //}
-            //if (!chkShowTrackingTooltip.Checked)
-            //{
-            //    ScriptManager.RegisterStartupScript(this, GetType(), "toggleTrackingTooltip", "toggleTrackingTooltip();", true);
-            //}
-            //if (!chkShowStationaryTooltip.Checked)
-            //{
-            //    ScriptManager.RegisterStartupScript(this, GetType(), "toggleStationaryTooltip", "toggleStationaryTooltip();", true);
-            //}
         }
 
         protected void ddlYearForWeeks_SelectedIndexChanged(object sender, EventArgs e)
         {
             fillWeekDDLs();
-            //if (!chkShowLabels.Checked)
-            //{
-            //    ScriptManager.RegisterStartupScript(this, GetType(), "toggleLabels", "toggleLabels();", true);
-            //}
-            //if (!chkShowTrackingTooltip.Checked)
-            //{
-            //    ScriptManager.RegisterStartupScript(this, GetType(), "toggleTrackingTooltip", "toggleTrackingTooltip();", true);
-            //}
-            //if (!chkShowStationaryTooltip.Checked)
-            //{
-            //    ScriptManager.RegisterStartupScript(this, GetType(), "toggleStationaryTooltip", "toggleStationaryTooltip();", true);
-            //}
+        }
+
+        protected void csvBtn_Click(object sender, EventArgs e)
+        {
+            string fileName = "";
+            string sizeBy = ddlSizeRepresents.SelectedValue.TrimEnd('1'); ;
+            string colorBy = ddlColorRepresents.SelectedValue.TrimEnd('1');
+            string categorizeBy = ddlCategorizeBy.SelectedValue;
+            
+            //Date
+            if(ddlTimeType.SelectedValue.Equals("Weeks"))
+            {
+                DateTime weekStart = Convert.ToDateTime(ddlYearStart.Text);
+                DateTime weekEnd = Convert.ToDateTime(ddlYearEnd.Text);
+                string weekStartFix = weekStart.ToString("yyyy-MM-dd");
+                string weekEndFix = weekEnd.ToString("yyyy-MM-dd");
+
+                if (weekStart.Equals(weekEndFix))
+                {
+                    fileName += weekStartFix + "TreemapData-For";
+                }
+                else
+                {
+                    fileName += weekStartFix + "Thru" + weekEndFix + "TreemapData-For";
+                }
+            }
+            else
+            {
+                if(ddlYearStart.Text.Equals(ddlYearEnd.Text))
+                {
+                    fileName += ddlYearStart.Text + "TreemapData-For";
+                }
+                else
+                {
+                    fileName += ddlYearStart.Text + "Thru" + ddlYearEnd.Text + "TreemapData-For";
+                }
+            }
+
+            //Focus on
+            if (ddlFocusOn.SelectedValue.Equals("%"))
+            {
+                if(categorizeBy.Equals("WeeksOfSummer"))
+                {
+                    fileName += "WholeState(ByWeeks)";
+                }
+                else if(categorizeBy.Equals("Counties"))
+                {
+                    fileName += "WholeState(ByCounty)";
+                }
+                else
+                {
+                    fileName += "WholeState(ByTrap)";
+                }
+            }
+            else
+            {
+                if(categorizeBy.Equals("WeeksOfSummer"))
+                {
+                    fileName += "Week" + ddlFocusOn.Text;
+                }
+                else
+                {
+                    fileName += Regex.Replace(ddlFocusOn.Text, @"\s+", "");
+                }
+            }
+            
+            //Size
+            if(sizeBy.Equals("Species"))
+            {
+                fileName += "-SizeByAllMosquitoes";
+            }
+            else
+            {
+                fileName += "-SizeBy" + Regex.Replace(sizeBy, @"\s+", "");
+            }
+
+            //Color
+            if(colorBy.Equals("Species"))
+            {
+                fileName += "-ColorByAllMosquitoes";
+            }
+            else
+            {
+                fileName += "-ColorBy" + Regex.Replace(colorBy, @"\s+", "");
+            }
+
+            Response.Clear();
+            Response.Buffer = true;
+            Response.AddHeader("content-disposition", "attachment;filename=" + fileName + ".csv");
+            Response.Charset = "";
+            Response.ContentType = "application/text";
+            Response.Output.Write(csv);
+            Response.Flush();
+            Response.End();
+
         }
     }
 }

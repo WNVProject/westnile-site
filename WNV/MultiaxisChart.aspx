@@ -13,7 +13,7 @@
     <asp:HiddenField ID="chartHeight" runat="server" Value="" />
     <asp:Button ID="btnRedraw" runat="server" Visible="false" />
     <div class="text-center mt-3">
-        <h3>Multivariate Trends - North Dakota West Nile Virus Forecasting</h3>
+        <h3>Multivariate Trends - North Dakota West Nile Virus</h3>
     </div>
     <div class="jumbotron" style="padding:10px;">
         <div class="text-center">
@@ -247,7 +247,10 @@
         <div class="col-lg-3">
             <asp:CheckBox ID="chkStatewide" runat="server" Text="&nbsp;Statewide Data" CssClass="checkbox" AutoPostBack="true" OnCheckedChanged="chkStatewide_CheckChanged" />
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-3">
+            <asp:Button ID="csvBtn" runat="server" Text="Download as CSV" CssClass="btn btn-success btn-lg btn-block" ValidationGroup="vgMultiaxisChart" OnClick="csvBtn_Click"/>
+        </div>
+        <div class="col-lg-3">
             <asp:Label ID="lblError" runat="server" ForeColor="Red"></asp:Label>
         </div>
     </div>
