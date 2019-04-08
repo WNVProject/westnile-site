@@ -590,11 +590,11 @@ function renderQuality() {
     var rdoCountyHighQual = document.getElementById("rdoCountyHighQual");
 
     if (rdoCountyLowQual.checked) {
-        countyGeoJson = Cesium.GeoJsonDataSource.load('/Scripts/GeoJSON/gz_2010_us_050_00_20m.json');
+        countyGeoJson = Cesium.GeoJsonDataSource.load('/Scripts/GeoJSON/us-statecounties-20m.json');
     } else if (rdoCountyMedQual.checked) {
-        countyGeoJson = Cesium.GeoJsonDataSource.load('/Scripts/GeoJSON/gz_2010_us_050_00_5m.json');
+        countyGeoJson = Cesium.GeoJsonDataSource.load('/Scripts/GeoJSON/us-statecounties-5m.json');
     } else if (rdoCountyHighQual.checked) {
-        countyGeoJson = Cesium.GeoJsonDataSource.load('/Scripts/GeoJSON/gz_2010_us_050_00_500k.json');
+        countyGeoJson = Cesium.GeoJsonDataSource.load('/Scripts/GeoJSON/us-statecounties-500km.json');
     }
 
     return countyGeoJson;
