@@ -149,6 +149,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Login.aspx" />
     <Content Include="photos\agencies-orgs-logos\amca-logo.png" />
     <Content Include="photos\agencies-orgs-logos\epa-logo.jpg" />
     <Content Include="photos\agencies-orgs-logos\m-cdc-logo.png" />
@@ -158,6 +159,7 @@
     <Content Include="photos\trap-images\NJ-light-trap.jpg" />
     <Content Include="photos\weather-station-images\station-diagram.jpg" />
     <Content Include="photos\weather-station-images\station.jpg" />
+    <Content Include="Register.aspx" />
     <Content Include="Scripts\colorbrewer.js" />
     <Content Include="Scripts\interactiveGlobe.js" />
     <Content Include="About.aspx" />
@@ -6299,6 +6301,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Login.aspx.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Login.aspx.designer.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
     <Compile Include="MosquitoSpecies.aspx.cs">
       <DependentUpon>MosquitoSpecies.aspx</DependentUpon>
     </Compile>
@@ -6320,6 +6329,13 @@
       <DependentUpon>MultiaxisChart.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Register.aspx.cs">
+      <DependentUpon>Register.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Register.aspx.designer.cs">
+      <DependentUpon>Register.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
