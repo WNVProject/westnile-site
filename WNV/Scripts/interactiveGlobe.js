@@ -1,5 +1,4 @@
-﻿
-document.getElementById('rngCtrlPnlOpacity').value = 100;
+﻿document.getElementById('rngCtrlPnlOpacity').value = 100;
 document.getElementById('rngCtrlPnlWidth').value = 40;
 
 var CesiumAPIKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI0NjhhNWVlOS0yYThiLTQ3M2YtOTBiNC03ZWY0YmFhMDZiNzgiLCJpZCI6NDA4NCwic2NvcGVzIjpbImFzbCIsImFzciIsImFzdyIsImdjIl0sImlhdCI6MTUzOTg1MDc4N30.jQhxjgKS3zpd5MKaks7_oSddnE_jtCC6fFSsfFufwj8";
@@ -15,11 +14,11 @@ var minColumnValue;
 var columnOfInterest;
 var infoBoxMessage;
 var mosquitoVariable;
+var jsonToRender;
+var mapType;
+var btnHide;
+var currentColumnValue;
 
-/* Render County Polygons
- *
- * Description: renders county polygons on the map
- */
 function renderCountyPolygons(jsonString) {
 
     var jsonToRender = JSON.parse(jsonString);
@@ -47,7 +46,7 @@ function renderCountyPolygons(jsonString) {
         btnHide.click();
     }
 
-    
+
     if (viewer.dataSources.get(viewer.dataSources.indexOf(globalRefCountyDataSource))) {
         viewer.dataSources.remove(globalRefCountyDataSource, false);
     }
@@ -162,19 +161,14 @@ function renderCountyPolygons(jsonString) {
     });
 }
 
-/*
- * Render Univariate Heatmap
- * 
- * Description: function renders the Univariate Heat Map onto the Cesium Globe
- */
 function renderUnivariateHeatmap(jsonString, statType) {
 
-    var jsonToRender = JSON.parse(jsonString); 
+    jsonToRender = JSON.parse(jsonString);
     mosquitoVariable = document.getElementById("ddlUniHeatMosquitoVariable").value; //mosquito type taken from the dropdown menu in the control panel
     columnOfInterest = statType + " " + mosquitoVariable;
     infoBoxMessage = "";
-    var mapType = 1;
-    var currentColumnValue;
+    mapType = 1;
+    currentColumnValue;
     var mosquitoDataRow;
 
     //infobox message header
@@ -183,7 +177,7 @@ function renderUnivariateHeatmap(jsonString, statType) {
     } else if (statType == "Total") {
         infoBoxMessage = columnOfInterest + "";
     }
-    
+
 
     for (var i = 0; i < jsonToRender.length; i++) {
         mosquitoDataRow = jsonToRender[i];
@@ -202,7 +196,7 @@ function renderUnivariateHeatmap(jsonString, statType) {
         }
     }
 
-    var btnHide = document.getElementById("btnHide");
+    btnHide = document.getElementById("btnHide");
     if (btnHide.innerHTML == "Show") {
         btnHide.click();
     }
@@ -213,220 +207,24 @@ function renderUnivariateHeatmap(jsonString, statType) {
 
     //determine what rendering quality should be used
     var countyGeoJson = renderQuality();
-   
+
     //render map function
     renderMap(countyGeoJson, mapType, jsonToRender, columnOfInterest, maxColumnValue, infoBoxMessage, minColumnValue);
 
 }
-
-function renderMap(countyGeoJson, mapType, jsonToRender, columnOfInterest, maxColumnValue, infoBoxMessage, minColumnValue) {
-
-    countyGeoJson.then(function (countyDataSource) {
-
-        var chkAllStates;
-        var ddlState;
-        var ddlOutlineColor;
-        var chkShowLabels;
-
-
-        if (mapType == 1) {
-            chkAllStates = document.getElementById("chkAllStates").checked; //determine if the 'all states' option was checked
-            ddlState = document.getElementById("ddlState"); //determine what state was selected from the dropdown menu
-            ddlOutlineColor = document.getElementById("ddlOutlineColor"); //determine the outline color to apply
-            chkShowLabels = document.getElementById("chkShowLabels").checked; //determine if the labels should be shown
-        }
-        var countyGeoEntities = countyDataSource.entities;
-
-        //if the 'all states' option was not selected then load data for the selected state
-        if (!chkAllStates) {
-            var countyGeoEntitiesValues = countyGeoEntities.values;
-            for (var i = 0; i < countyGeoEntitiesValues.length; i++) {
-                var countyEntity = countyGeoEntitiesValues[i];
-                if (countyEntity.properties.State != ddlState.options[ddlState.selectedIndex].value) {
-                    countyGeoEntities.remove(countyEntity);
-                }
-            }
-        }
-
-
-
-        countyGeoEntitiesValues = countyGeoEntities.values;
-    
-        //render the polygons of the counties for the selected state on the map
-        for (var i = 0; i < countyGeoEntitiesValues.length; i++) {
-
-            var countyEntity = countyGeoEntitiesValues[i];
-            var name = countyEntity.name;
-
-            
-            if (countyEntity.properties.State == ddlState.options[ddlState.selectedIndex].value || chkAllStates) {
-
-                var outLineColor = ddlOutlineColor.value;
-                //if the first option of the dropdown is selected, county borders are not rendered
-                outLineColor == "01" ? countyEntity.polygon.outline = false : countyEntity.polygon.outline = true;
-
-                //if the county needs an outline determine the color
-                if (countyEntity.polygon.outline) {
-                    countyEntity.polygon.outlineColor = determineOutlineColor(outLineColor);
-                }
-
-                for (var j = 0; j < jsonToRender.length; j++) {
-
-                    var mosquitoDataRow = jsonToRender[j];
-                    for (var key in mosquitoDataRow) {
-                        var columnHeader = key;
-                        var columnValue = mosquitoDataRow[columnHeader];
-                        if (columnValue == name) {
-                            var columnCountyName = columnValue;
-                            var valueOfInterest = mosquitoDataRow[columnOfInterest];
-                            countyEntity.polygon.extrudedHeight = 0;
-                            var color = new Cesium.Color.fromBytes(
-                                255,
-                                0,
-                                0,
-                                Math.floor((valueOfInterest / maxColumnValue) * 255)
-                            );
-                            
-                            var colorBytes = color.toBytes();
-
-                            var valueOfInterestLegendOffsetText = "";
-                            var valueOfInterestLegendOffsetValue = Math.round(((maxColumnValue - valueOfInterest) / maxColumnValue) * 298);
-                            if (!valueOfInterestLegendOffsetValue == 0) {
-                                valueOfInterestLegendOffsetText = '<div class="row" style="height:' + valueOfInterestLegendOffsetValue + 'px"><div class="col-xs-12"></div></div>';
-                            }
-
-                            var countyPolygonPositions = countyEntity.polygon.hierarchy.getValue(Cesium.JulianDate.now()).positions;
-                            var countyPolygonBoundingSphere = Cesium.BoundingSphere.fromPoints(countyPolygonPositions);
-                            var countyCartographicCenter = Cesium.Cartographic.fromCartesian(countyPolygonBoundingSphere.center);
-                            var countyExtrusionHeightOffset = Cesium.Cartesian3.fromRadians(countyCartographicCenter.longitude, countyCartographicCenter.latitude, countyEntity.polygon.extrudedHeight.getValue(Cesium.JulianDate.now()) + 4000);
-
-                            //create the string that build the county description 
-                            var header = descriptionHeader(columnCountyName);
-                            var body = descriptionBody(infoBoxMessage, valueOfInterest, maxColumnValue, minColumnValue, colorBytes, valueOfInterestLegendOffsetText);
-                            var footer = descriptionFooter(infoBoxMessage, columnCountyName);
-
-                            //set countyEntity properties
-                            countyEntity.polygon.material = color;
-                            countyEntity.description = header + body + footer;
-                            countyEntity.polygon.heightReference = Cesium.HeightReference.CLAMP_TO_GROUND;
-                            countyEntity.position = countyExtrusionHeightOffset;
-                            countyEntity.label = {
-                                show: chkShowLabels,
-                                text: valueOfInterest + '',
-                                font: '30px "Helvetiva Neue", Helvetica, Arial, sans-serif',
-                                fillColor: Cesium.Color.WHITE,
-                                outlineColor: Cesium.Color.BLACK,
-                                outlineWidth: 4,
-                                style: Cesium.LabelStyle.FILL_AND_OUTLINE,
-                                scale: 1.0,
-                                scaleByDistance: new Cesium.NearFarScalar(1.0e2, 1.3, 1.0e7, 0.1)
-                            };
-                        }
-                    }
-                }
-
-            } else {
-                countyEntity.polygon.show = false;
-                countyEntity.polygon.outline = false;
-            }
-        }
-
-        //zoomToRenderedMap(countyDataSource); <-- doesn't work for some stupid reason
-        var heading = Cesium.Math.toRadians(0);
-        var pitch = Cesium.Math.toRadians(-90);
-        viewer.flyTo(countyGeoEntitiesValues, {
-            duration: 2.0,
-            offset: new Cesium.HeadingPitchRange(heading, pitch)
-        });
-        viewer.dataSources.add(countyDataSource);
-        globalRefCountyDataSource = countyDataSource;
-    }).otherwise(function (error) {
-        //Display any errrors encountered while loading.
-        window.alert(error + " Univariate Heatmap");
-    });
-    
-}
-
-//description header
-function descriptionHeader(columnCountyName) {
-    return '<h2 class="text-center">' + columnCountyName + ' County</h2>';
-}
-
-function descriptionBody(infoBoxMessage, valueOfInterest, maxColumnValue, minColumnValue, colorBytes, valueOfInterestLegendOffsetText) {
-    return '<div class="row" style="margin-bottom:20px">' + '<div class="col-xs-6 text-right">' + infoBoxMessage + '</div>' +
-        '<div class="col-xs-6">' + valueOfInterest + '</div>' + '</div>' + '<div class="row">' + '<div class="col-xs-4 text-right" style="padding-right:0px">' +
-        '<div class="row" style="height:150px"><div class="col-xs-12">' + maxColumnValue + '&nbsp;&nbsp;&mdash;' + '</div></div>' +
-        '<div class="row" style="height:150px"><div class="col-xs-12"></div></div>' + '<div class="row" style="height:22px"><div class="col-xs-12">' +
-        minColumnValue + '&nbsp;&nbsp;&mdash;' + '</div></div>' + '</div>' + '<div class="col-xs-4" style="margin-top:12px">' +
-        '<div style="height:300px;background-image: linear-gradient(rgba(' + colorBytes[0] + ',' + colorBytes[1] + ',' + colorBytes[2] +
-        '),rgba(' + colorBytes[0] + ',' + colorBytes[1] + ',' + colorBytes[2] + ',' + (minColumnValue / maxColumnValue) + ')">' +
-        '</div>' + '</div>' + '<div class="col-xs-4" style="padding-left:0px">' + valueOfInterestLegendOffsetText +
-        '<div class="row"><div class="col-xs-12"><span style="font-size:18px">&larr;</span>&nbsp;&nbsp;' + valueOfInterest + '</div></div>' + '</div>' + '</div>';
-}
-/* DescriptionFooter
- *
- * returns the footer for the info box details for each county
- *
- */
-function descriptionFooter(infoBoxMessage, columnCountyName) {
-    return '<div class="row" style="margin-top:20px">' + '<div class="col-xs-4 text-right">' + infoBoxMessage +
-        '</div>' + '<div class="col-xs-4 text-center">' + 'Intensity' + '</div>' + '<div class="col-xs-4 text-left">'
-        + columnCountyName + '</div>' + '</div>';
-}
-/*Determine Outline Color
- * 
- * Description: determines what color outline should be applied if any
- */ 
-function determineOutlineColor(outLineColor) {
-    if (outLineColor == "02") {
-        return Cesium.Color.BLACK;
-    } else if (outLineColor == "03") {
-        return Cesium.Color.RED;
-    } else if (outLineColor == "04") {
-        return Cesium.Color.GREEN;
-    } else if (outLineColor == "05") {
-        return Cesium.Color.BLUE;
-    } else if (outLineColor == "06") {
-        return Cesium.Color.YELLOW;
-    }
-}
-
-/* Render Quality fuction
- * 
- * Description: returns the render quality value for the map
- */
-function renderQuality() {
-
-    var countyGeoJson;
-
-    //grab the render quality values
-    var rdoCountyLowQual = document.getElementById("rdoCountyLowQual");
-    var rdoCountyMedQual = document.getElementById("rdoCountyMedQual");
-    var rdoCountyHighQual = document.getElementById("rdoCountyHighQual");
-
-    if (rdoCountyLowQual.checked) {
-        countyGeoJson = Cesium.GeoJsonDataSource.load('/Scripts/GeoJSON/gz_2010_us_050_00_20m.json');
-    } else if (rdoCountyMedQual.checked) {
-        countyGeoJson = Cesium.GeoJsonDataSource.load('/Scripts/GeoJSON/gz_2010_us_050_00_5m.json');
-    } else if (rdoCountyHighQual.checked) {
-        countyGeoJson = Cesium.GeoJsonDataSource.load('/Scripts/GeoJSON/gz_2010_us_050_00_500k.json');
-    }
-
-    return countyGeoJson;
-}
-
 function renderUnivariateExtrusion(jsonString, statType) {
 
-    var jsonToRender = JSON.parse(jsonString);
-    var mosquitoVariable = document.getElementById("ddlUniExtrMosquitoVariable").value;
-    var columnOfInterest = statType + " " + mosquitoVariable;
-    var infoBoxMessage = "";
+    jsonToRender = JSON.parse(jsonString);
+    mosquitoVariable = document.getElementById("ddlUniExtrMosquitoVariable").value;
+    columnOfInterest = statType + " " + mosquitoVariable;
+    infoBoxMessage = "";
+    mapType = 2;
+
     if (statType == "Mean") {
         infoBoxMessage = columnOfInterest + "";
     } else if (statType == "Total") {
         infoBoxMessage = columnOfInterest + "";
     }
-    var currentColumnValue;
 
     for (var i = 0; i < jsonToRender.length; i++) {
         var mosquitoDataRow = jsonToRender[i];
@@ -445,7 +243,7 @@ function renderUnivariateExtrusion(jsonString, statType) {
         }
     }
 
-    var btnHide = document.getElementById("btnHide");
+    btnHide = document.getElementById("btnHide");
     if (btnHide.innerHTML == "Show") {
         btnHide.click();
     }
@@ -456,16 +254,37 @@ function renderUnivariateExtrusion(jsonString, statType) {
 
     var countyGeoJson = renderQuality();
 
+    //call render map
+    renderMap(countyGeoJson, mapType, jsonToRender, columnOfInterest, maxColumnValue, infoBoxMessage, minColumnValue);
+}
+
+function renderMap(countyGeoJson, mapType, jsonToRender, columnOfInterest, maxColumnValue, infoBoxMessage, minColumnValue) {
+
     countyGeoJson.then(function (countyDataSource) {
 
-        var chkAllStates = document.getElementById("chkAllStates").checked;
-        var ddlState = document.getElementById("ddlState");
-        var ddlOutlineColor = document.getElementById("ddlOutlineColor");
-        var chkShowLabels = document.getElementById("chkShowLabels").checked;
-        var extrusionFactor = document.getElementById("valUniExtrExtrusionFactor").value;
-        var dataOpacity = document.getElementById("valUniExtrDataOpacity").value;
+        var chkAllStates;
+        var ddlState;
+        var ddlOutlineColor;
+        var chkShowLabels;
+        var extrusionFactor;
+        var dataOpacity;
+        var countyGeoEntities;
+        var countyEntity;
+        var name;
+        var color;
+        var colorBytes;
 
-        var countyGeoEntities = countyDataSource.entities;
+        chkAllStates = document.getElementById("chkAllStates").checked;
+        ddlState = document.getElementById("ddlState");
+        ddlOutlineColor = document.getElementById("ddlOutlineColor");
+        chkShowLabels = document.getElementById("chkShowLabels").checked;
+        if (mapType == 2) {
+            extrusionFactor = document.getElementById("valUniExtrExtrusionFactor").value;
+            dataOpacity = document.getElementById("valUniExtrDataOpacity").value;
+        }
+        countyGeoEntities = countyDataSource.entities;
+
+        //if the all states were not checked then drop the states that were not selected
         if (!chkAllStates) {
             var countyGeoEntitiesValues = countyGeoEntities.values;
             for (var i = 0; i < countyGeoEntitiesValues.length; i++) {
@@ -475,33 +294,21 @@ function renderUnivariateExtrusion(jsonString, statType) {
                 }
             }
         }
-
-
-
         countyGeoEntitiesValues = countyGeoEntities.values;
+
+
+        //render the polygons of the counties for the selected state on the map
         for (var i = 0; i < countyGeoEntitiesValues.length; i++) {
-
-            var countyEntity = countyGeoEntitiesValues[i];
-            var name = countyEntity.name;
-
+            countyEntity = countyGeoEntitiesValues[i];
+            name = countyEntity.name;
             if (countyEntity.properties.State == ddlState.options[ddlState.selectedIndex].value || chkAllStates) {
 
-                //Remove the outlines.
-                ddlOutlineColor.value == "01" ? countyEntity.polygon.outline = false : countyEntity.polygon.outline = true;
-                if (countyEntity.polygon.outline) {
-                    if (ddlOutlineColor.value == "02") {
-                        countyEntity.polygon.outlineColor = Cesium.Color.BLACK;
-                    } else if (ddlOutlineColor.value == "03") {
-                        countyEntity.polygon.outlineColor = Cesium.Color.RED;
-                    } else if (ddlOutlineColor.value == "04") {
-                        countyEntity.polygon.outlineColor = Cesium.Color.GREEN;
-                    } else if (ddlOutlineColor.value == "05") {
-                        countyEntity.polygon.outlineColor = Cesium.Color.BLUE;
-                    } else if (ddlOutlineColor.value == "06") {
-                        countyEntity.polygon.outlineColor = Cesium.Color.YELLOW;
-                    }
-                }
+                var outLineColor = ddlOutlineColor.value;
+                outLineColor == "01" ? countyEntity.polygon.outline = false : countyEntity.polygon.outline = true;
 
+                if (countyEntity.polygon.outline) {
+                    countyEntity.polygon.outlineColor = determineOutlineColor(outLineColor);
+                }
 
                 for (var j = 0; j < jsonToRender.length; j++) {
 
@@ -512,72 +319,44 @@ function renderUnivariateExtrusion(jsonString, statType) {
                         if (columnValue == name) {
                             var columnCountyName = columnValue;
                             var valueOfInterest = mosquitoDataRow[columnOfInterest];
-                            countyEntity.polygon.extrudedHeight = Math.floor((valueOfInterest / maxColumnValue) * ((extrusionFactor / 100) * 200000));
-                            var color = new Cesium.Color.fromBytes(
-                                255,
-                                255 - Math.floor((valueOfInterest / maxColumnValue) * 255),
-                                255 - Math.floor((valueOfInterest / maxColumnValue) * 255),
-                                Math.floor((dataOpacity / 100) * 255)
-                            );
-                            countyEntity.polygon.material = color;
 
+                            //Set the color of the polygon
+                            if (mapType == 1) {
+                                countyEntity.polygon.extrudedHeight = 0;
+                                color = new Cesium.Color.fromBytes(255, 0, 0, Math.floor((valueOfInterest / maxColumnValue) * 255));
+                                colorBytes = color.toBytes();
+                            } else if (mapType == 2) {
+                                countyEntity.polygon.extrudedHeight = Math.floor((valueOfInterest / maxColumnValue) * ((extrusionFactor / 100) * 200000));
+                                color = new Cesium.Color.fromBytes(255, 255 - Math.floor((valueOfInterest / maxColumnValue) * 255), 255 - Math.floor((valueOfInterest / maxColumnValue) * 255), Math.floor((dataOpacity / 100) * 255));
+                            }
+
+                            //set the legend offset
                             var valueOfInterestLegendOffsetText = "";
                             var valueOfInterestLegendOffsetValue = Math.round(((maxColumnValue - valueOfInterest) / maxColumnValue) * 298);
                             if (!valueOfInterestLegendOffsetValue == 0) {
                                 valueOfInterestLegendOffsetText = '<div class="row" style="height:' + valueOfInterestLegendOffsetValue + 'px"><div class="col-xs-12"></div></div>';
                             }
 
-                            countyEntity.description =
-                                '<h2 class="text-center">' + columnCountyName + ' County</h2>' +
-                                '<div class="row" style="margin-bottom:20px">' +
-                                '<div class="col-xs-6 text-right">' +
-                                infoBoxMessage +
-                                '</div>' +
-                                '<div class="col-xs-6">' +
-                                valueOfInterest +
-                                '</div>' +
-                                '</div>' +
-                                '<div class="row">' +
-                                '<div class="col-xs-4 text-right" style="padding-right:0px">' +
-                                '<div class="row" style="height:150px"><div class="col-xs-12">' + maxColumnValue + '&nbsp;&nbsp;&mdash;' + '</div></div>' +
-                                '<div class="row" style="height:150px"><div class="col-xs-12"></div></div>' +
-                                '<div class="row" style="height:22px"><div class="col-xs-12">' + minColumnValue + '&nbsp;&nbsp;&mdash;' + '</div></div>' +
-                                '</div>' +
-                                '<div class="col-xs-4" style="margin-top:12px">' +
-                                '<div style="height:300px;background-image: linear-gradient(rgba(255,0,0,' + dataOpacity / 100 + '),rgba(255,255,255,' + dataOpacity / 100 + ')">' +
-
-                                '</div>' +
-                                '</div>' +
-                                '<div class="col-xs-4" style="padding-left:0px">' +
-                                valueOfInterestLegendOffsetText +
-                                '<div class="row"><div class="col-xs-12"><span style="font-size:18px">&larr;</span>&nbsp;&nbsp;' + valueOfInterest + '</div></div>' +
-                                '</div>' +
-                                '</div>' +
-                                '<div class="row" style="margin-top:20px">' +
-                                '<div class="col-xs-4 text-right">' +
-                                infoBoxMessage +
-                                '</div>' +
-                                '<div class="col-xs-4 text-center">' +
-                                'Intensity' +
-                                '</div>' +
-                                '<div class="col-xs-4 text-left">' +
-                                columnCountyName +
-                                '</div>' +
-                                '</div>'
-                                ;
-
-                            countyEntity.polygon.heightReference = Cesium.HeightReference.CLAMP_TO_GROUND;
-                            countyEntity.polygon.shadows = Cesium.ShadowMode.CAST_ONLY;
-
+                            //polygon position 
                             var countyPolygonPositions = countyEntity.polygon.hierarchy.getValue(Cesium.JulianDate.now()).positions;
-                            //var countyCenter = Cesium.BoundingSphere.fromPoints(countyPolygonPositions).center;
-                            //countyEntity.position = countyCenter;
-
                             var countyPolygonBoundingSphere = Cesium.BoundingSphere.fromPoints(countyPolygonPositions);
                             var countyCartographicCenter = Cesium.Cartographic.fromCartesian(countyPolygonBoundingSphere.center);
-                            var countyExtrusionHeightOffset = Cesium.Cartesian3.fromRadians(countyCartographicCenter.longitude, countyCartographicCenter.latitude, countyEntity.polygon.extrudedHeight.getValue(Cesium.JulianDate.now()) + 10000);
-                            countyEntity.position = countyExtrusionHeightOffset;
+                            var countyExtrusionHeightOffset;
 
+                            //set countyEntity properties
+                            countyEntity.polygon.material = color;
+                            countyEntity.description = generateDescription(mapType, dataOpacity, columnCountyName, infoBoxMessage, valueOfInterest, maxColumnValue, minColumnValue, colorBytes, valueOfInterestLegendOffsetText);
+                            countyEntity.polygon.heightReference = Cesium.HeightReference.CLAMP_TO_GROUND;
+
+                            if (mapType == 1) {
+                                countyExtrusionHeightOffset = Cesium.Cartesian3.fromRadians(countyCartographicCenter.longitude, countyCartographicCenter.latitude, countyEntity.polygon.extrudedHeight.getValue(Cesium.JulianDate.now()) + 4000);
+                                countyEntity.position = countyExtrusionHeightOffset;
+                            }
+                            if (mapType == 2) {
+                                countyEntity.polygon.shadows = Cesium.ShadowMode.CAST_ONLY;
+                                countyExtrusionHeightOffset = Cesium.Cartesian3.fromRadians(countyCartographicCenter.longitude, countyCartographicCenter.latitude, countyEntity.polygon.extrudedHeight.getValue(Cesium.JulianDate.now()) + 10000);
+                                countyEntity.position = countyExtrusionHeightOffset;
+                            }
                             countyEntity.label = {
                                 show: chkShowLabels,
                                 text: valueOfInterest + '',
@@ -599,38 +378,34 @@ function renderUnivariateExtrusion(jsonString, statType) {
             }
         }
 
-        var heading = Cesium.Math.toRadians(0);
-        var pitch = Cesium.Math.toRadians(-90);
-        viewer.flyTo(countyGeoEntitiesValues, {
-            duration: 2.0,
-            offset: new Cesium.HeadingPitchRange(heading, pitch)
-        });
-        viewer.dataSources.add(countyDataSource);
-        globalRefCountyDataSource = countyDataSource;
+        zoomToRenderedMap(countyDataSource, countyGeoEntitiesValues);
     }).otherwise(function (error) {
         //Display any errrors encountered while loading.
-        window.alert(error + " Univariate Extr");
+        if (mapType == 1) {
+            window.alert(error + " Univariate Heatmap");
+        } else if (mapType == 2) {
+            window.alert(error + " Univariate Extrusion map");
+        }
+
+        
     });
+
 }
 
-function renderPearsonCorrelationHeatmap(jsonString, mosquitoVarOfInterest, weatherVarOfInterest) {
-    var jsonToRender = JSON.parse(jsonString);
-    infoBoxMessage = "Pearson's Coefficient";
 
-    var btnHide = document.getElementById("btnHide");
+
+function renderPearsonCorrelationHeatmap(jsonString, mosquitoVarOfInterest, weatherVarOfInterest) {
+    jsonToRender = JSON.parse(jsonString);
+    infoBoxMessage = "Pearson's Coefficient";
+    mapType = 3;
+    btnHide = document.getElementById("btnHide");
     if (btnHide.innerHTML == "Show") {
         btnHide.click();
     }
-
-    var rdoCountyLowQual = document.getElementById("rdoCountyLowQual");
-    var rdoCountyMedQual = document.getElementById("rdoCountyMedQual");
-    var rdoCountyHighQual = document.getElementById("rdoCountyHighQual");
     if (viewer.dataSources.get(viewer.dataSources.indexOf(globalRefCountyDataSource))) {
         viewer.dataSources.remove(globalRefCountyDataSource, false);
     }
-   
-
-    var countyGeoJson = renderQuality(rdoCountyLowQual, rdoCountyMedQual, rdoCountyHighQual);
+    var countyGeoJson = renderQuality();
 
     countyGeoJson.then(function (countyDataSource) {
 
@@ -638,9 +413,7 @@ function renderPearsonCorrelationHeatmap(jsonString, mosquitoVarOfInterest, weat
         var ddlState = document.getElementById("ddlState");
         var ddlOutlineColor = document.getElementById("ddlOutlineColor");
         var chkShowLabels = document.getElementById("chkShowLabels").checked;
-        //var extrusionFactor = document.getElementById("valUniExtrExtrusionFactor").value;
-        //var dataOpacity = document.getElementById("valUniExtrDataOpacity").value;
-
+        
         var countyGeoEntities = countyDataSource.entities;
         if (!chkAllStates) {
             var countyGeoEntitiesValues = countyGeoEntities.values;
@@ -692,26 +465,11 @@ function renderPearsonCorrelationHeatmap(jsonString, mosquitoVarOfInterest, weat
                             countyEntity.polygon.extrudedHeight = 0;
                             var color;
                             if (valueOfInterest <= 0) {
-                                color = new Cesium.Color.fromBytes(
-                                    0,
-                                    0,
-                                    255,
-                                    Math.floor((valueOfInterest * -1) * 255)
-                                );
+                                color = new Cesium.Color.fromBytes(0, 0, 255, Math.floor((valueOfInterest * -1) * 255));
                             } else if (valueOfInterest == 0) {
-                                color = new Cesium.Color.fromBytes(
-                                    0,
-                                    0,
-                                    0,
-                                    0
-                                );
+                                color = new Cesium.Color.fromBytes(0, 0, 0, 0);
                             } else {
-                                color = new Cesium.Color.fromBytes(
-                                    255,
-                                    0,
-                                    0,
-                                    Math.floor((valueOfInterest) * 255)
-                                );
+                                color = new Cesium.Color.fromBytes(255, 0, 0, Math.floor((valueOfInterest) * 255));
                             }
                             countyEntity.polygon.material = color;
 
@@ -721,51 +479,11 @@ function renderPearsonCorrelationHeatmap(jsonString, mosquitoVarOfInterest, weat
                                 valueOfInterestLegendOffsetText = '<div class="row" style="height:' + valueOfInterestLegendOffsetValue + 'px"><div class="col-xs-12"></div></div>';
                             }
 
-                            countyEntity.description =
-                                '<h2 class="text-center">' + columnCountyName + ' County</h2>' +
-                                '<div class="row" style="margin-bottom:20px">' +
-                                '<div class="col-xs-6 text-right">' +
-                                infoBoxMessage +
-                                '</div>' +
-                                '<div class="col-xs-6">' +
-                                valueOfInterest +
-                                '</div>' +
-                                '</div>' +
-                                '<div class="row">' +
-                                '<div class="col-xs-4 text-right" style="padding-right:0px">' +
-                                '<div class="row" style="height:150px"><div class="col-xs-12">' + "1" + '&nbsp;&nbsp;&mdash;' + '</div></div>' +
-                                '<div class="row" style="height:150px"><div class="col-xs-12"></div></div>' +
-                                '<div class="row" style="height:22px"><div class="col-xs-12">' + "-1" + '&nbsp;&nbsp;&mdash;' + '</div></div>' +
-                                '</div>' +
-                                '<div class="col-xs-4" style="margin-top:12px">' +
-                                '<div style="height:300px;background-image: linear-gradient(rgba(255,0,0),rgba(0,0,0,0),rgba(0,0,255))">' +
-
-                                '</div>' +
-                                '</div>' +
-                                '<div class="col-xs-4" style="padding-left:0px">' +
-                                valueOfInterestLegendOffsetText +
-                                '<div class="row"><div class="col-xs-12"><span style="font-size:18px">&larr;</span>&nbsp;&nbsp;' + valueOfInterest + '</div></div>' +
-                                '</div>' +
-                                '</div>' +
-                                '<div class="row" style="margin-top:20px">' +
-                                '<div class="col-xs-4 text-right">' +
-                                infoBoxMessage +
-                                '</div>' +
-                                '<div class="col-xs-4 text-center">' +
-                                'Correlation' +
-                                '</div>' +
-                                '<div class="col-xs-4 text-left">' +
-                                columnCountyName +
-                                '</div>' +
-                                '</div>'
-                                ;
-
+                            countyEntity.description = generateDescription(mapType, columnCountyName, infoBoxMessage, valueOfInterest, valueOfInterestLegendOffsetText);
                             countyEntity.polygon.heightReference = Cesium.HeightReference.CLAMP_TO_GROUND;
                             countyEntity.polygon.shadows = Cesium.ShadowMode.CAST_ONLY;
 
                             var countyPolygonPositions = countyEntity.polygon.hierarchy.getValue(Cesium.JulianDate.now()).positions;
-                            //var countyCenter = Cesium.BoundingSphere.fromPoints(countyPolygonPositions).center;
-                            //countyEntity.position = countyCenter;
 
                             var countyPolygonBoundingSphere = Cesium.BoundingSphere.fromPoints(countyPolygonPositions);
                             var countyCartographicCenter = Cesium.Cartographic.fromCartesian(countyPolygonBoundingSphere.center);
@@ -793,24 +511,95 @@ function renderPearsonCorrelationHeatmap(jsonString, mosquitoVarOfInterest, weat
             }
         }
 
-        var heading = Cesium.Math.toRadians(0);
-        var pitch = Cesium.Math.toRadians(-90);
-        viewer.flyTo(countyGeoEntitiesValues, {
-            duration: 2.0,
-            offset: new Cesium.HeadingPitchRange(heading, pitch)
-        });
-        viewer.dataSources.add(countyDataSource);
-        globalRefCountyDataSource = countyDataSource;
+        zoomToRenderedMap(countyDataSource, countyGeoEntitiesValues);
     }).otherwise(function (error) {
         //Display any errrors encountered while loading.
         window.alert(error + " Pearson Heatmap");
     });
 }
+function zoomToRenderedMap(countyDataSource, countyGeoEntitiesValues) {
+    var heading = Cesium.Math.toRadians(0);
+    var pitch = Cesium.Math.toRadians(-90);
+    viewer.flyTo(countyGeoEntitiesValues, {
+        duration: 2.0,
+        offset: new Cesium.HeadingPitchRange(heading, pitch)
+    });
+    viewer.dataSources.add(countyDataSource);
+    globalRefCountyDataSource = countyDataSource;
+}
 
-/* Create trap locations
- * 
- * Description
- */
+function generateDescription(mapType, dataOpacity, columnCountyName, infoBoxMessage, valueOfInterest, maxColumnValue, minColumnValue, colorBytes, valueOfInterestLegendOffsetText) {
+    if (mapType == 1) {
+        return '<h2 class="text-center">' + columnCountyName + ' County</h2>' + '<div class="row" style="margin-bottom:20px">' + '<div class="col-xs-6 text-right">' + infoBoxMessage + '</div>' +
+            '<div class="col-xs-6">' + valueOfInterest + '</div>' + '</div>' + '<div class="row">' + '<div class="col-xs-4 text-right" style="padding-right:0px">' +
+            '<div class="row" style="height:150px"><div class="col-xs-12">' + maxColumnValue + '&nbsp;&nbsp;&mdash;' + '</div></div>' +
+            '<div class="row" style="height:150px"><div class="col-xs-12"></div></div>' + '<div class="row" style="height:22px"><div class="col-xs-12">' +
+            minColumnValue + '&nbsp;&nbsp;&mdash;' + '</div></div>' + '</div>' + '<div class="col-xs-4" style="margin-top:12px">' +
+            '<div style="height:300px;background-image: linear-gradient(rgba(' + colorBytes[0] + ',' + colorBytes[1] + ',' + colorBytes[2] +
+            '),rgba(' + colorBytes[0] + ',' + colorBytes[1] + ',' + colorBytes[2] + ',' + (minColumnValue / maxColumnValue) + ')">' +
+            '</div>' + '</div>' + '<div class="col-xs-4" style="padding-left:0px">' + valueOfInterestLegendOffsetText +
+            '<div class="row"><div class="col-xs-12"><span style="font-size:18px">&larr;</span>&nbsp;&nbsp;' + valueOfInterest + '</div></div>' + '</div>' + '</div>'
+            + '<div class="row" style="margin-top:20px">' + '<div class="col-xs-4 text-right">' + infoBoxMessage +
+            '</div>' + '<div class="col-xs-4 text-center">' + 'Intensity' + '</div>' + '<div class="col-xs-4 text-left">'
+            + columnCountyName + '</div>' + '</div>';
+    }
+    if (mapType == 2) {
+        return '<h2 class="text-center">' + columnCountyName + ' County</h2>' + '<div class="row" style="margin-bottom:20px">' + '<div class="col-xs-6 text-right">' +
+            infoBoxMessage + '</div>' + '<div class="col-xs-6">' + valueOfInterest + '</div>' + '</div>' + '<div class="row">' + '<div class="col-xs-4 text-right" style="padding-right:0px">' +
+            '<div class="row" style="height:150px"><div class="col-xs-12">' + maxColumnValue + '&nbsp;&nbsp;&mdash;' + '</div></div>' + '<div class="row" style="height:150px"><div class="col-xs-12"></div></div>' +
+            '<div class="row" style="height:22px"><div class="col-xs-12">' + minColumnValue + '&nbsp;&nbsp;&mdash;' + '</div></div>' + '</div>' + '<div class="col-xs-4" style="margin-top:12px">' +
+            '<div style="height:300px;background-image: linear-gradient(rgba(255,0,0,' + dataOpacity / 100 + '),rgba(255,255,255,' + dataOpacity / 100 + ')">' + '</div>' + '</div>' +
+            '<div class="col-xs-4" style="padding-left:0px">' + valueOfInterestLegendOffsetText + '<div class="row"><div class="col-xs-12"><span style="font-size:18px">&larr;</span>&nbsp;&nbsp;' + valueOfInterest + '</div></div>' +
+            '</div>' + '</div>' + '<div class="row" style="margin-top:20px">' + '<div class="col-xs-4 text-right">' + infoBoxMessage + '</div>' + '<div class="col-xs-4 text-center">' + 'Intensity' +
+            '</div>' + '<div class="col-xs-4 text-left">' + columnCountyName + '</div>' + '</div>';
+    }
+    if (mapType == 3) {
+        return '<h2 class="text-center">' + columnCountyName + ' County</h2>' + '<div class="row" style="margin-bottom:20px">' + '<div class="col-xs-6 text-right">' +
+            infoBoxMessage + '</div>' + '<div class="col-xs-6">' + valueOfInterest + '</div>' + '</div>' + '<div class="row">' + '<div class="col-xs-4 text-right" style="padding-right:0px">' +
+            '<div class="row" style="height:150px"><div class="col-xs-12">' + "1" + '&nbsp;&nbsp;&mdash;' + '</div></div>' + '<div class="row" style="height:150px"><div class="col-xs-12"></div></div>' +
+            '<div class="row" style="height:22px"><div class="col-xs-12">' + "-1" + '&nbsp;&nbsp;&mdash;' + '</div></div>' + '</div>' + '<div class="col-xs-4" style="margin-top:12px">' +
+            '<div style="height:300px;background-image: linear-gradient(rgba(255,0,0),rgba(0,0,0,0),rgba(0,0,255))">' + '</div>' + '</div>' + '<div class="col-xs-4" style="padding-left:0px">' +
+            valueOfInterestLegendOffsetText + '<div class="row"><div class="col-xs-12"><span style="font-size:18px">&larr;</span>&nbsp;&nbsp;' + valueOfInterest + '</div></div>' +
+            '</div>' + '</div>' + '<div class="row" style="margin-top:20px">' + '<div class="col-xs-4 text-right">' + infoBoxMessage + '</div>' + '<div class="col-xs-4 text-center">' + 'Correlation' +
+            '</div>' + '<div class="col-xs-4 text-left">' + columnCountyName + '</div>' + '</div>';
+    }
+
+}
+
+function determineOutlineColor(outLineColor) {
+    if (outLineColor == "02") {
+        return Cesium.Color.BLACK;
+    } else if (outLineColor == "03") {
+        return Cesium.Color.RED;
+    } else if (outLineColor == "04") {
+        return Cesium.Color.GREEN;
+    } else if (outLineColor == "05") {
+        return Cesium.Color.BLUE;
+    } else if (outLineColor == "06") {
+        return Cesium.Color.YELLOW;
+    }
+}
+
+function renderQuality() {
+
+    var countyGeoJson;
+
+    //grab the render quality values
+    var rdoCountyLowQual = document.getElementById("rdoCountyLowQual");
+    var rdoCountyMedQual = document.getElementById("rdoCountyMedQual");
+    var rdoCountyHighQual = document.getElementById("rdoCountyHighQual");
+
+    if (rdoCountyLowQual.checked) {
+        countyGeoJson = Cesium.GeoJsonDataSource.load('/Scripts/GeoJSON/us-statecounties-20m.json');
+    } else if (rdoCountyMedQual.checked) {
+        countyGeoJson = Cesium.GeoJsonDataSource.load('/Scripts/GeoJSON/us-statecounties-5m.json');
+    } else if (rdoCountyHighQual.checked) {
+        countyGeoJson = Cesium.GeoJsonDataSource.load('/Scripts/GeoJSON/us-statecounties-500km.json');
+    }
+
+    return countyGeoJson;
+}
+
 function createTrapLocations(fileToRender) {
     var trapGeoJson = Cesium.GeoJsonDataSource.load('/Scripts/GeoJSON/' + fileToRender);
     trapGeoJson.then(function (trapDataSource) {
@@ -886,10 +675,7 @@ function createTrapLocations(fileToRender) {
         window.alert(error);
     });
 }
-/* show Traps
- * 
- * Description: 
- */
+
 function showTraps() {
     var chkShowTraps = document.getElementById("chkShowTraps").checked;
     if (chkShowTraps) {
@@ -902,10 +688,7 @@ function showTraps() {
         }
     }
 }
-/* show labels
- * 
- * Description
- */
+
 function showLabels() {
     var chkShowLabels = document.getElementById("chkShowLabels").checked;
     if (viewer.dataSources.get(viewer.dataSources.indexOf(globalRefCountyDataSource))) {
@@ -976,13 +759,8 @@ document.getElementById("btnResetView").addEventListener("click", function () {
     }
 });
 
-
 dragElement(document.getElementsByClassName("cesium-infoBox")[0]);
 
-/* drag Element
- * 
- * Description:
- */
 function dragElement(elmnt) {
     var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
     if (document.getElementsByClassName("cesium-infoBox-title")[0]) {
@@ -1045,10 +823,6 @@ function dragElement(elmnt) {
     }
 }
 
-/* Expand Controls
- * 
- * Description:
- */
 function expandControls() {
     var ctrlContainer = document.getElementById('controlContainer');
     var ctrlNavbar = document.getElementById('controlNavbar');
@@ -1061,29 +835,16 @@ function expandControls() {
     }
 }
 
-
-/* Adjust Opacity
- * 
- * Description:
- */
 function adjustOpacity(opacityValue, ctrlID) {
     var ctrl = document.getElementById(ctrlID);
     ctrl.style.opacity = opacityValue * '.01';
 }
 
-/* Adjust Width
- * 
- * Description:
- */
 function adjustWidth(widthValue, ctrlID) {
     var ctrl = document.getElementById(ctrlID);
     ctrl.style.width = widthValue + '%';
 }
 
-/* Toggle Tool tip
- * 
- * Description:
- */
 function toggleTooltip(ctrlID) {
     var ctrl = document.getElementById(ctrlID);
     if (ctrl.classList.contains("tooltip-hide")) {
@@ -1093,19 +854,11 @@ function toggleTooltip(ctrlID) {
     }
 }
 
-/* Update Slide Output Live
- * 
- * Description:
- */
 function updateSlideOutputLive(ctrlInput, ctrlOutputID) {
     var ctrlOutputID = document.getElementById(ctrlOutputID);
     ctrlOutputID.innerText = ctrlInput.value;
 }
 
-/* Toggle Dropdown Caret
- * 
- * Description:
- */
 function toggleDropdownCaret(caller) {
     var ctrlChildren = caller.children;
     caller.style.pointerEvents = "none";
@@ -1119,10 +872,6 @@ function toggleDropdownCaret(caller) {
     setTimeout(function () { caller.style.pointerEvents = "auto"; }, 350);
 }
 
-/* Toggle Parameter Panel
- * 
- * Description:
- */
 function toggleParameterPanel(caller) {
 
     $('#pnlVisualization1').collapse('hide');

@@ -149,6 +149,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Login.aspx" />
     <Content Include="photos\agencies-orgs-logos\amca-logo.png" />
     <Content Include="photos\agencies-orgs-logos\epa-logo.jpg" />
     <Content Include="photos\agencies-orgs-logos\m-cdc-logo.png" />
@@ -158,6 +159,7 @@
     <Content Include="photos\trap-images\NJ-light-trap.jpg" />
     <Content Include="photos\weather-station-images\station-diagram.jpg" />
     <Content Include="photos\weather-station-images\station.jpg" />
+    <Content Include="Register.aspx" />
     <Content Include="Scripts\colorbrewer.js" />
     <Content Include="Scripts\interactiveGlobe.js" />
     <Content Include="About.aspx" />
@@ -5229,8 +5231,6 @@
     <Content Include="Scripts\Cesium\ThirdParty\requirejs-2.1.20\domReady.js" />
     <Content Include="Scripts\Cesium\ThirdParty\requirejs-2.1.20\require.js" />
     <Content Include="Scripts\Cesium\ThirdParty\requirejs-2.1.20\require.min.js" />
-    <Content Include="Scripts\GeoJSON\gz_2010_us_050_00_20m.json" />
-    <Content Include="Scripts\GeoJSON\gz_2010_us_050_00_5m.json" />
     <Content Include="Scripts\GeoJSON\ND_Counties.json" />
     <Content Include="Scripts\Cesium\Apps\SampleData\Cesium3DTiles\Batched\BatchedColors\batchedColors.b3dm" />
     <Content Include="Scripts\Cesium\Apps\SampleData\Cesium3DTiles\Batched\BatchedColors\tileset.json" />
@@ -6236,7 +6236,13 @@
     <Content Include="Scripts\Cesium\ThirdParty\jasmine-2.2.0\MIT.LICENSE" />
     <Content Include="Scripts\Cesium\ThirdParty\requirejs-2.1.20\MIT.LICENSE" />
     <Content Include="Scripts\GeoJSON\Counties.json" />
-    <Content Include="Scripts\GeoJSON\gz_2010_us_050_00_500k.json" />
+    <Content Include="Scripts\GeoJSON\trapLocations.json" />
+    <Content Include="Scripts\GeoJSON\us-statecounties-20m.json" />
+    <Content Include="Scripts\GeoJSON\us-statecounties-500k.json" />
+    <Content Include="Scripts\GeoJSON\us-statecounties-5m.json" />
+    <Content Include="Scripts\GeoJSON\us-states-20m.json" />
+    <Content Include="Scripts\GeoJSON\us-states-500k.json" />
+    <Content Include="Scripts\GeoJSON\us-states-5m.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="MosquitoSpecies.aspx" />
     <Content Include="Scripts\bootstrap.js" />
@@ -6299,6 +6305,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Login.aspx.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Login.aspx.designer.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
     <Compile Include="MosquitoSpecies.aspx.cs">
       <DependentUpon>MosquitoSpecies.aspx</DependentUpon>
     </Compile>
@@ -6320,6 +6333,13 @@
       <DependentUpon>MultiaxisChart.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Register.aspx.cs">
+      <DependentUpon>Register.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Register.aspx.designer.cs">
+      <DependentUpon>Register.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
