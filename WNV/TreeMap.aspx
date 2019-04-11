@@ -505,15 +505,20 @@
                     var parents = nodes.filter(function(d) {
                         return d.children;
                     });
-                    
+                    console.log(data);
                     var categoryItemMax = data.value;
                     var categoryItemMin = -1;
-                    for (var i = 0; i < data.children.length; i++) {
-                        var currentItemValue = data.children[i].value;
-                        if (categoryItemMin == -1) {
-                            categoryItemMin = currentItemValue;
-                        } else if (categoryItemMin > currentItemValue) {
-                            categoryItemMin = currentItemValue;
+
+                    if (data.children.length == 1) {
+                        categoryItemMin = data.min;
+                    } else {
+                        for (var i = 0; i < data.children.length; i++) {
+                            var currentItemValue = data.children[i].value;
+                            if (categoryItemMin == -1) {
+                                categoryItemMin = currentItemValue;
+                            } else if (categoryItemMin > currentItemValue) {
+                                categoryItemMin = currentItemValue;
+                            }
                         }
                     }
                     headerColor.domain([categoryItemMin, categoryItemMax]);
@@ -622,7 +627,7 @@
                         .attr("width", function (d) {if(d.parent.dx) d.xRatioToParent = d.dx / d.parent.dx; return d.dx - 1; })
                         .attr("height", function (d) {if(d.parent.dy) d.yRatioToParent = d.dy / d.parent.dy; return d.dy - 1; })
                         .style("fill", function (d) {
-                            console.log(d);
+                            //console.log(d);
                             if (d.name != "Culex Tarsalis") {
                                 return color(d.colorValue);
                             } else {
@@ -649,7 +654,6 @@
                                       categoryString = d.category;
                                   } else if (d.category == "Trap") {
                                       imagePath = "/photos/tooltips/states/ND/trap-highlights/" + d.parent.county;
-                                      console.log(imagePath);
                                       categoryString = d.category;
                                   } else if (d.category == "Week") {
                                       imagePath = "/photos/tooltips/states/ND/Statewide";
