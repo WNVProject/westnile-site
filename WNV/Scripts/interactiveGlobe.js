@@ -345,7 +345,7 @@ function renderMap(countyGeoJson, mapType, jsonToRender, columnOfInterest, maxCo
 
                             //set countyEntity properties
                             countyEntity.polygon.material = color;
-                            countyEntity.description = generateDescription(mapType, dataOpacity, columnCountyName, infoBoxMessage, valueOfInterest, maxColumnValue, minColumnValue, colorBytes, valueOfInterestLegendOffsetText);
+                            countyEntity.description = generateDescription(mapType, columnCountyName, infoBoxMessage, valueOfInterest, valueOfInterestLegendOffsetText, dataOpacity, maxColumnValue, minColumnValue, colorBytes);
                             countyEntity.polygon.heightReference = Cesium.HeightReference.CLAMP_TO_GROUND;
 
                             if (mapType == 1) {
@@ -398,6 +398,10 @@ function renderPearsonCorrelationHeatmap(jsonString, mosquitoVarOfInterest, weat
     jsonToRender = JSON.parse(jsonString);
     infoBoxMessage = "Pearson's Coefficient";
     mapType = 3;
+    var dataOpacity; //just keep this here
+    var maxColumnValue; //just keep this here
+    var minColumnValue; //just keep this here
+    var colorBytes; //just keep this here
     btnHide = document.getElementById("btnHide");
     if (btnHide.innerHTML == "Show") {
         btnHide.click();
@@ -528,7 +532,7 @@ function zoomToRenderedMap(countyDataSource, countyGeoEntitiesValues) {
     globalRefCountyDataSource = countyDataSource;
 }
 
-function generateDescription(mapType, dataOpacity, columnCountyName, infoBoxMessage, valueOfInterest, maxColumnValue, minColumnValue, colorBytes, valueOfInterestLegendOffsetText) {
+function generateDescription(mapType, columnCountyName, infoBoxMessage, valueOfInterest, valueOfInterestLegendOffsetText, dataOpacity, maxColumnValue, minColumnValue, colorBytes) {
     if (mapType == 1) {
         return '<h2 class="text-center">' + columnCountyName + ' County</h2>' + '<div class="row" style="margin-bottom:20px">' + '<div class="col-xs-6 text-right">' + infoBoxMessage + '</div>' +
             '<div class="col-xs-6">' + valueOfInterest + '</div>' + '</div>' + '<div class="row">' + '<div class="col-xs-4 text-right" style="padding-right:0px">' +
@@ -594,7 +598,7 @@ function renderQuality() {
     } else if (rdoCountyMedQual.checked) {
         countyGeoJson = Cesium.GeoJsonDataSource.load('/Scripts/GeoJSON/us-statecounties-5m.json');
     } else if (rdoCountyHighQual.checked) {
-        countyGeoJson = Cesium.GeoJsonDataSource.load('/Scripts/GeoJSON/us-statecounties-500km.json');
+        countyGeoJson = Cesium.GeoJsonDataSource.load('/Scripts/GeoJSON/us-statecounties-500k.json');
     }
 
     return countyGeoJson;
