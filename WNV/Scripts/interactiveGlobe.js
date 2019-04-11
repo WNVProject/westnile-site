@@ -398,10 +398,6 @@ function renderPearsonCorrelationHeatmap(jsonString, mosquitoVarOfInterest, weat
     jsonToRender = JSON.parse(jsonString);
     infoBoxMessage = "Pearson's Coefficient";
     mapType = 3;
-    var dataOpacity; //just keep this here
-    var maxColumnValue; //just keep this here
-    var minColumnValue; //just keep this here
-    var colorBytes; //just keep this here
     btnHide = document.getElementById("btnHide");
     if (btnHide.innerHTML == "Show") {
         btnHide.click();
@@ -439,19 +435,11 @@ function renderPearsonCorrelationHeatmap(jsonString, mosquitoVarOfInterest, weat
                 countyEntity.polygon.show = false;
                 countyEntity.polygon.outline = false;
 
-                ddlOutlineColor.value == "01" ? countyEntity.polygon.outline = false : countyEntity.polygon.outline = true;
+                var outLineColor = ddlOutlineColor.value;
+                outLineColor == "01" ? countyEntity.polygon.outline = false : countyEntity.polygon.outline = true;
+
                 if (countyEntity.polygon.outline) {
-                    if (ddlOutlineColor.value == "02") {
-                        countyEntity.polygon.outlineColor = Cesium.Color.BLACK;
-                    } else if (ddlOutlineColor.value == "03") {
-                        countyEntity.polygon.outlineColor = Cesium.Color.RED;
-                    } else if (ddlOutlineColor.value == "04") {
-                        countyEntity.polygon.outlineColor = Cesium.Color.GREEN;
-                    } else if (ddlOutlineColor.value == "05") {
-                        countyEntity.polygon.outlineColor = Cesium.Color.BLUE;
-                    } else if (ddlOutlineColor.value == "06") {
-                        countyEntity.polygon.outlineColor = Cesium.Color.YELLOW;
-                    }
+                    countyEntity.polygon.outlineColor = determineOutlineColor(outLineColor);
                 }
 
                 for (var j = 0; j < jsonToRender.length; j++) {
@@ -521,6 +509,7 @@ function renderPearsonCorrelationHeatmap(jsonString, mosquitoVarOfInterest, weat
         window.alert(error + " Pearson Heatmap");
     });
 }
+
 function zoomToRenderedMap(countyDataSource, countyGeoEntitiesValues) {
     var heading = Cesium.Math.toRadians(0);
     var pitch = Cesium.Math.toRadians(-90);
@@ -644,35 +633,11 @@ function createTrapLocations(fileToRender) {
                 cluster.point.outlineWidth = pointOutlineWidth;
                 cluster.point.pixelSize = pointSize + 5;
             });
-
-
-            trapMarker.description =
-                '<h2 class="text-center">' + trapMarker.properties.name + '</h2>' +
-                '<div class="row" style="margin-bottom:10px">' +
-                '<div class="col-xs-6 text-right">' +
-                'County' +
-                '</div>' +
-                '<div class="col-xs-6">' +
-                trapMarker.properties.County +
-                '</div>' +
-                '</div>' +
-                '<div class="row" style="margin-bottom:10px">' +
-                '<div class="col-xs-6 text-right">' +
-                'Latitude' +
-                '</div>' +
-                '<div class="col-xs-6">' +
-                trapLatitude +
-                '</div>' +
-                '</div>' +
-                '<div class="row" style="margin-bottom:10px">' +
-                '<div class="col-xs-6 text-right">' +
-                'Longitude' +
-                '</div>' +
-                '<div class="col-xs-6">' +
-                trapLongitude +
-                '</div>' +
-                '</div>'
-                ;
+            trapMarker.description = '<h2 class="text-center">' + trapMarker.properties.name + '</h2>' + '<div class="row" style="margin-bottom:10px">' +
+                '<div class="col-xs-6 text-right">' + 'County' + '</div>' + '<div class="col-xs-6">' + trapMarker.properties.County + '</div>' + '</div>' +
+                '<div class="row" style="margin-bottom:10px">' + '<div class="col-xs-6 text-right">' + 'Latitude' + '</div>' + '<div class="col-xs-6">' +
+                trapLatitude + '</div>' + '</div>' + '<div class="row" style="margin-bottom:10px">' + '<div class="col-xs-6 text-right">' + 'Longitude' +
+                '</div>' + '<div class="col-xs-6">' + trapLongitude + '</div>' + '</div>';
         }
         showTraps();
     }).otherwise(function (error) {
