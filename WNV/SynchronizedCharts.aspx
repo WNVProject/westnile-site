@@ -27,7 +27,7 @@
         </div>
         <div class="row">
             <div class="col-lg-12">
-                <h6>Cumulative WNV Cases</h6>
+                <h6>Weekly WNV Cases</h6>
             </div>
         </div>
         <div id="chrtCases" class="syncChart text-center align-middle">
