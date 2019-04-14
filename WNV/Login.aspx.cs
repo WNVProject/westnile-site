@@ -23,40 +23,40 @@ namespace WNV {
             }
         }
 
-        protected void ValidateUser(object sender, EventArgs e) {
-            string email = emailTxt.Text.Trim();
-            string password = passwordTxt.Text.Trim();
-            int userId = 0;
+        protected void userLogin(object sender, EventArgs e) {
+            string hash, salt;
+            string pass = passwordTxt.Text;
+            GenerateSaltedHash(pass, out salt, out hash);
+
             try {
                 using (MySqlConnection conn = new MySqlConnection(cs)) {
-                    var procedure = "Validate_User";
+                    var procedure = "USP_validateUser";
                     MySqlCommand cmd = new MySqlCommand(procedure, conn);
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("email", email);
-                    cmd.Parameters.AddWithValue("password", password);
-                    cmd.Connection = conn;
+                    cmd.Parameters.AddWithValue("uEmail", emailTxt.Text);
+                    cmd.Parameters.AddWithValue("uPassword", hash);
+                    cmd.Parameters.AddWithValue("salt", salt);
                     conn.Open();
-                    userId = Convert.ToInt32(cmd.ExecuteScalar());
-                    conn.Close();
-                }
-                switch (userId) {
-                    case -1:
-                        dvMessage.Visible = true;
-                        lblMessage.Text = "Email and/or password is incorrect";
-                        break;
-                    case -2:
-                        dvMessage.Visible = true;
-                        lblMessage.Text = "Account has not been activated";
-                        break;
-                    default:
-                        Response.Redirect(Request.QueryString["ReturnUrl"]);
-                        break;
+                    cmd.ExecuteNonQuery();
+
+                    
                 }
             } catch (MySqlException ex) {
-                dbError.Visible = true;
-                lblDBError.Text = "Could not connect to Database at this time. Try again later." + ex.ToString();
-
+                lblDBError.Text = "Could not connect to database: " + ex.ToString();
+                lblDBError.Visible = true;
             }
+        }
+
+        public static void GenerateSaltedHash(string password, out string salt, out string hash) {
+            var saltBytes = new byte[64];
+            var provider = new RNGCryptoServiceProvider();
+            provider.GetNonZeroBytes(saltBytes);
+            salt = Convert.ToBase64String(saltBytes);
+
+            var rfc2898DeriveBytes = new Rfc2898DeriveBytes(password, saltBytes, 10000);
+            hash = Convert.ToBase64String(rfc2898DeriveBytes.GetBytes(256));
+
+
         }
     }
 }

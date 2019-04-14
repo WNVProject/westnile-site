@@ -25,7 +25,7 @@
                             <asp:RequiredFieldValidator ID="rfvPasswordtxt" runat="server" forecolor="Red" controlToValidate="passwordTxt" ErrorMessage="Please enter a password" />
                         </div>
                         <div class="form-group justify-content-center align-content-center">
-                            <asp:Button ID="loginButton" runat="server" Text="Login" class="btn btn-lg btn-success btn-block" OnClick="ValidateUser"/>
+                            <asp:Button ID="loginButton" runat="server" Text="Login" class="btn btn-lg btn-success btn-block" OnClick="userLogin"/>
                         </div>
                     </div>
 
