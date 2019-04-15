@@ -22,6 +22,24 @@ namespace WNV {
         protected global::System.Web.UI.WebControls.DropDownList ddlVisType;
         
         /// <summary>
+        /// ddlState control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlSelect ddlState;
+        
+        /// <summary>
+        /// chkAllStates control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkAllStates;
+        
+        /// <summary>
         /// ddlUniHeatStartYear control.
         /// </summary>
         /// <remarks>
@@ -164,6 +182,60 @@ namespace WNV {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlPearsonHeatWeekOfInterest;
+        
+        /// <summary>
+        /// ddlUniHeatStateCaseVariable control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlUniHeatStateCaseVariable;
+        
+        /// <summary>
+        /// ddlUniHeatStateCaseStartYear control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlUniHeatStateCaseStartYear;
+        
+        /// <summary>
+        /// ddlUniHeatStateCaseEndYear control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlUniHeatStateCaseEndYear;
+        
+        /// <summary>
+        /// ddlUniExtrStateCaseVariable control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlUniExtrStateCaseVariable;
+        
+        /// <summary>
+        /// ddlUniExtrStateCaseStartYear control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlUniExtrStateCaseStartYear;
+        
+        /// <summary>
+        /// ddlUniExtrStateCaseEndYear control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlUniExtrStateCaseEndYear;
         
         /// <summary>
         /// upnlbtnRender control.

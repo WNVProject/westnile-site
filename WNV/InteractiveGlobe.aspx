@@ -48,13 +48,13 @@
                                         <div class="col-lg-6">
                                             <div class="slideContainer" onmouseover="document.getElementById('valCtrlPnlOpacity')">
                                                 <input id="rngCtrlPnlOpacity" class="ctrlSlider cesium-button p-3 m-0 w-100" type="range" value="100" min="10" max="100" step="2" onchange="valCtrlPnlOpacity.value=value;adjustOpacity(value,'controlContainer');" onmouseover="toggleTooltip('valCtrlPnlOpacity');" onmouseout="toggleTooltip('valCtrlPnlOpacity');" onmousemove="updateSlideOutputLive(this,'valCtrlPnlOpacity');"/>
-                                                <output class="tooltip-hide cesium-button text-white p-1 m-0 w-100 text-center" id="valCtrlPnlOpacity">100</output>
+                                                <output class="tooltip-hide cesium-button text-white p-1 m-0 text-center" id="valCtrlPnlOpacity">100</output>
                                             </div>
                                         </div>
                                         <div class="col-lg-6">
                                             <div class="slideContainer">
                                                 <input id="rngCtrlPnlWidth" class="ctrlSlider cesium-button p-3 m-0 w-100" type="range" value="40" min="25" max="50" step="1" onchange="valCtrlPnlWidth.value=value;adjustWidth(value,'controlContainer');" onmouseover="toggleTooltip('valCtrlPnlWidth');" onmouseout="toggleTooltip('valCtrlPnlWidth');" onmousemove="updateSlideOutputLive(this,'valCtrlPnlWidth');"/>
-                                                <output id="valCtrlPnlWidth" class="tooltip-hide cesium-button text-white p-1 m-0 w-100 text-center">35</output>
+                                                <output id="valCtrlPnlWidth" class="tooltip-hide cesium-button text-white p-1 m-0 text-center">35</output>
                                             </div>
                                         </div>
                                     </div>
@@ -80,16 +80,18 @@
                         </div>
                         <div class="row mb-1">
                             <div class="col-lg-5">
-                                <asp:DropDownList ID="ddlVisType" runat="server" CssClass="cesium-button p-1 m-0 aspnet-width-fix" Width="100%" onchange="toggleParameterPanel(this);">
+                                <asp:DropDownList ID="ddlVisType" runat="server" CssClass="cesium-button p-1 m-0 aspnet-width-fix" Width="100%" onchange="toggleParameterPanel(this);" ClientIDMode="Static">
                                     <asp:ListItem Value="1" Text="Univariate County Heatmap" ></asp:ListItem>
                                     <asp:ListItem Value="2" Text="Univariate County Extrusion" ></asp:ListItem>
                                     <%--<asp:ListItem Value="3" Text="Bivariate County Extrusion" ></asp:ListItem>--%>
                                     <asp:ListItem Value="4" Text="Pearson's Correlation County Heatmap" ></asp:ListItem>
+                                    <asp:ListItem Value="5" Text="Univariate State Heatmap" ></asp:ListItem>
+                                    <asp:ListItem Value="6" Text="Univariate State Extrusion" ></asp:ListItem>
                                 </asp:DropDownList>
                             </div>
                             <div class="col-lg-3">
                                 <%--<asp:DropDownList ID="ddlState" runat="server" CssClass="dropdown-item cesium-button p-0 m-0 aspnet-width-fix"></asp:DropDownList>--%>
-                                <select id="ddlState" class="cesium-button p-1 m-0 w-100 aspnet-width-fix" disabled="disabled" aria-disabled="true">
+                                <select id="ddlState" runat="server" class="cesium-button p-1 m-0 w-100 aspnet-width-fix" disabled="disabled" aria-disabled="true" ClientIDMode="Static" >
                                     <option value="01">Alabama</option>
                                     <option value="02">Alaska</option>
                                     <option value="03">Arizona</option>
@@ -145,7 +147,7 @@
                             </div>
                             <div class="col-lg-4">
                                 <div class="form-check-inline disabled">
-                                    <input id="chkAllStates" class="form-check-input aspnet-width-fix" type="checkbox" disabled/>
+                                    <input id="chkAllStates" runat="server" class="form-check-input aspnet-width-fix" type="checkbox" onchange="toggleStateDDL();" ClientIDMode="Static" disabled/>
                                     <label class="form-check-label" for="chkAllStates">Use All States</label>
                                 </div>
                             </div>
@@ -324,13 +326,13 @@
                                 <div class="col-lg-6">
                                     <div class="slideContainer">
                                         <input id="rngUniExtrExtrusionFactor" class="ctrlSlider cesium-button p-3 m-0 w-100" type="range" value="100" min="10" max="100" step="1" onchange="valUniExtrExtrusionFactor.value=value;" onmouseover="toggleTooltip('valUniExtrExtrusionFactor');" onmouseout="toggleTooltip('valUniExtrExtrusionFactor');" onmousemove="updateSlideOutputLive(this,'valUniExtrExtrusionFactor');"/>
-                                        <output id="valUniExtrExtrusionFactor" class="tooltip-hide cesium-button text-white p-1 m-0 w-100 text-center">100</output>
+                                        <output id="valUniExtrExtrusionFactor" class="tooltip-hide cesium-button text-white p-1 m-0 text-center">100</output>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="slideContainer">
                                         <input id="rngUniExtrDataOpacity" class="ctrlSlider cesium-button p-3 m-0 w-100" type="range" value="100" min="10" max="100" step="1" onchange="valUniExtrDataOpacity.value=value;" onmouseover="toggleTooltip('valUniExtrDataOpacity');" onmouseout="toggleTooltip('valUniExtrDataOpacity');" onmousemove="updateSlideOutputLive(this,'valUniExtrDataOpacity');"/>
-                                        <output id="valUniExtrDataOpacity" class="tooltip-hide cesium-button text-white p-1 m-0 w-100 text-center">100</output>
+                                        <output id="valUniExtrDataOpacity" class="tooltip-hide cesium-button text-white p-1 m-0 text-center">100</output>
                                     </div>
                                 </div>
                             </div>
@@ -415,13 +417,13 @@
                                 <div class="col-lg-4">
                                     <div class="slideContainer">
                                         <input id="rngMultiExtrExtrusionFactor" class="ctrlSlider cesium-button p-3 m-0 w-100" type="range" value="100" min="10" max="100" step="1" onchange="valMultiExtrExtrusionFactor.value=value;" onmouseover="toggleTooltip('valMultiExtrExtrusionFactor');" onmouseout="toggleTooltip('valMultiExtrExtrusionFactor');" onmousemove="updateSlideOutputLive(this,'valMultiExtrExtrusionFactor');"/>
-                                        <output id="valMultiExtrExtrusionFactor" class="tooltip-hide cesium-button text-white p-1 m-0 w-100 text-center">100</output>
+                                        <output id="valMultiExtrExtrusionFactor" class="tooltip-hide cesium-button text-white p-1 m-0 text-center">100</output>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="slideContainer">
                                         <input id="rngMultiExtrDataOpacity" class="ctrlSlider cesium-button p-3 m-0 w-100" type="range" value="100" min="10" max="100" step="1" onchange="valMultiExtrDataOpacity.value=value;" onmouseover="toggleTooltip('valMultiExtrDataOpacity');" onmouseout="toggleTooltip('valMultiExtrDataOpacity');" onmousemove="updateSlideOutputLive(this,'valMultiExtrDataOpacity');"/>
-                                        <output id="valMultiExtrDataOpacity" class="tooltip-hide cesium-button text-white p-1 m-0 w-100 text-center">100</output>
+                                        <output id="valMultiExtrDataOpacity" class="tooltip-hide cesium-button text-white p-1 m-0 text-center">100</output>
                                     </div>
                                 </div>
                             </div>
@@ -522,6 +524,94 @@
                                             </asp:DropDownList>
                                         </ContentTemplate>
                                     </asp:UpdatePanel>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-0">
+                            <div class="col-lg-12 text-white mb-0">
+                                <div class="m-0 dropdown-toggle" data-toggle="collapse" data-target="#pnlVisualization5" aria-expanded="false" aria-controls="pnlVisualization5">
+                                </div>
+                            </div>
+                        </div>
+                        <div id="pnlVisualization5" class="mb-0 mt-1 collapse">
+                            <div class="row mb-1">
+                                <div class="col-lg-4">
+                                    <h6 class="text-white">Case Vairable</h6>
+                                </div>
+                                <div class="col-lg-4">
+                                    <h6 class="text-white">Start Year</h6>
+                                </div>
+                                <div class="col-lg-4">
+                                    <h6 class="text-white">End Year</h6>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-lg-4">
+                                    <asp:DropDownList ID="ddlUniHeatStateCaseVariable" runat="server" CssClass="cesium-button p-1 m-0 aspnet-width-fix" Width="100%" ClientIDMode="Static">
+                                        <asp:ListItem Value="Cases" Text="WNV Cases" ></asp:ListItem>
+                                        <asp:ListItem Value="Deaths" Text="WNV Deaths" ></asp:ListItem>
+                                    </asp:DropDownList>
+                                </div>
+                                <div class="col-lg-4">
+                                    <asp:DropDownList ID="ddlUniHeatStateCaseStartYear" runat="server" CssClass="cesium-button p-1 m-0 w-100 aspnet-width-fix" Width="100%" DataTextFormatString="{0:yyyy}"></asp:DropDownList>
+                                </div>
+                                <div class="col-lg-4">
+                                    <asp:DropDownList ID="ddlUniHeatStateCaseEndYear" runat="server" CssClass="cesium-button p-1 m-0 w-100 aspnet-width-fix" Width="100%" DataTextFormatString="{0:yyyy}"></asp:DropDownList>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-0">
+                            <div class="col-lg-12 text-white mb-0">
+                                <div class="m-0 dropdown-toggle" data-toggle="collapse" data-target="#pnlVisualization6" aria-expanded="false" aria-controls="pnlVisualization6">
+                                </div>
+                            </div>
+                        </div>
+                        <div id="pnlVisualization6" class="mb-0 mt-1 collapse">
+                            <div class="row mb-1">
+                                <div class="col-lg-4">
+                                    <h6 class="text-white">Case Vairable</h6>
+                                </div>
+                                <div class="col-lg-4">
+                                    <h6 class="text-white">Start Year</h6>
+                                </div>
+                                <div class="col-lg-4">
+                                    <h6 class="text-white">End Year</h6>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-lg-4">
+                                    <asp:DropDownList ID="ddlUniExtrStateCaseVariable" runat="server" CssClass="cesium-button p-1 m-0 aspnet-width-fix" Width="100%" ClientIDMode="Static">
+                                        <asp:ListItem Value="Cases" Text="WNV Cases" ></asp:ListItem>
+                                        <asp:ListItem Value="Deaths" Text="WNV Deaths" ></asp:ListItem>
+                                    </asp:DropDownList>
+                                </div>
+                                <div class="col-lg-4">
+                                    <asp:DropDownList ID="ddlUniExtrStateCaseStartYear" runat="server" CssClass="cesium-button p-1 m-0 w-100 aspnet-width-fix" Width="100%" DataTextFormatString="{0:yyyy}"></asp:DropDownList>
+                                </div>
+                                <div class="col-lg-4">
+                                    <asp:DropDownList ID="ddlUniExtrStateCaseEndYear" runat="server" CssClass="cesium-button p-1 m-0 w-100 aspnet-width-fix" Width="100%" DataTextFormatString="{0:yyyy}"></asp:DropDownList>
+                                </div>
+                            </div>
+                            <div class="row mb-1">
+                                <div class="col-lg-6">
+                                    <h6 class="text-white">Extrusion Factor</h6>
+                                </div>
+                                <div class="col-lg-6">
+                                    <h6 class="text-white">Data Opacity</h6>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-lg-6">
+                                    <div class="slideContainer">
+                                        <input id="rngUniExtrStateExtrusionFactor" class="ctrlSlider cesium-button p-3 m-0 w-100" type="range" value="100" min="10" max="100" step="1" onchange="valUniExtrStateExtrusionFactor.value=value;" onmouseover="toggleTooltip('valUniExtrStateExtrusionFactor');" onmouseout="toggleTooltip('valUniExtrStateExtrusionFactor');" onmousemove="updateSlideOutputLive(this,'valUniExtrStateExtrusionFactor');"/>
+                                        <output id="valUniExtrStateExtrusionFactor" class="tooltip-hide cesium-button text-white p-1 m-0 text-center">100</output>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="slideContainer">
+                                        <input id="rngUniExtrStateDataOpacity" class="ctrlSlider cesium-button p-3 m-0 w-100" type="range" value="100" min="10" max="100" step="1" onchange="valUniExtrStateDataOpacity.value=value;" onmouseover="toggleTooltip('valUniExtrStateDataOpacity');" onmouseout="toggleTooltip('valUniExtrStateDataOpacity');" onmousemove="updateSlideOutputLive(this,'valUniExtrStateDataOpacity');"/>
+                                        <output id="valUniExtrStateDataOpacity" class="tooltip-hide cesium-button text-white p-1 m-0 text-center">100</output>
+                                    </div>
                                 </div>
                             </div>
                         </div>
