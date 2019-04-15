@@ -39,8 +39,8 @@ namespace WNV {
                     cmd.Parameters.AddWithValue("salt", salt);
                     conn.Open();
                     cmd.ExecuteNonQuery();
-
-                    Response.Redirect("Default.aspx");
+                    conn.Close();
+                    Response.Redirect("~/Login.aspx");
                 }
             } catch (MySqlException ex) {
                 lblDBError.Text = "Could not connect to database: " + ex.ToString();
