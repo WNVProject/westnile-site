@@ -150,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Login.aspx" />
+    <Content Include="logout.aspx" />
     <Content Include="photos\agencies-orgs-logos\amca-logo.png" />
     <Content Include="photos\agencies-orgs-logos\epa-logo.jpg" />
     <Content Include="photos\agencies-orgs-logos\m-cdc-logo.png" />
@@ -6311,6 +6312,13 @@
     </Compile>
     <Compile Include="Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="logout.aspx.cs">
+      <DependentUpon>logout.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="logout.aspx.designer.cs">
+      <DependentUpon>logout.aspx</DependentUpon>
     </Compile>
     <Compile Include="MosquitoSpecies.aspx.cs">
       <DependentUpon>MosquitoSpecies.aspx</DependentUpon>

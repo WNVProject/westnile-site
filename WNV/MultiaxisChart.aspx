@@ -242,7 +242,7 @@
     <div class="row">
         <br />
         <div class="col-lg-3">
-            <asp:Button ID="btnRender" runat="server" Text="Render Graph" CssClass="btn btn-success btn-lg btn-block" ValidationGroup="vgMultiaxisChart" OnClick="btnRender_Click"/>
+            <asp:Button ID="btnRender" runat="server" Text="Generate Chart" CssClass="btn btn-success btn-lg btn-block" ValidationGroup="vgMultiaxisChart" OnClick="btnRender_Click"/>
         </div>
         <div class="col-lg-3">
             <asp:CheckBox ID="chkStatewide" runat="server" Text="&nbsp;Statewide Data" CssClass="checkbox" AutoPostBack="true" OnCheckedChanged="chkStatewide_CheckChanged" />
