@@ -26,7 +26,7 @@ namespace WNV
         protected void Page_Load(object sender, EventArgs e)
         {
             fillYearDropdowns();            
-
+            
             if (!IsPostBack)
             {
                 string procedure = "";
@@ -112,6 +112,40 @@ namespace WNV
                             ddlMultiExtrStartYear.SelectedIndex = 0;
                             ddlMultiExtrEndYear.SelectedIndex = ddlMultiExtrEndYear.Items.Count - 1;
 
+                        }
+                        
+                        procedure = "USP_Select_CaseYear";
+                        cmd = new MySqlCommand(procedure, conn);
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        using (MySqlDataAdapter da = new MySqlDataAdapter(cmd)) {
+                            DataTable dt = new DataTable();
+                            da.Fill(dt);
+
+                            ddlUniHeatStateCaseStartYear.DataSource = dt;
+                            ddlUniHeatStateCaseEndYear.DataSource = dt;
+                            ddlUniExtrStateCaseStartYear.DataSource = dt;
+                            ddlUniExtrStateCaseEndYear.DataSource = dt;
+
+                            ddlUniHeatStateCaseStartYear.DataValueField = "usYear";
+                            ddlUniHeatStateCaseEndYear.DataValueField = "usYear";
+                            ddlUniExtrStateCaseStartYear.DataValueField = "usYear";
+                            ddlUniExtrStateCaseEndYear.DataValueField = "usYear";
+
+                            ddlUniHeatStateCaseStartYear.DataTextField = "usYear";
+                            ddlUniHeatStateCaseEndYear.DataTextField = "usYear";
+                            ddlUniExtrStateCaseStartYear.DataTextField = "usYear";
+                            ddlUniExtrStateCaseEndYear.DataTextField = "usYear";
+
+                            ddlUniHeatStateCaseStartYear.DataBind();
+                            ddlUniHeatStateCaseEndYear.DataBind();
+                            ddlUniExtrStateCaseStartYear.DataBind();
+                            ddlUniExtrStateCaseEndYear.DataBind();
+
+                            ddlUniHeatStateCaseStartYear.SelectedIndex = 0;
+                            ddlUniHeatStateCaseEndYear.SelectedIndex = ddlUniHeatStateCaseEndYear.Items.Count - 1;
+                            ddlUniExtrStateCaseStartYear.SelectedIndex = 0;
+                            ddlUniExtrStateCaseEndYear.SelectedIndex = ddlUniExtrStateCaseEndYear.Items.Count - 1;
                         }
                     }
                 }
@@ -376,6 +410,34 @@ namespace WNV
                 //ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Average Pearson Correlation: r = "+avgPearsonCorrelation+"');", true);
                 //ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Time to calculate = " + totalElapsed + "');", true);
                 ScriptManager.RegisterStartupScript(this, GetType(), "renderPearsonCorrelationHeatmap", "renderPearsonCorrelationHeatmap('" + jsonToRender + "','" + ddlPearsonHeatMosquitoVar.Value + "','"+ddlPearsonHeatWeatherVar.Value+"');", true);
+            } else if (ddlVisType.SelectedValue == "5") {
+                procedure = "USP_Get_Select_USTotalWNVCasesAndDeathsByDateRange";
+                String ddlStateValue = "%";
+                if (!chkAllStates.Checked) {
+                    ddlStateValue = ddlState.Value;
+                }
+                parameters = new Hashtable()
+                {
+                    {"StartYear",ddlUniHeatStateCaseStartYear.SelectedItem.Text.ToString() + "-01-01"},
+                    {"EndYear",ddlUniHeatStateCaseEndYear.SelectedItem.Text.ToString() + "-12-31"},
+                    {"StateNumber",ddlStateValue}
+                };
+                String jsonToRender = generateJSONFromDataTable(procedure, parameters);
+                ScriptManager.RegisterStartupScript(this, GetType(), "renderUnivariateHeatmap", "renderUnivariateHeatmap('" + jsonToRender + "','Total');", true);
+            } else if (ddlVisType.SelectedValue == "6") {
+                procedure = "USP_Get_Select_USTotalWNVCasesAndDeathsByDateRange";
+                String ddlStateValue = "%";
+                if (!chkAllStates.Checked) {
+                    ddlStateValue = ddlState.Value;
+                }
+                parameters = new Hashtable()
+                {
+                    {"StartYear",ddlUniExtrStateCaseStartYear.SelectedItem.Text.ToString() + "-01-01"},
+                    {"EndYear",ddlUniExtrStateCaseEndYear.SelectedItem.Text.ToString() + "-12-31"},
+                    {"StateNumber",ddlStateValue}
+                };
+                String jsonToRender = generateJSONFromDataTable(procedure, parameters);
+                ScriptManager.RegisterStartupScript(this, GetType(), "renderUnivariateExtrusion", "renderUnivariateExtrusion('" + jsonToRender + "','Total');", true);
             }
         }
 
@@ -461,7 +523,7 @@ namespace WNV
                     {
                         foreach (DictionaryEntry param in parameters)
                         {
-                            cmd.Parameters.AddWithValue(param.Key.ToString(), param.Value.ToString());
+                            cmd.Parameters.AddWithValue(param.Key.ToString(), param.Value);
                         }
                     }
 
@@ -470,11 +532,12 @@ namespace WNV
                         DataTable dt = new DataTable();
                         da.Fill(dt);
 
+                        var test = dt.Rows.Count;
+
                         json = JsonConvert.SerializeObject(dt);
                     }
                 }
-                //using (StreamWriter sr = new StreamWriter(Server.MapPath("/Scripts/GeoJSON/serializedJsonExample.json")))
-                //{
+                //using (StreamWriter sr = new StreamWriter(Server.MapPath("/Scripts/GeoJSON/serializedJsonExample.json"))) {
                 //    sr.Write(json);
                 //    sr.Dispose();
                 //}
