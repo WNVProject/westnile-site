@@ -27,7 +27,7 @@
         </div>
         <div class="row">
             <div class="col-lg-12">
-                <h6>Cumulative WNV Cases</h6>
+                <h6>Weekly WNV Cases</h6>
             </div>
         </div>
         <div id="chrtCases" class="syncChart text-center align-middle">
@@ -202,7 +202,7 @@
     <div class="row">
         <br />
         <div class="col-lg-4">
-            <asp:Button ID="renderBtn" runat="server" Text="Render" CssClass="btn btn-success btn-lg btn-block aspnet-width-fix" ValidationGroup="vgSynchronizedCharts" OnClick="renderBtn_Click" />
+            <asp:Button ID="renderBtn" runat="server" Text="Generate Charts" CssClass="btn btn-success btn-lg btn-block aspnet-width-fix" ValidationGroup="vgSynchronizedCharts" OnClick="renderBtn_Click" />
         </div>
         <div class="col-lg-6">
             <asp:Label ID="lblError" runat="server" ForeColor="Red"></asp:Label>

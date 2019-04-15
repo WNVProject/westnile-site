@@ -11,7 +11,9 @@ namespace WNV
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            if(Session["logged"].Equals("Yes")) {
+                signout.Visible = true;
+            }
         }
     }
 }
