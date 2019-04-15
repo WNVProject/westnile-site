@@ -148,7 +148,7 @@
                             <div class="col-lg-4">
                                 <div class="form-check-inline disabled">
                                     <input id="chkAllStates" runat="server" class="form-check-input aspnet-width-fix" type="checkbox" onchange="toggleStateDDL();" ClientIDMode="Static" disabled/>
-                                    <label class="form-check-label" for="chkAllStates">Use All States</label>
+                                    <label class="form-check-label text-light" for="chkAllStates">Use All States</label>
                                 </div>
                             </div>
                         </div>

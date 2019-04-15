@@ -275,13 +275,6 @@ textarea {
         margin-top: 0.5em;
     }
 
-label.form-check-label {
-    color: white !important;
-}
-label.form-check-label:active {
-    color:white !important;
-}
-
 .col-xs-onehalf, .col-sm-onehalf, .col-md-onehalf, .col-lg-onehalf, .col-xs-threehalves, .col-sm-threehalves, .col-md-threehalves, .col-lg-threehalves, .col-xs-fivehalves, .col-sm-fivehalves, .col-md-fivehalves, .col-lg-fivehalves {
     position: relative;
     min-height: 1px;
