@@ -75,6 +75,9 @@
                 <li class =" nav-item">
                     <a class="nav-link" href="Register.aspx">Register</a>
                 </li>
+                <li ID="signout" runat="server" class="nav-item" visible="false">
+                    <a class="nav-link" href="logout.aspx">Sign out</a>
+                </li>
             </ul>
 
             </div>
